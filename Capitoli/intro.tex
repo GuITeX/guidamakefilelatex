@@ -1,0 +1,65 @@
+\cleardoublepage
+\chapter{Introduzione}
+\label{cha:introduzione}
+
+Quando si scrive un documento \LaTeX{}
+molto elaborato, potrebbe diventare necessario dare numerosi comandi in fase di
+compilazione, comandi che a volte risultano molto lunghi o di difficile
+memorizzazione.  In questo caso viene in aiuto la utility dei sistemi UNIX
+\verb|make| che si utilizza da linea di comando. \verb|make| è molto usata nella
+compilazione dei programmi, specie nell'ambiente open source, ma può essere
+utilmente sfruttata per automatizzare e semplificare anche la compilazione di
+sorgenti \LaTeX{}
+e anche altre operazioni quali la cancellazione di file temporanei non necessari
+e la creazione di un archivio compresso per conservare i file sorgenti.  Non ci
+sono limiti alla fantasia.
+
+Per compilare un sorgente, \verb|make| non fa altro che leggere le istruzioni
+presenti in un file di testo, chiamato necessariamente
+\verb|Makefile|\footnote{In realtà potrebbe avere anche altri nomi, questo è
+  quello consigliato, vedi \textcite[12]{gnu:make}.}
+e scritto con una particolare sintassi.
+
+I \verb|Makefile| sono dei file di testo puro, per scriverli c'è bisogno quindi
+di un normale editor di testo come Gedit o Kate per GNU/Linux, TextEdit per Mac
+OS X.
+
+Di \verb|make| esistono alcune versioni, le più famose sono \verb|GNU make| e
+\verb|BSD make|.  In questa guida verrà spiegato come scrivere \verb|Makefile|
+elementari per \verb|GNU make|, cioè il dialetto presente nei sistemi GNU/Linux
+e Mac OS X.
+
+\textbf{Nota}: da qui in poi (tranne nel Paragrafo \ref{sec:installazione}),
+tutti i comandi da eseguire nel terminale devono essere lanciati trovandosi
+nella stessa cartella in cui è presente il \verb|Makefile| che si desidera
+utilizzare, se non diversamente specificato.
+
+
+\section{Installazione di \texttt{make}}
+\label{sec:installazione}
+
+Per ottenere \verb|make| in ambiente GNU/Linux, se non già presente nel sistema
+bisogna installare il pacchetto omonimo utilizzando il gestore pacchetti della
+propria distribuzione.  Per esempio, per Debian e sistemi derivati (come Ubuntu)
+bisogna dare il comando
+\begin{verbatim}
+apt-get install make
+\end{verbatim}
+con i diritti di root.  In Fedora e derivate, invece, bisogna eseguire il
+comando
+\begin{verbatim}
+yum install make
+\end{verbatim}
+
+Sui sistemi Mac OS X, \verb|make| dovrebbe essere preinstallato.  Per
+verificarlo si può dare il comando nel Terminale
+\begin{verbatim}
+make --version
+\end{verbatim}
+che restituisce la versione del programma installata nel sistema.  Se il
+programma non è presente verrà mostrato un messaggio di errore.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../make"
+%%% End: 

@@ -1,0 +1,14 @@
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.dvi
+*.fdb_latexmk
+*.log
+*.out
+*.pdf
+*.run.xml
+*.toc
+*-blx.bib
+*~
+auto/
