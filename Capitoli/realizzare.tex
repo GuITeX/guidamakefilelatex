@@ -8,7 +8,7 @@
 Un \verb|Makefile| basilare è composto essenzialmente da \emph{regole} (chiamate
 in inglese \emph{rules}) che hanno la seguente struttura (vedi
 \textcite[3]{gnu:make}):
-\begin{lstlisting}[showtabs=true,tab=\rightarrowfill,caption={Struttura di una 
+\begin{lstlisting}[showtabs=true,tab=\rightarrowfill,caption={Struttura di una
 regola},label=lst:rule]
 obiettivo: prerequisiti
 	comandi
@@ -163,14 +163,14 @@ Si può anche mettere una regola per compilare lo stesso documento con \LaTeX{}
 e un'altra per compilarlo con \textsc{PDF}\LaTeX, per poter scegliere fra un
 file di output in formato \textsc{DVI} o \textsc{PDF}.  In questo caso il
 \verb|Makefile| apparirebbe così:
-\begin{lstlisting}[caption={La prima regola permette di compilare un documento con 
+\begin{lstlisting}[caption={La prima regola permette di compilare un documento con
 \LaTeX, la seconda con \textsc{PDF}\LaTeX},label=lst:dvi-pdf]
 documento.dvi: documento.tex bibliografia.bib
 	latex documento
 	bibtex documento
 	latex documento
 	latex documento
-	
+
 documento.pdf: documento.tex bibliografia.bib
 	pdflatex documento
 	bibtex documento
@@ -188,7 +188,7 @@ Codice~\ref{lst:dvi-pdf} si potrebbe ridurrebbe quindi a
 \begin{lstlisting}
 documento.dvi: documento.tex bibliografia.bib
 	texi2dvi documento
-	
+
 documento.pdf: documento.tex bibliografia.bib
 	texi2pdf documento
 \end{lstlisting}
@@ -232,7 +232,7 @@ presenza di un eventuale file \verb|clean|.
 
 I phony target possono essere anche usati per creare una sorta di \emph{alias}
 di altre regole.  Per esempio, inserendo il seguente
-\begin{lstlisting}[caption=I prerequisiti della regola dell'obiettivo \texttt{.PHONY} 
+\begin{lstlisting}[caption=I prerequisiti della regola dell'obiettivo \texttt{.PHONY}
 sono i nomi dei phony target che vengono successivamente specificati,label=lst:phony]
 .PHONY: dvi pdf
 
@@ -334,7 +334,7 @@ Entrambi i file \verb|documento.tex| e \verb|bibliografia.bib|, inoltre, si
 trovano nella stessa cartella in cui è posizionato il seguente
 \verb|Makefile|:\footnote{Parte del \texttt{Makefile} è ripreso da quello
   presente in \textcite[61]{caucci:tabelle}.}
-\begin{lstlisting}[caption={Esempio di \texttt{Makefile} che utilizza le 
+\begin{lstlisting}[caption={Esempio di \texttt{Makefile} che utilizza le
 variabili},label=lst:variabili]
 PRINCIPALE 		= documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
@@ -359,7 +359,7 @@ $(PRINCIPALE_DVI): $(PRINCIPALE_TEX) $(BIBLIOGRAFIA_BIB)
 	makeindex $(PRINCIPALE)
 	latex $(PRINCIPALE)
 	latex $(PRINCIPALE)
-	
+
 $(PRINCIPALE_PDF): $(PRINCIPALE_TEX) $(BIBLIOGRAFIA_BIB)
 	pdflatex $(PRINCIPALE)
 	bibtex $(PRINCIPALE)
@@ -468,7 +468,7 @@ compilare in \textsc{DVI} è quindi necessario convertire tutte le immagini.  Pe
 automatizzare la compilazione e la conversione delle immagini è possibile
 scrivere queste regole utilizzando le funzioni apprese nel
 Paragrafo~\ref{sec:variabili}:
-\begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PNG} 
+\begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PNG}
 vengono convertite in \textsc{EPS} nella compilazione con \LaTeX},label=lst:png-eps]
 PRINCIPALE 		= documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
@@ -625,7 +625,7 @@ sicuramente importante è la più volte citata \emph{GNU Make}, di Richard
 M. Stallman, Roland McGrath e Paul D. Smith che si può trovare all'indirizzo
 \url{http://www.gnu.org/software/make/manual/make.pdf}.
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../make"
-%%% End: 
+%%% End:
