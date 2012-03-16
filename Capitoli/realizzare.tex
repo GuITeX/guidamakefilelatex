@@ -15,34 +15,37 @@ obiettivo: prerequisiti
 	...
 	...
 \end{lstlisting}
-
-L'\emph{obiettivo} (in inglese \emph{target}), ciò che viene scritto prima del
-simbolo `\verb|:|', è il nome del file che verrà generato con la regola
-descritta.  Si può utilizzare come obiettivo un'azione da eseguire, come `clean'
-(vedi il paragrafo~\vref{sec:phony}).
+L'\emph{obiettivo} (in inglese \emph{target}), ciò che viene scritto prima dei
+due punti \verb|:|, di norma è il nome del file che verrà generato con la regola
+descritta.  Vedremo nel paragrafo~\ref{sec:phony} in che modo sia possibile
+usare un obiettivo che non sia il nome di un file da creare eseguendo la
+corrispondente regola.
 
 I \emph{prerequisiti} sono i file che devono essere presenti al momento
 dell'esecuzione di una regola e a partire dai quali viene generato il file
-obiettivo.  Spesso gli obiettivi dipendono da più file (che vengono elencati
-separati da uno spazio).  Per evitare problemi in fase di compilazione è
-conveniente che tutti i file non abbiano degli spazi nel nome.  Alcune regole,
-come la citata `clean', possono non avere alcun prerequisito.  Fra i
-prerequisiti possono comparire anche i nomi di altri obiettivi che, come detto,
-potrebbero essere dei comandi.
+obiettivo.  Spesso gli obiettivi dipendono da più file, che vengono elencati
+separati da uno spazio.  Per evitare problemi in fase di compilazione è
+conveniente che tutti i file non abbiano degli spazi nel proprio nome.  Le
+regole possono non avere alcun prerequisito.  Fra i prerequisiti possono
+comparire anche i nomi di altri obiettivi.
 
 Il programma \verb|make| conosce i comandi necessari per eseguire una regola
 leggendoli dall'elenco dei \emph{comandi}.  I comandi di ciascuna regola
 \emph{devono necessariamente} essere preceduti da una tabulazione (nel
-Codice~\ref{lst:rule} è evidenziata da una lunga linea), non da spazi altrimenti
+codice~\ref{lst:rule} è evidenziata da una lunga linea), non da spazi altrimenti
 verrà segnalato un errore.
+
+Un \verb|Makefile| deve contenere almeno una regola, ma possono essercene anche
+più di una, ciascuna corrispondente a un diverso file da creare, e l'ordine con
+cui le regole compaiono nel \verb|Makefile| \emph{non} è importante.
 
 Un \verb|Makefile| può contenere, oltre alle regole, anche dei commenti,
 introdotti dal simbolo \verb|#|: tutto ciò che si trova alla destra di \verb|#|
-viene trattato come commento.  Questo simbolo ha un comportamento simile a
-\verb|%| nel linguaggio \LaTeX{}, vedi \textcite[26]{pantieri:latex}.
+viene trattato come commento.  Questo simbolo ha lo stesso comportamento del
+simbolo \verb|%| nel linguaggio \LaTeX{}, vedi \textcite[26]{pantieri:latex}.
 
-Se necessario è possibile suddividere una riga di codice molto lunga su più
-righe in inserendo \verb|\| seguito da un carattere di nuova linea (in pratica
+Se lo si desidera è possibile suddividere una riga di codice molto lunga su più
+righe inserendo \verb|\| seguito da un carattere di nuova linea (in pratica
 bisogna premere il tasto \keystroke{Invio} subito dopo l'inserimento del
 backslash).  Ciò non è comunque obbligatorio, in quanto non sono posti limiti
 alla lunghezza delle righe di un \verb|Makefile|.
@@ -51,34 +54,29 @@ alla lunghezza delle righe di un \verb|Makefile|.
 \section{Come funziona \texttt{make}}
 \label{sec:come-funziona}
 
-Se si richiama \verb|make| senza argomenti, cioè si da solo il comando
+Per eseguire la regola che ha per obiettivo il file \verb|<obiettivo>| bisogna
+invocare \verb|make| da terminale con il comando
 \begin{verbatim}
-make
+make <obiettivo>
 \end{verbatim}
-esso procede all'esecuzione della prima regola che trova nel \verb|Makefile|,
-per la precisione la prima regola il cui target non inizia con `.' (questo
-comportamento può essere modificato, vedi \textcite[5]{gnu:make}).
-
-Quando \verb|make| processa un \verb|Makefile| verifica se è necessario
-aggiornare un obiettivo: se l'obiettivo indicato non esiste oppure ha una data
-di ultima modifica precedente almeno a una di quelle dei file elencati nei
-\emph{prerequisiti} è considerato da aggiornare e la regola viene eseguita.  In
-caso contrario (l'obiettivo esiste ed è più recente di tutti i prerequisiti) la
-regola non viene eseguita.  Se si vuole forzare l'esecuzione delle regola,
-ignorando le date di modifica, bisogna utilizzare l'opzione \texttt{-B} in
-questo modo:
+\verb|make| verifica se è necessario aggiornare l'obiettivo della regola
+corrispondente in questo modo: se l'obiettivo indicato da linea di comando non
+esiste oppure ha una data di ultima modifica precedente almeno a una di quelle
+dei file elencati nei \emph{prerequisiti} è considerato da aggiornare e la
+regola viene eseguita.  In caso contrario (l'obiettivo esiste ed è più recente
+di tutti i prerequisiti) la regola non viene eseguita e sul terminale si leggerà
+il messaggio
 \begin{verbatim}
-make -B obiettivo
+make: Nessuna operazione da eseguire per "<obiettivo>".
 \end{verbatim}
+Le istruzioni per aggiornare un obiettivo sono
+presenti nei \emph{comandi}: questi sono passati alla shell, normalmente la
+\verb|sh|.
 
-Le istruzioni per aggiornare un obiettivo sono presenti nei \emph{comandi}:
-questi sono passati alla shell, normalmente la `sh'.  Per scegliere una shell
-differente bisogna modificare la variabile \verb|SHELL|.  Per informazioni sulle
-variabili vedi il Paragrafo~\vref{sec:variabili}.
-
-Quindi \verb|make| verifica se, prima di eseguire una regola, è necessario
-aggiornare uno o più dei file elencati fra i prerequisiti (o eseguire una o più
-delle regole presenti).  Nel seguente esempio
+Uno dei prerequisiti di una regola può essere l'obiettivo di un'altra regola.
+In questo caso \verb|make| verifica se, prima di eseguire una regola, è
+necessario aggiornare uno o più dei file elencati fra i prerequisiti.  Nel
+seguente esempio
 \begin{lstlisting}
 obiettivo1: prerequisito1 prerequisito2
 	comando1
@@ -91,15 +89,37 @@ il \verb|prerequisito2| ha una propria regola: dando il comando
 \begin{verbatim}
 make obiettivo1
 \end{verbatim}
-\verb|make| verifica se è necessario aggiornare, operando il \verb|comando3|
+\verb|make| verifica se è necessario aggiornare, eseguendo il \verb|comando3|
 specificato, il file \verb|prerequisito2| prima di eseguire la regola associata
 all'\verb|obiettivo1|.
 
-Gli obiettivi dipendono dai prerequisiti: quando un prerequisito viene
-modificato allora probabilmente l'obiettivo deve essere ricreato.  Questo
-meccanismo, forse un po' laborioso e difficile da comprendere inizialmente,
-dovrebbe risultare chiaro più avanti.
+Tutta la logica di funzionamento di \verb|make| si basa sul fatto che gli
+obiettivi dipendono dai prerequisiti:
+\emph{quando un prerequisito viene modificato allora probabilmente l'obiettivo
+  deve essere ricreato}.
+Questo meccanismo, forse un po' laborioso e difficile da comprendere
+inizialmente, dovrebbe risultare chiaro più avanti.
 
+Per scrivere correttamente un \verb|Makefile| risulta utile disegnarsi un
+grafico ad albero che illustri le relazioni che ci sono fra i vari file,
+individuando quali dovranno essere gli obiettivi delle regole e quali saranno i
+prerequisiti delle regole.  Ricordiamo che un file può svolgere il ruolo di
+prerequisito in una regola e di obiettivo in un'altra.
+
+Se si richiama \verb|make| senza argomenti, cioè si dà solo il comando
+\begin{verbatim}
+make
+\end{verbatim}
+esso procede all'esecuzione della prima regola che trova nel \verb|Makefile|,
+per la precisione la prima regola il cui target non inizia con un punto \verb|.|
+(questo comportamento può essere modificato, vedi \textcite[5]{gnu:make}).
+
+Se si vuole forzare l'esecuzione delle regola \verb|<obiettivo>|, ignorando le
+date di modifica dell'obiettivo e dei suoi prerequisiti, bisogna utilizzare
+l'opzione \texttt{-B} in questo modo:
+\begin{verbatim}
+make -B <obiettivo>
+\end{verbatim}
 
 \section{Un semplice \texttt{Makefile}}
 \label{sec:makefile-semplice}
@@ -110,8 +130,8 @@ showtabs=true,tab=\rightarrowfill]
 documento.dvi: documento.tex
 	latex documento
 \end{lstlisting}
-Nel Codice~\ref{lst:base}, l'\emph{obiettivo}, cioè il file ottenuto dopo la
-compilazione è il file \verb|documento.dvi|, il \emph{prerequisito} è il solo
+Nel codice~\ref{lst:base}, l'\emph{obiettivo}, cioè il file ottenuto dopo la
+compilazione, è il file \verb|documento.dvi|, il \emph{prerequisito} è il solo
 file \verb|documento.tex| e l'unico comando che deve essere eseguito è
 \verb|latex documento|.
 
@@ -184,7 +204,7 @@ e \textsc{PDF}\TeX{}
 (e, se necessario, \textsc{Bib}\TeX) sul sorgente il numero strettamente
 necessario di volte per la corretta compilazione del documento (vedi
 \textcite[63]{caucci:tabelle}).  Utilizzando questi due comandi il
-Codice~\ref{lst:dvi-pdf} si potrebbe ridurrebbe quindi a
+codice~\ref{lst:dvi-pdf} si potrebbe ridurrebbe quindi a
 \begin{lstlisting}
 documento.dvi: documento.tex bibliografia.bib
 	texi2dvi documento
@@ -240,7 +260,7 @@ dvi: documento.dvi
 
 pdf: documento.pdf
 \end{lstlisting}
-in un \verb|Makefile|, prima del Codice~\ref{lst:dvi-pdf}, per compilare il
+in un \verb|Makefile|, prima del codice~\ref{lst:dvi-pdf}, per compilare il
 documento in formato \textsc{DVI} servirà dare il comando
 \begin{verbatim}
 make dvi
@@ -323,7 +343,7 @@ spazi o tabulazioni, siano essi iniziali o finali.  È comunque consigliabile
 utilizzare per i nomi delle variabili solo lettere, numeri e trattini bassi,
 vedi \textcite[57]{gnu:make}.  Eventuali caratteri di spaziatura o tabulazione
 presenti prima o dopo il nome di una variabile vengono ignorati, come nel
-Codice~\ref{lst:variabili}.
+codice~\ref{lst:variabili}.
 
 Vediamo ora un'applicazione dell'uso delle variabili.  Consideriamo il caso in
 cui abbiamo un documento \LaTeX{}
@@ -378,7 +398,7 @@ quando viene invocato: tutte le occorrenze di
 \verb|$(PRINCIPALE)| verranno lette dal programma come se ci fosse scritto
 \verb|documento|, perciò la variabile \verb|$(PRINCIPALE_TEX)|
 assume il valore \verb|documento.tex|, e così via. Come nell'esempio del
-Codice~\ref{lst:phony}, per compilare il documento in formato \textsc{DVI} è
+codice~\ref{lst:phony}, per compilare il documento in formato \textsc{DVI} è
 sufficiente dare il comando
 \begin{verbatim}
 make dvi
@@ -393,7 +413,7 @@ abbiamo indicato tutti i file che dovranno essere cancellati nella regole
 `clean', analogamente la variabile \verb|FILE_DISTCLEAN| assume come valore i
 nomi dei file \verb|documento.dvi| e \verb|documento.pdf| che verranno rimossi
 se si esegue il comando \verb|make distclean|.  Notare che, come nel
-Codice~\ref{lst:distclean}, `clean' è un prerequisito di `distclean'.
+codice~\ref{lst:distclean}, `clean' è un prerequisito di `distclean'.
 
 Quando si dovrà compilare un documento \LaTeX{}
 che richiede gli stessi comandi del documento appena visto, si potrà facilmente
@@ -443,7 +463,7 @@ sostituite rispettivamente con \verb|img1.eps| e \verb|img3.eps|.
 
 
 \section{Un \texttt{Makefile} ancora più complesso}
-Il Codice~\ref{lst:variabili} è già un \verb|Makefile| abbastanza elaborato e
+Il codice~\ref{lst:variabili} è già un \verb|Makefile| abbastanza elaborato e
 utile per automatizzare comandi piuttosto lunghi.
 
 Quando in un documento si inseriscono delle immagini, queste devono avere un
@@ -467,7 +487,7 @@ principale e il \verb|Makefile| tutte le immagini in formato \textsc{PNG}.  Per
 compilare in \textsc{DVI} è quindi necessario convertire tutte le immagini.  Per
 automatizzare la compilazione e la conversione delle immagini è possibile
 scrivere queste regole utilizzando le funzioni apprese nel
-Paragrafo~\ref{sec:variabili}:
+paragrafo~\ref{sec:variabili}:
 \begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PNG}
 vengono convertite in \textsc{EPS} nella compilazione con \LaTeX},label=lst:png-eps]
 PRINCIPALE 		= documento
@@ -515,7 +535,7 @@ Il prerequisito di questa regola è un qualsiasi file della sottocartella
 qualsiasi file della sottocartella \verb|Immagini| con estensione \verb|.eps|,
 bensì il file che ha lo stesso nome base del prerequisito ed estensione
 \verb|.eps|.\footnote{Il metacarattere `\texttt{\%}' è stato introdotto nel
-  Paragrafo~\ref{sec:variabili}.}
+  paragrafo~\ref{sec:variabili}.}
 Con questa regola verranno dunque generati solo file con estensione \verb|.eps|
 e nome base uguale a quello di file in formato \textsc{PNG} presente nella
 sottocartella \verb|Immagini|.  Il comando eseguito nella regola è
@@ -535,7 +555,7 @@ utilizzare il comando nel terminale:
 make immagine.eps
 \end{verbatim}
 Per come è scritta la regola con obiettivo \verb|$(PRINCIPALE_DVI)|
-nel \verb|Makefile| del Codice~\ref{lst:png-eps} non è però necessario
+nel \verb|Makefile| del codice~\ref{lst:png-eps} non è però necessario
 convertire una a una le immagini quando si vuole generare il documento in
 formato \textsc{DVI}.  Infatti, compilando con il comando
 \begin{verbatim}

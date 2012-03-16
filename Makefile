@@ -1,3 +1,4 @@
+CARTELLA		= $(shell basename $$(pwd))
 MAIN			= make
 MAIN_TEX		= $(MAIN).tex
 MAIN_DVI		= $(MAIN).dvi
@@ -15,7 +16,7 @@ CLEAN_FILES		= *.aux *.bbl *.bcf *.blg *-blx.bib *.brf *.fdb_latexmk \
 			  *.idx *.ilg *.ind *.log *.out *.run.xml *.toc *~ \
 			  $(INTRO_TEMP) $(REALIZZARE_TEMP)
 DISTCLEAN_FILES		= $(MAIN_PDF) $(MAIN_DVI)
-TODAY			= $(shell date +%Y%m%d.%H%M%S)
+TODAY			= $(shell date "+%Y%m%d.%H%M%S")
 
 .PHONY: pdf dvi clean distclean dist
 
@@ -30,7 +31,7 @@ $(MAIN_DVI): $(ALL_TEX)
 	latexmk $(MAIN)
 
 dist: distclean
-	cd ..; tar cvfzps $(MAIN)-$(TODAY).tar.gz $(MAIN)/
+	cd ..; tar cvfzps $(MAIN)-$(TODAY).tar.gz $(CARTELLA)/
 
 clean:
 	rm -f $(CLEAN_FILES)
