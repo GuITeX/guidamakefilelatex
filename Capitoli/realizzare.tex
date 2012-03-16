@@ -26,14 +26,44 @@ dell'esecuzione di una regola e a partire dai quali viene generato il file
 obiettivo.  Spesso gli obiettivi dipendono da più file, che vengono elencati
 separati da uno spazio.  Per evitare problemi in fase di compilazione è
 conveniente che tutti i file non abbiano degli spazi nel proprio nome.  Le
-regole possono non avere alcun prerequisito.  Fra i prerequisiti possono
-comparire anche i nomi di altri obiettivi.
+regole possono non avere alcun prerequisito.
 
 Il programma \verb|make| conosce i comandi necessari per eseguire una regola
 leggendoli dall'elenco dei \emph{comandi}.  I comandi di ciascuna regola
 \emph{devono necessariamente} essere preceduti da una tabulazione (nel
 codice~\ref{lst:rule} è evidenziata da una lunga linea), non da spazi altrimenti
 verrà segnalato un errore.
+
+\begin{figure}
+  \centering
+  % TODO: provare a usare le funzioni native di TikZ per creare grafi ad albero
+  \begin{tikzpicture}
+    \node (p1) at (0,0) {\verb|prerequisito1|};
+    \node[rounded corners,draw] (p2) at (4,0) {\verb|prerequisito2|};
+    \node (p3) at ($(p2)-(0,1)$) {\verb|prerequisito3|};
+    \node[rounded corners,draw] (o1) at ($(p1)!0.5!(p2)+(0,1)$)
+                                {\verb|obiettivo1|};
+    \draw[->] (p1) -- (o1);
+    \draw[->] (p2) -- (o1);
+    \draw[->] (p3) -- (p2);
+  \end{tikzpicture}
+  \caption{Grafo ad albero che illustra le dipendenze fra i file.  I file che si
+    trovano alla coda di una freccia, evidenziati in un rettangolo,
+    costituiscono l'obiettivo di una regola, i file che invece si trovano alla
+    testa di una freccia rappresentano i prerequisiti della corrispondente
+    regola e sono necessari per la creazione dell'obiettivo.}
+  \label{fig:grafo-albero1}
+\end{figure}
+Per scrivere correttamente un \verb|Makefile| risulta utile disegnarsi un grafo
+ad albero che illustri le relazioni che ci sono fra i vari file, individuando
+quali dovranno essere gli obiettivi delle regole e quali saranno i prerequisiti
+delle regole.  Uno stesso file può svolgere il ruolo di prerequisito in una
+regola e di obiettivo in un'altra.  Nell'esempio della
+figura~\ref{fig:grafo-albero1} ci sono due obiettivi, \verb|obiettivo1| e
+\verb|prerequisito2|, per le quali verranno scritte le opportune regole.  I
+prerequisiti di \verb|obiettivo1| sono i file \verb|prerequisito1| e
+\verb|prerequisito2|, l'unico prerequisito di \verb|prerequisito2| è il file
+\verb|prerequisito3|.
 
 Un \verb|Makefile| deve contenere almeno una regola, ma possono essercene anche
 più di una, ciascuna corrispondente a un diverso file da creare, e l'ordine con
@@ -73,10 +103,11 @@ Le istruzioni per aggiornare un obiettivo sono
 presenti nei \emph{comandi}: questi sono passati alla shell, normalmente la
 \verb|sh|.
 
-Uno dei prerequisiti di una regola può essere l'obiettivo di un'altra regola.
-In questo caso \verb|make| verifica se, prima di eseguire una regola, è
-necessario aggiornare uno o più dei file elencati fra i prerequisiti.  Nel
-seguente esempio
+Come detto, uno dei prerequisiti di una regola può essere l'obiettivo di
+un'altra regola.  In questo caso \verb|make| verifica se, prima di eseguire una
+regola, è necessario aggiornare uno o più dei file elencati fra i prerequisiti.
+Nel seguente \verb|Makefile|, corrispondente alla situazione illustrata nella
+figura~\ref{fig:grafo-albero1},
 \begin{lstlisting}
 obiettivo1: prerequisito1 prerequisito2
 	comando1
@@ -100,12 +131,6 @@ obiettivi dipendono dai prerequisiti:
 Questo meccanismo, forse un po' laborioso e difficile da comprendere
 inizialmente, dovrebbe risultare chiaro più avanti.
 
-Per scrivere correttamente un \verb|Makefile| risulta utile disegnarsi un
-grafico ad albero che illustri le relazioni che ci sono fra i vari file,
-individuando quali dovranno essere gli obiettivi delle regole e quali saranno i
-prerequisiti delle regole.  Ricordiamo che un file può svolgere il ruolo di
-prerequisito in una regola e di obiettivo in un'altra.
-
 Se si richiama \verb|make| senza argomenti, cioè si dà solo il comando
 \begin{verbatim}
 make
@@ -124,25 +149,31 @@ make -B <obiettivo>
 \section{Un semplice \texttt{Makefile}}
 \label{sec:makefile-semplice}
 
-Passiamo ora alla pratica vedendo un esempio di \verb|Makefile| molto semplice:
+Passiamo ora alla pratica vedendo un esempio di \verb|Makefile| molto semplice
+per compilare un documento \LaTeX{}:
 \begin{lstlisting}[caption={Un semplice \texttt{Makefile}},label=lst:base,
 showtabs=true,tab=\rightarrowfill]
 documento.dvi: documento.tex
 	latex documento
 \end{lstlisting}
-Nel codice~\ref{lst:base}, l'\emph{obiettivo}, cioè il file ottenuto dopo la
-compilazione, è il file \verb|documento.dvi|, il \emph{prerequisito} è il solo
+Nel codice~\ref{lst:base}, il file \verb|documento.dvi| è l'\emph{obiettivo},
+cioè il file ottenuto dopo la compilazione, il \emph{prerequisito} è il solo
 file \verb|documento.tex| e l'unico comando che deve essere eseguito è
 \verb|latex documento|.
 
-Per invocare \verb|make|, dopo aver aperto un terminale ed essersi spostati
-nella cartella in cui si trova il \verb|Makefile| con il comando \verb|cd|,
-bisogna utilizzare il comando
+Per invocare \verb|make|, dopo aver aperto un terminale ed essersi spostati con
+il comando \verb|cd| nella cartella in cui si trova il \verb|Makefile|, bisogna
+utilizzare il comando
 \begin{verbatim}
-make target
+make obiettivo
 \end{verbatim}
-sostituendo a \verb|target| il nome del target che specificato nella regola che
-si desidera eseguire.
+sostituendo a \verb|obiettivo| il nome dell'obiettivo che specificato nella
+regola che si desidera eseguire.  In questo caso dovremo eseguire il comando
+\begin{verbatim}
+make documento.dvi
+\end{verbatim}
+oppure semplicemente \verb|make| se la regola è la prima in ordine di
+apparizione nel \verb|Makefile|.
 
 
 \section{Un \texttt{Makefile} un po' più elaborato}
@@ -198,8 +229,8 @@ documento.pdf: documento.tex bibliografia.bib
 	pdflatex documento
 \end{lstlisting}
 
-In alcune distribuzioni GNU/Linux sono presenti gli script shell \verb|texi2dvi|
-e \verb|texi2pdf| che eseguono rispettivamente \LaTeX{}
+In alcune distribuzioni GNU/Linux sono presenti gli script \verb|texi2dvi| e
+\verb|texi2pdf| che eseguono rispettivamente \LaTeX{}
 e \textsc{PDF}\TeX{}
 (e, se necessario, \textsc{Bib}\TeX) sul sorgente il numero strettamente
 necessario di volte per la corretta compilazione del documento (vedi
@@ -212,11 +243,11 @@ documento.dvi: documento.tex bibliografia.bib
 documento.pdf: documento.tex bibliografia.bib
 	texi2pdf documento
 \end{lstlisting}
-Bisogna però evidenziare che se il documento richiede comandi particolari per la
-compilazione (come quando si utilizza il pacchetto \verb|frontespizio|),
-\verb|texi2dvi| e \verb|texi2pdf| non sono più in grado di generare
-correttamente il documento finale.
-
+Anche lo script \verb|latexmk|, fornito dalle distribuzioni TeX Live e MikTeX,
+offre funzionalità simili, bisogna però evidenziare che se il documento richiede
+comandi particolari per la compilazione (come quando si utilizza il pacchetto
+\verb|frontespizio|), \verb|texi2dvi|, \verb|texi2pdf| e \verb|latexmk| non sono
+più in grado di generare correttamente il documento finale.
 
 \section{Phony target}
 \label{sec:phony}
@@ -227,27 +258,29 @@ file che verrà ottenuto.  Questo tipo di obiettivi vengono chiamati in inglese
 come nome dei comandi. Per esempio, quando si esegue la regola
 \begin{lstlisting}
 clean:
-	rm *.aux *.log *.out
+	rm -f *.aux *.log *.out
 \end{lstlisting}
 vengono cancellati tutti i file con estensione \verb|.aux|, \verb|.log| e
 \verb|.out| che vengono prodotti durante la compilazione di un semplice
 documento
 \LaTeX.\footnote{Il comando \texttt{rm} cancella tutti i file che vengono
-  elencati di seguito.  Il metacarattere \texttt{*} sostituisce una qualsiasi
-  sequenza di caratteri.}
+  elencati di seguito, l'opzione \texttt{-f} serve per non stampare eventuali
+  messaggi di errore in caso di assenza dei file da cancellare.  Il
+  metacarattere \texttt{*} sostituisce una qualsiasi sequenza di caratteri.}
 È consigliabile specificare esplicitamente quali sono i phony target utilizzati
 nel \verb|Makefile|: se nella cartella in cui si trova il \verb|Makefile| è
 presente un file chiamato \verb|clean| questa regola non verrebbe mai eseguita.
 Infatti, dal momento che la regola non ha prerequisiti, il file \texttt{clean}
-risulterebbe sempre aggiornato (vedi \textcite[31]{gnu:make}).  Per fare ciò si
-usa l'obiettivo speciale \verb|.PHONY|:
+risulterebbe sempre aggiornato (vedi \textcite[31]{gnu:make}).  Per fare ciò
+bisogna mettere gli obbiettivi di queste regole come prerequisiti della regola
+speciale \verb|.PHONY|:
 \begin{lstlisting}
 .PHONY: clean
 clean:
-	rm *.aux *.log *.out
+	rm -f *.aux *.log *.out
 \end{lstlisting}
-In questo modo \verb|make| sa che `clean' non è il nome del file che si deve
-ottenere e la regola verrà quindi sempre eseguita, indipendentemente dalla
+In questo modo \verb|make| sa che \verb|clean| non è il nome del file che si
+deve ottenere e la regola verrà quindi sempre eseguita, indipendentemente dalla
 presenza di un eventuale file \verb|clean|.
 
 I phony target possono essere anche usati per creare una sorta di \emph{alias}
@@ -261,36 +294,37 @@ dvi: documento.dvi
 pdf: documento.pdf
 \end{lstlisting}
 in un \verb|Makefile|, prima del codice~\ref{lst:dvi-pdf}, per compilare il
-documento in formato \textsc{DVI} servirà dare il comando
+documento in formato \textsc{DVI} si potrà eseguire il comando
 \begin{verbatim}
 make dvi
 \end{verbatim}
-Analogamente, per ottenere il file \textsc{PDF} bisognerà dare il comando
+Analogamente, per ottenere il file \textsc{PDF} si potrà dare il comando
 \begin{verbatim}
 make pdf
 \end{verbatim}
 L'utilità dell'uso di questi alias è che i comandi da eseguire sono indipendenti
 dal nome del file di output.
 
-Accanto al phony target `clean' si trova spesso `distclean': `clean' cancella
-solo i file temporanei generati durante la compilazione, `distclean' in più
-elimina anche i file di output (quindi gli eventuali file in formato \verb|.pdf|
-o \verb|.dvi|, nel caso di documenti
+Accanto al phony target \verb|clean| si trova spesso \verb|distclean|:
+\verb|clean| cancella solo i file temporanei generati durante la compilazione,
+\verb|distclean| in più elimina anche i file di output (quindi gli eventuali
+file in formato \verb|.pdf| o \verb|.dvi|, nel caso di documenti
 \LaTeX).\footnote{Queste sono solo delle convenzioni, in uso specialmente
-  nell'ambito della programmazione. Il redattore è libero di creare regole
-  diverse e con nomi differenti.}
-Poiché `distclean', \emph{oltre} a cancellare file rimossi da `clean' ne
-cancella altri, è possibile inserire `clean' come prerequisito di `distclean',
-in modo che quella regola venga eseguita \emph{anche} quando si dà il comando
-\verb|make distclean|:
-\begin{lstlisting}[caption={Phony target `distclean' e `clean'},label=lst:distclean]
+  nell'ambito della programmazione.  L'utente è libero di creare regole diverse
+  e con nomi differenti.}
+Poiché \verb|distclean|, \emph{oltre} a cancellare file rimossi da \verb|clean|
+ne cancella altri, è possibile inserire \verb|clean| come prerequisito di
+\verb|distclean|, in modo che quella regola venga eseguita \emph{anche} quando
+si dà il comando \verb|make distclean|:
+\begin{lstlisting}[caption={Phony target \texttt{distclean} e \texttt{clean}.},
+label=lst:distclean]
 .PHONY: distclean clean
 
 distclean: clean
-	rm *.pdf *.dvi
+	rm -f *.pdf *.dvi
 
 clean:
-	rm *.aux *.log *.out
+	rm -f *.aux *.log *.out
 \end{lstlisting}
 
 
@@ -336,14 +370,14 @@ qualsiasi cosa: oltre a elenchi di file le variabili potrebbero avere come
 valore nomi di cartelle in cui cercare file o programmi da eseguire.
 
 Le variabili, come qualunque altra cosa scritta nel \verb|Makefile|, sono
-sensibili alle maiuscole, quindi `Variabile', `variabile' e `VARIABILE' hanno
-significati differenti.  Inoltre il nome di una variabile può essere una
-sequenza di qualsiasi carattere eccetto `\verb|:|', `\verb|#|', `\verb|=|' e
-spazi o tabulazioni, siano essi iniziali o finali.  È comunque consigliabile
-utilizzare per i nomi delle variabili solo lettere, numeri e trattini bassi,
-vedi \textcite[57]{gnu:make}.  Eventuali caratteri di spaziatura o tabulazione
-presenti prima o dopo il nome di una variabile vengono ignorati, come nel
-codice~\ref{lst:variabili}.
+sensibili alle maiuscole, quindi \verb|Variabile|, \verb|variabile| e
+\verb|VARIABILE| sono stringhe distinte.  Inoltre il nome di una variabile può
+essere una sequenza di qualsiasi carattere eccetto spazi o tabulazioni, siano
+essi iniziali o finali, o uno fra i tre seguenti simboli \verb|:| \verb|#|
+\verb|=|.  È comunque consigliabile utilizzare per i nomi delle variabili solo
+lettere, numeri e trattini bassi, vedi \textcite[57]{gnu:make}.  Eventuali
+caratteri di spaziatura o tabulazione presenti prima o dopo il nome di una
+variabile vengono ignorati, come nel codice~\ref{lst:variabili}.
 
 Vediamo ora un'applicazione dell'uso delle variabili.  Consideriamo il caso in
 cui abbiamo un documento \LaTeX{}
@@ -388,10 +422,10 @@ $(PRINCIPALE_PDF): $(PRINCIPALE_TEX) $(BIBLIOGRAFIA_BIB)
 	pdflatex $(PRINCIPALE)
 
 distclean: clean
-	rm $(FILE_DISTCLEAN)
+	rm -f $(FILE_DISTCLEAN)
 
 clean:
-	rm $(FILE_CLEAN)
+	rm -f $(FILE_CLEAN)
 \end{lstlisting}
 Le variabili specificate all'inizio del file vengono sostituite da \verb|make|
 quando viene invocato: tutte le occorrenze di
@@ -410,17 +444,17 @@ make pdf
 
 Nella variabile \verb|$(FILE_CLEAN)|
 abbiamo indicato tutti i file che dovranno essere cancellati nella regole
-`clean', analogamente la variabile \verb|FILE_DISTCLEAN| assume come valore i
-nomi dei file \verb|documento.dvi| e \verb|documento.pdf| che verranno rimossi
+\verb|clean|, analogamente la variabile \verb|FILE_DISTCLEAN| assume come valore
+i nomi dei file \verb|documento.dvi| e \verb|documento.pdf| che verranno rimossi
 se si esegue il comando \verb|make distclean|.  Notare che, come nel
-codice~\ref{lst:distclean}, `clean' è un prerequisito di `distclean'.
+codice~\ref{lst:distclean}, \verb|clean| è un prerequisito di \verb|distclean|.
 
 Quando si dovrà compilare un documento \LaTeX{}
 che richiede gli stessi comandi del documento appena visto, si potrà facilmente
 riutilizzare lo stesso \verb|Makefile|, avendo solo cura di modificare il valore
 delle variabili \verb|PRINCIPALE| e \verb|BIBLIOGRAFIA| a seconda delle
-necessità. Il \verb|Makefile| va sempre posto o copiato nella cartella in cui si
-trova il nuovo documento.
+necessità. % Il \verb|Makefile| va sempre posto o copiato nella cartella in cui
+% si trova il nuovo documento.
 
 Esistono delle cosiddette funzioni per nomi di
 file.\footnote{Per un elenco esaustivo di queste funzioni vedi
@@ -445,14 +479,14 @@ stringhe.%
 $(patsubst modello,sostituzione,testo)
 \end{lstlisting}
 permette di sostituire \verb|modello| con \verb|sostituzione| all'interno di
-\verb|testo|.  \verb|modello| potrebbe contenere il metacarattere `\verb|%|' che
+\verb|testo|.  \verb|modello| potrebbe contenere il metacarattere \verb|%| che
 rappresenta una qualsiasi sequenza di caratteri e numeri.  Se anche
-\verb|sostituzione| contiene la stessa sequenza indicata da `\verb|%|' allora
-la sostituzione viene eseguita.  Per esempio
+\verb|sostituzione| contiene \emph{la stessa} sequenza indicata da \verb|%|
+allora la sostituzione viene eseguita.  Per esempio
 \begin{lstlisting}
 $(patsubst %.png,%.eps,img1.png img2.jpg img3.png)
 \end{lstlisting}
-dà come risultato
+viene interpretato da \verb|make| come
 \begin{verbatim}
 img1.eps img3.eps
 \end{verbatim}
@@ -534,7 +568,7 @@ Il prerequisito di questa regola è un qualsiasi file della sottocartella
 \verb|Immagini| con estensione \verb|.png|, l'obiettivo, però, non è un
 qualsiasi file della sottocartella \verb|Immagini| con estensione \verb|.eps|,
 bensì il file che ha lo stesso nome base del prerequisito ed estensione
-\verb|.eps|.\footnote{Il metacarattere `\texttt{\%}' è stato introdotto nel
+\verb|.eps|.\footnote{Il metacarattere \texttt{\%} è stato introdotto nel
   paragrafo~\ref{sec:variabili}.}
 Con questa regola verranno dunque generati solo file con estensione \verb|.eps|
 e nome base uguale a quello di file in formato \textsc{PNG} presente nella
@@ -626,10 +660,10 @@ Immagini/%.eps: Immagini/%.png
 	convert $^ $@
 
 distclean: clean
-	rm $(FILE_DISTCLEAN)
+	rm -f $(FILE_DISTCLEAN)
 
 clean:
-	rm $(FILE_CLEAN)
+	rm -f $(FILE_CLEAN)
 \end{lstlisting}
 Con gli strumenti acquisiti fino a questo punto dovrebbe essere comprensibile
 come funziona questo \verb|Makefile|, cosa compie ciascuna regola e quali
