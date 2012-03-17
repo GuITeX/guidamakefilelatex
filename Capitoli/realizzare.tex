@@ -520,13 +520,13 @@ converte il file \verb|nomefile.eps|, in formato \textsc{EPS}, nel file
 \verb|nomefile.pdf|, in formato \textsc{PDF}.  Supponiamo di avere nella
 sottocartella \verb|Immagini| della cartella in cui si trovano il documento
 \LaTeX{}
-principale e il \verb|Makefile| tutte le immagini in formato \textsc{PNG}.  Per
+principale e il \verb|Makefile| tutte le immagini in formato \textsc{PDF}.  Per
 compilare in \textsc{DVI} è quindi necessario convertire tutte le immagini.  Per
 automatizzare la compilazione e la conversione delle immagini è possibile
 scrivere queste regole utilizzando le funzioni apprese nel
 paragrafo~\ref{sec:variabili}:
-\begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PNG}
-vengono convertite in \textsc{EPS} nella compilazione con \LaTeX.},label=lst:png-eps]
+\begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PDF}
+vengono convertite in \textsc{EPS} nella compilazione con \LaTeX.},label=lst:pdf-eps]
 PRINCIPALE 		= documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
 PRINCIPALE_DVI		= $(PRINCIPALE).dvi
@@ -535,9 +535,9 @@ BIBLIOGRAFIA_BIB	= $(BIBLIOGRAFIA).bib
 TUTTI_LATEX		= $(PRINCIPALE_TEX) \
 			  $(BIBLIOGRAFIA_BIB)
 CARTELLA_IMG		= Immagini
-IMMAGINI_PNG		= $(wildcard $(CARTELLA_IMG)/*.png)
+IMMAGINI_PDF		= $(wildcard $(CARTELLA_IMG)/*.pdf)
 IMMAGINI_EPS		= $(patsubst $(CARTELLA_IMG)/%.eps,\
-			  $(CARTELLA_IMG)/%.png, $(IMMAGINI_PNG))
+			  $(CARTELLA_IMG)/%.pdf, $(IMMAGINI_PDF))
 
 .PHONY: dvi immagini-eps
 
@@ -552,29 +552,29 @@ $(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
 
 immagini-eps: $(IMMAGINI_EPS)
 
-Immagini/%.eps: Immagini/%.png
+Immagini/%.eps: Immagini/%.pdf
 	convert $^ $@
 \end{lstlisting}
-La variabile \verb|IMMAGINI_PNG| contiene l'elenco di tutti i file in formato
-\textsc{PNG} presenti nella sottocartella Immagini (il nome della sottocartella
+La variabile \verb|IMMAGINI_PDF| contiene l'elenco di tutti i file in formato
+\textsc{PDF} presenti nella sottocartella Immagini (il nome della sottocartella
 è salvato nella variabile \verb|CARTELLA_IMG| in modo che sarà sufficiente
 cambiare solo questo valore per cartelle con nomi differenti).  La variabile
 \verb|IMMAGINI_EPS|, invece, contiene l'elenco dei degli stessi file in formato
-\textsc{PNG}, ma questa volta con estensione \verb|.eps| (abbiamo utilizzato la
+\textsc{PDF}, ma questa volta con estensione \verb|.eps| (abbiamo utilizzato la
 funzione \verb|patsubst| per eseguire la sostituzione).  In questo
 \verb|Makefile| è presente una regola con una definizione un po' particolare:
 \begin{lstlisting}
-Immagini/%.eps: Immagini/%.png
+Immagini/%.eps: Immagini/%.pdf
 	convert $^ $@
 \end{lstlisting}
 Il prerequisito di questa regola è un qualsiasi file della sottocartella
-\verb|Immagini| con estensione \verb|.png|, l'obiettivo, però, non è un
+\verb|Immagini| con estensione \verb|.pdf|, l'obiettivo, però, non è un
 qualsiasi file della sottocartella \verb|Immagini| con estensione \verb|.eps|,
 bensì il file che ha lo stesso nome base del prerequisito ed estensione
 \verb|.eps|.\footnote{Il metacarattere \texttt{\%} è stato introdotto nel
   paragrafo~\ref{sec:variabili}.}
 Con questa regola verranno dunque generati solo file con estensione \verb|.eps|
-e nome base uguale a quello di file in formato \textsc{PNG} presente nella
+e nome base uguale a quello di file in formato \textsc{PDF} presente nella
 sottocartella \verb|Immagini|.  Il comando eseguito nella regola è
 \begin{lstlisting}
 	convert $^ $@
@@ -583,16 +583,16 @@ Le due variabili \verb|$^| e \verb|$@| sono delle variabili dette automatiche%
 \footnote{Per un elenco esaustivo di queste variabili vedi
   \textcite[112]{gnu:make}.}
 e che hanno un significato speciale: la prima indica tutti i prerequisiti della
-regola (in questo caso indica solo il file \textsc{PNG} che ha lo stesso nome
+regola (in questo caso indica solo il file \textsc{PDF} che ha lo stesso nome
 dell'obiettivo), la seconda indica l'obiettivo della regola (in questo caso
 l'immagine \textsc{EPS} da generare).  Se volessimo convertire un determinato
-file chiamato, supponiamo, \verb|immagine.png| in formato \textsc{EPS} potremmo
+file chiamato, supponiamo, \verb|immagine.pdf| in formato \textsc{EPS} potremmo
 utilizzare il comando nel terminale:
 \begin{verbatim}
 make immagine.eps
 \end{verbatim}
 Per come è scritta la regola con obiettivo \verb|$(PRINCIPALE_DVI)|
-nel \verb|Makefile| del codice~\ref{lst:png-eps} non è però necessario
+nel \verb|Makefile| del codice~\ref{lst:pdf-eps} non è però necessario
 convertire una a una le immagini quando si vuole generare il documento in
 formato \textsc{DVI}.  Infatti, compilando con il comando
 \begin{verbatim}
@@ -601,7 +601,7 @@ make dvi
 il programma \verb|make| si preoccupa di verificare se tutti i prerequisiti
 elencati in questa regola sono aggiornati.  Uno di essi è \verb|immagini-eps|
 che è un phony target: \verb|immagini-eps| ha il compito di convertire tutte le
-immagini in formato \textsc{PNG} presenti nella sottocartella \verb|Immagini|
+immagini in formato \textsc{PDF} presenti nella sottocartella \verb|Immagini|
 nel formato \textsc{EPS}, adatto per l'inclusione di immagini nel documento
 finale \textsc{DVI}.
 
@@ -609,34 +609,31 @@ Riportiamo ora un \verb|Makefile| ancora più complesso di quelli visti fino ad
 adesso. Immaginiamo di avere in una cartella il file \verb|documento.tex| come
 file \LaTeX{}
 principale, \verb|bibliografia.bib| come raccolta dei riferimenti bibliografici.
-Nelle sottocartelle \verb|Capitolo1| e \verb|Capitolo2| sono presenti vari file
-\verb|.tex| inclusi in \verb|documento.tex|; nella sottocartella
-\verb|Immagini|, invece, sono presenti immagini nel solo formato \textsc{PNG}
-che saranno eventualmente convertite nel formato \textsc{EPS} nel caso di
-compilazione con \LaTeX.  Un \verb|Makefile| per compilare questo progetto
-potrebbe apparire così:
+Nella sottocartella \verb|Capitoli| sono presenti vari file \verb|.tex| inclusi
+in \verb|documento.tex|; nella sottocartella \verb|Immagini|, invece, sono
+presenti immagini nel solo formato \textsc{PDF} che saranno eventualmente
+convertite nel formato \textsc{EPS} nel caso di compilazione con \LaTeX.  Un
+\verb|Makefile| per compilare questo progetto potrebbe apparire così:
 \begin{lstlisting}[caption={Un \texttt{Makefile} complesso.},
 label=lst:complesso]
 PRINCIPALE 		= documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
 PRINCIPALE_DVI		= $(PRINCIPALE).dvi
 PRINCIPALE_PDF		= $(PRINCIPALE).pdf
-CAPITOLO1_TEX		= $(wildcard Capitolo1/*.tex)
-CAPITOLO2_TEX		= $(wildcard Capitolo2/*.tex)
+CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
 BIBLIOGRAFIA		= bibliografia
 BIBLIOGRAFIA_BIB	= $(BIBLIOGRAFIA).bib
 TUTTI_LATEX		= $(PRINCIPALE_TEX) \
 			  $(BIBLIOGRAFIA_BIB) \
-			  $(CAPITOLO1_TEX) \
-			  $(CAPITOLO2_TEX)
+			  $(CAPITOLI_TEX)
+IMMAGINI_PDF		= $(wildcard Immagini/*.pdf)
+IMMAGINI_EPS		= $(patsubst Immagini/%.eps,\
+			  Immagini/%.pdf, $(IMMAGINI_PDF))
 FILE_CLEAN		= *.aux *.bbl *.blg *.brf *.idx \
 			  *.ilg *.ind *.log
 FILE_DISTCLEAN		= $(PRINCIPALE_DVI) \
 			  $(PRINCIPALE_PDF) \
 			  $(IMMAGINI_EPS)
-IMMAGINI_PNG		= $(wildcard Immagini/*.png)
-IMMAGINI_EPS		= $(patsubst Immagini/%.eps,\
-			  Immagini/%.png, $(IMMAGINI_PNG))
 
 .PHONY: dvi pdf distclean clean immagini-eps
 
@@ -651,7 +648,7 @@ $(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
 	latex $(PRINCIPALE)
 	latex $(PRINCIPALE)
 
-$(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PNG)
+$(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
 	pdflatex $(PRINCIPALE)
 	bibtex $(PRINCIPALE)
 	makeindex $(PRINCIPALE)
@@ -660,7 +657,7 @@ $(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PNG)
 
 immagini-eps: $(IMMAGINI_EPS)
 
-Immagini/%.eps: Immagini/%.png
+Immagini/%.eps: Immagini/%.pdf
 	convert $^ $@
 
 distclean: clean
@@ -676,12 +673,12 @@ clean:
     \node (dvi) [rounded corners,draw] {\texttt{\$(PRINCIPALE\_DVI)}}
       child {node {\texttt{\$(TUTTI\_LATEX)}}}
       child {node[rounded corners,draw] {\texttt{\$(IMMAGINI\_EPS)}}
-        child {node {\texttt{\$(IMMAGINI\_PNG)}}}
+        child {node {\texttt{\$(IMMAGINI\_PDF)}}}
       };
     \node at ($(dvi)+(7,0)$) [rounded corners,draw]
       {\texttt{\$(PRINCIPALE\_PDF)}}
       child {node {\texttt{\$(TUTTI\_LATEX)}}}
-      child {node {\texttt{\$(IMMAGINI\_PNG)}}};
+      child {node {\texttt{\$(IMMAGINI\_PDF)}}};
   \end{tikzpicture}
   \caption{Grafo ad albero che rappresenta le dipendenze fra i file del
     \texttt{Makefile} del codice~\ref{lst:complesso}, eccetto i phony target.}
