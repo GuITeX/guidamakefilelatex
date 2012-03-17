@@ -6,15 +6,12 @@ MAIN_PDF		= $(MAIN).pdf
 BIBLIO			= bibliografia
 BIBLIO_BIB		= $(BIBLIO).bib
 CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
-CAPITOLI_TEMP		= $(addsuffix ~, $(CAPITOLI_TEX))
 INIZIALEFINALE_TEX	= $(wildcard MaterialeInizialeFinale/*.tex)
-INIZIALEFINALE_TEMP	= $(addsuffix ~, $(INIZIALEFINALE_FILE))
 SHELL			= /bin/sh
 ALL_TEX			= $(MAIN_TEX) $(CAPITOLI_TEX) $(INIZIALEFINALE_TEX) \
 			  $(BIBLIO_BIB)
 CLEAN_FILES		= *.aux *.bbl *.bcf *.blg *-blx.bib *.brf *.fdb_latexmk \
-			  *.idx *.ilg *.ind *.log *.out *.run.xml *.toc *~ \
-			  $(INTRO_TEMP) $(REALIZZARE_TEMP)
+			  *.idx *.ilg *.ind *.log *.out *.run.xml *.toc *~
 DISTCLEAN_FILES		= $(MAIN_PDF) $(MAIN_DVI)
 TODAY			= $(shell date "+%Y%m%d.%H%M%S")
 
@@ -31,7 +28,7 @@ $(MAIN_DVI): $(ALL_TEX)
 	latexmk $(MAIN)
 
 dist: distclean
-	cd ..; tar cvfzps $(MAIN)-$(TODAY).tar.gz $(CARTELLA)/
+	cd ..; tar cvzpf $(MAIN)-$(TODAY).tar.gz --exclude-vcs --exclude $(CARTELLA)/auto $(CARTELLA)/
 
 clean:
 	rm -f $(CLEAN_FILES)
