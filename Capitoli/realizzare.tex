@@ -9,7 +9,7 @@ Un \verb|Makefile| basilare è composto essenzialmente da \emph{regole} (chiamat
 in inglese \emph{rules}) che hanno la seguente struttura (vedi
 \textcite[3]{gnu:make}):
 \begin{lstlisting}[showtabs=true,tab=\rightarrowfill,caption={Struttura di una
-regola},label=lst:rule]
+regola.},label=lst:rule]
 obiettivo: prerequisiti
 	comandi
 	...
@@ -31,7 +31,8 @@ regole possono non avere alcun prerequisito.
 Il programma \verb|make| conosce i comandi necessari per eseguire una regola
 leggendoli dall'elenco dei \emph{comandi}.  I comandi di ciascuna regola
 \emph{devono necessariamente} essere preceduti da una tabulazione (nel
-codice~\ref{lst:rule} è evidenziata da una lunga linea), non da spazi altrimenti
+codice~\ref{lst:rule} è evidenziata dalla freccia
+\lstinline[showtabs=true,tab=\rightarrowfill]{	}), non da spazi altrimenti
 verrà segnalato un errore.
 
 \begin{figure}
@@ -148,8 +149,7 @@ make -B <obiettivo>
 
 Passiamo ora alla pratica vedendo un esempio di \verb|Makefile| molto semplice
 per compilare un documento \LaTeX{}:
-\begin{lstlisting}[caption={Un semplice \texttt{Makefile}},label=lst:base,
-showtabs=true,tab=\rightarrowfill]
+\begin{lstlisting}[caption={Un semplice \texttt{Makefile}.},label=lst:base]
 documento.dvi: documento.tex
 	latex documento
 \end{lstlisting}
@@ -212,7 +212,7 @@ e un'altra per compilarlo con \textsc{PDF}\LaTeX, per poter scegliere fra un
 file di output in formato \textsc{DVI} o \textsc{PDF}.  In questo caso il
 \verb|Makefile| apparirebbe così:
 \begin{lstlisting}[caption={La prima regola permette di compilare un documento con
-\LaTeX, la seconda con \textsc{PDF}\LaTeX},label=lst:dvi-pdf]
+\LaTeX, la seconda con \textsc{PDF}\LaTeX.},label=lst:dvi-pdf]
 documento.dvi: documento.tex bibliografia.bib
 	latex documento
 	bibtex documento
@@ -282,8 +282,9 @@ presenza di un eventuale file \verb|clean|.
 
 I phony target possono essere anche usati per creare una sorta di \emph{alias}
 di altre regole.  Per esempio, inserendo il seguente
-\begin{lstlisting}[caption=I prerequisiti della regola dell'obiettivo \texttt{.PHONY}
-sono i nomi dei phony target che vengono successivamente specificati,label=lst:phony]
+\begin{lstlisting}[caption={I prerequisiti della regola dell'obiettivo
+\texttt{.PHONY} sono i nomi dei phony target che vengono successivamente
+specificati.},label=lst:phony]
 .PHONY: dvi pdf
 
 dvi: documento.dvi
@@ -386,7 +387,7 @@ trovano nella stessa cartella in cui è posizionato il seguente
 \verb|Makefile|:\footnote{Parte del \texttt{Makefile} è ripreso da quello
   presente in \textcite[61]{caucci:tabelle}.}
 \begin{lstlisting}[caption={Esempio di \texttt{Makefile} che utilizza le
-variabili},label=lst:variabili]
+variabili.},label=lst:variabili]
 PRINCIPALE 		= documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
 PRINCIPALE_DVI		= $(PRINCIPALE).dvi
@@ -525,7 +526,7 @@ automatizzare la compilazione e la conversione delle immagini è possibile
 scrivere queste regole utilizzando le funzioni apprese nel
 paragrafo~\ref{sec:variabili}:
 \begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PNG}
-vengono convertite in \textsc{EPS} nella compilazione con \LaTeX},label=lst:png-eps]
+vengono convertite in \textsc{EPS} nella compilazione con \LaTeX.},label=lst:png-eps]
 PRINCIPALE 		= documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
 PRINCIPALE_DVI		= $(PRINCIPALE).dvi
@@ -614,7 +615,8 @@ Nelle sottocartelle \verb|Capitolo1| e \verb|Capitolo2| sono presenti vari file
 che saranno eventualmente convertite nel formato \textsc{EPS} nel caso di
 compilazione con \LaTeX.  Un \verb|Makefile| per compilare questo progetto
 potrebbe apparire così:
-\begin{lstlisting}
+\begin{lstlisting}[caption={Un \texttt{Makefile} complesso.},
+label=lst:complesso]
 PRINCIPALE 		= documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
 PRINCIPALE_DVI		= $(PRINCIPALE).dvi
@@ -649,7 +651,7 @@ $(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
 	latex $(PRINCIPALE)
 	latex $(PRINCIPALE)
 
-$(PRINCIPALE_PDF): $(TUTTI_LATEX)
+$(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PNG)
 	pdflatex $(PRINCIPALE)
 	bibtex $(PRINCIPALE)
 	makeindex $(PRINCIPALE)
@@ -667,9 +669,30 @@ distclean: clean
 clean:
 	rm -f $(FILE_CLEAN)
 \end{lstlisting}
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[level 1/.style={sibling distance=90},
+    edge from parent/.style={draw,<-}]
+    \node (dvi) [rounded corners,draw] {\texttt{\$(PRINCIPALE\_DVI)}}
+      child {node {\texttt{\$(TUTTI\_LATEX)}}}
+      child {node[rounded corners,draw] {\texttt{\$(IMMAGINI\_EPS)}}
+        child {node {\texttt{\$(IMMAGINI\_PNG)}}}
+      };
+    \node at ($(dvi)+(7,0)$) [rounded corners,draw]
+      {\texttt{\$(PRINCIPALE\_PDF)}}
+      child {node {\texttt{\$(TUTTI\_LATEX)}}}
+      child {node {\texttt{\$(IMMAGINI\_PNG)}}};
+  \end{tikzpicture}
+  \caption{Grafo ad albero che rappresenta le dipendenze fra i file del
+    \texttt{Makefile} del codice~\ref{lst:complesso}, eccetto i phony target.}
+  \label{fig:grafo-albero2}
+\end{figure}
 Con gli strumenti acquisiti fino a questo punto dovrebbe essere comprensibile
 come funziona questo \verb|Makefile|, cosa compie ciascuna regola e quali
-comandi bisogna dare nel terminale per compilare il documento.
+comandi bisogna dare nel terminale per compilare il documento.  Per maggiore
+chiarezza, nella figura~\ref{fig:grafo-albero2} è rappresentato il grafo ad
+albero che descrive le dipendenze fra i file del \verb|Makefile| mostrato nel
+codice~\ref{lst:complesso}.
 
 I \verb|Makefile| dei programmi spesso raggiungono svariate migliaia di righe di
 codice, per quanto riguarda un documento \LaTeX{}
