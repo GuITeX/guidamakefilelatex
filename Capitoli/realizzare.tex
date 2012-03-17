@@ -36,16 +36,13 @@ verrà segnalato un errore.
 
 \begin{figure}
   \centering
-  % TODO: provare a usare le funzioni native di TikZ per creare grafi ad albero
-  \begin{tikzpicture}
-    \node (p1) at (0,0) {\verb|prerequisito1|};
-    \node[rounded corners,draw] (p2) at (4,0) {\verb|prerequisito2|};
-    \node (p3) at ($(p2)-(0,1)$) {\verb|prerequisito3|};
-    \node[rounded corners,draw] (o1) at ($(p1)!0.5!(p2)+(0,1)$)
-                                {\verb|obiettivo1|};
-    \draw[->] (p1) -- (o1);
-    \draw[->] (p2) -- (o1);
-    \draw[->] (p3) -- (p2);
+  \begin{tikzpicture}[level 1/.style={sibling distance=100},
+    edge from parent/.style={draw,<-}]
+    \node[rounded corners,draw] {\texttt{obiettivo1}}
+         child { node {\texttt{prerequisito1}}}
+         child { node[rounded corners,draw] {\texttt{prerequisito2}}
+           child {node {\texttt{prerequisito3}}}
+         };
   \end{tikzpicture}
   \caption{Grafo ad albero che illustra le dipendenze fra i file.  I file che si
     trovano alla coda di una freccia, evidenziati in un rettangolo,
@@ -472,8 +469,7 @@ si indica un elenco di tutti i file, presenti nella cartella, con estensione
 hanno tutti uno stesso formato o uno stesso schema nel nome.
 
 Un ultimo strumento importante sono le funzioni per le sostituzioni di
-stringhe.%
-\footnote{Per un elenco esaustivo di queste funzioni vedi
+stringhe.\footnote{Per un elenco esaustivo di queste funzioni vedi
   \textcite[80]{gnu:make}.}  In particolare la funzione
 \begin{lstlisting}
 $(patsubst modello,sostituzione,testo)
@@ -514,9 +510,15 @@ sintassi
 convert fileinput fileoutput
 \end{verbatim}
 si converte il primo file specificato, cioè \verb|fileinput|, nel secondo file,
-chiamato in questo caso \verb|fileoutput|.  Per esempio supponiamo di avere
-nella sottocartella \verb|Immagini| della cartella in cui si trovano il
-documento \LaTeX{}
+chiamato in questo caso \verb|fileoutput|.  Il formato dei due file, di input e
+output, viene riconosciuto dalle estensioni dei file.  Per esempio, il comando
+\begin{verbatim}
+convert nomefile.eps nomefile.pdf
+\end{verbatim}
+converte il file \verb|nomefile.eps|, in formato \textsc{EPS}, nel file
+\verb|nomefile.pdf|, in formato \textsc{PDF}.  Supponiamo di avere nella
+sottocartella \verb|Immagini| della cartella in cui si trovano il documento
+\LaTeX{}
 principale e il \verb|Makefile| tutte le immagini in formato \textsc{PNG}.  Per
 compilare in \textsc{DVI} è quindi necessario convertire tutte le immagini.  Per
 automatizzare la compilazione e la conversione delle immagini è possibile
