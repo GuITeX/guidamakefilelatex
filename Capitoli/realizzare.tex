@@ -492,6 +492,77 @@ img1.eps img3.eps
 seguono lo schema del modello per cui \verb|img1.png| e \verb|img3.png| vengono
 sostituite rispettivamente con \verb|img1.eps| e \verb|img3.eps|.
 
+\subsection{Uso delle variabili nelle regole}
+\label{sec:uso-variabili}
+
+Abbiamo imparato che per richiamare una variabile definita all'interno del
+\verb|Makefile| bisogna usare la sintassi
+\verb|$(NOME_DELLA_VARIABILE)|.  Qualche volta, però, potremmo voler richiamare
+una variabile della shell.  Nella maggior parte delle shell Unix questo si fa
+usando proprio il metacarattere \verb|$|,
+però per far capire a \verb|make| che in questo caso vogliamo una variabile
+della shell e non del \verb|Makefile| dobbiamo raddoppiare il simbolo di dollaro
+\verb|$|: \verb|$$|.
+
+Nel seguente esempio, tratto da~\textcite[43]{gnu:make},
+\begin{lstlisting}
+ELENCO = uno due tre
+foo:
+	for i in $(ELENCO); do \
+	  echo $$i; \
+	done
+\end{lstlisting}
+la variabile \verb|ELENCO| è stata richiamata normalmente con
+\verb|$(ELENCO)| poiché è una variabile del \verb|Makefile|, mentre la variabile
+\verb|i| del \verb|for| è stata richiamata con \verb|$$i|
+poiché è una variabile della shell.
+
+Osserviamo che in un \verb|Makefile| i comandi che devono essere eseguiti in una
+regola vanno scritti, normalmente, uno su ciascuna riga.  Anche se generalmente
+i cicli \verb|for| delle shell Unix sono scritti nella forma
+\begin{lstlisting}[language=bash]
+for <variabile> in <elenco>; do
+  comandi
+  ...
+  ...
+done
+\end{lstlisting}
+si tratta in realtà di \emph{un unico} comando e quindi nel \verb|Makefile|
+andrebbe scritto su un'unica riga in questo modo
+\begin{lstlisting}[language=bash]
+for <variabile> in <elenco>; do comandi ; ... ; ... ; done
+\end{lstlisting}
+Per rendere il codice più leggibile si può effettuare l'escape del carattere di
+nuova linea (vedi paragrafo~\ref{sec:le-regole}) come fatto nell'esempio
+precedente.  Bisogna prendere questo accorgimento anche quando in una regola si
+vogliono eseguire gli altri tipi di cicli e verifiche condizionali delle shell
+quali \verb|if|, \verb|while| e \verb|until|.
+
+\subsection{Sostituzione di comando}
+\label{sec:sostituzione-comando}
+
+Nella principali shell Unix si può effettuare la sostituzione di comando con la
+sintassi \verb|`...`| e questa può essere usata anche all'interno di un
+\verb|Makefile|.  Inoltre nella bash e nella ksh la sostituzione di comando può
+essere eseguita con la sintassi \verb|$(...)| che però nei \verb|Makefile|
+abbiamo visto che si usa per richiamare il valore delle variabili.  La
+sostituzione di comando può essere eseguita, invece, sfruttando la funzione
+\verb|shell| in questo modo:
+\begin{lstlisting}
+$(shell <comando>)
+\end{lstlisting}
+sostituendo a \verb|<comando>| l'effettivo comando da eseguire.  Il comando
+viene passato alla shell impostata con la variabile \verb|SHELL| che in maniera
+predefinita è la \verb|sh|.
+
+Per esempio, se si vuole impostare una variabile che sia uguale alla data
+attuale si può usare una delle due seguenti alternative
+\begin{lstlisting}
+ORA = `date "+%Y%m%d-%H%M%S"`
+ORA = $(shell date "+%Y%m%d-%H%M%S")
+\end{lstlisting}
+L'argomento di \verb|date| può, naturalmente, essere cambiato in modo da
+adattarlo alle proprie esigenze.
 
 \section{Un \texttt{Makefile} ancora più complesso}
 Il codice~\ref{lst:variabili} è già un \verb|Makefile| abbastanza elaborato e
@@ -690,6 +761,10 @@ comandi bisogna dare nel terminale per compilare il documento.  Per maggiore
 chiarezza, nella figura~\ref{fig:grafo-albero2} è rappresentato il grafo ad
 albero che descrive le dipendenze fra i file del \verb|Makefile| mostrato nel
 codice~\ref{lst:complesso}.
+
+
+\section{Conclusione}
+\label{sec:conclusione}
 
 I \verb|Makefile| dei programmi spesso raggiungono svariate migliaia di righe di
 codice, per quanto riguarda un documento \LaTeX{}
