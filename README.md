@@ -4,21 +4,22 @@ internet http://creativecommons.org/licenses/by/3.0/deed.it.
 
 Per compilare il documento in formato DVI, dopo aver scompattato l'archivio e 
 aver aperto un terminale in questa cartella, si può dare il comando
-
-	make dvi
-
+````
+$ make dvi
+````
 Per compilare in formato PDF dare il comando
-
-	make pdf
-
+````
+$ make pdf
+````
 Per cancellare i file temporanei usare
-
-	make clean
-
+````
+$ make clean
+````
 Per cancellare tutti i file, compresi i file di output DVI e PDF, usare
-
-	make distclean
-
+````
+$ make distclean
+````
 Per creare un archivio .tar.gz per distribuire il documento usare
-
-	make dist
+````
+$ make dist
+````

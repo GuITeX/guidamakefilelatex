@@ -5,11 +5,11 @@
 
 \usepackage{lmodern}
 \usepackage[font=small,format=hang,labelfont=bf]{caption}
-\usepackage{keystroke,emptypage,layaureo,quoting}
+\usepackage{emptypage,layaureo,quoting}
 \usepackage{listings} % per inserire codice
 \usepackage[autostyle=true]{csquotes}
-\usepackage[style=numeric,backref,hyperref,abbreviate=false,backend=biber]{biblatex}
-\usepackage{tikz}
+\usepackage[style=authoryear,backref,hyperref,backend=biber]{biblatex}
+\usepackage{menukeys} % `menukeys' carica automaticamente `tikz'
 \usepackage{hyperref}
 
 %%% Per avere i nomi dei Codici in italiano (vedi L'arte di scrivere codici con
@@ -23,7 +23,7 @@
 \usetikzlibrary{calc}
 
 \hypersetup{
-  colorlinks=true,
+  hidelinks,
   pdftitle={Introduzione ai Makefile per compilare documenti LaTeX},
   pdfauthor={Mosè Giordano},
   breaklinks=true, % permette di spezzare i link su più righe
@@ -63,11 +63,11 @@
 \input{Capitoli/realizzare}
 
 %\appendix %%%%% TODO: scrivere le appendici %%%%%
-%\section{Introduzione all'uso del terminale} %%%%% TODO: scrivere %%%%%
 
 %\section{Convenzioni GNU nei \texttt{Makefile}} %%%%% TODO: scrivere %%%%%
 
-%\section{Vantaggi/svantaggi} %%%%% TODO: valutare se è necessario ed eventualmente scriverlo %%%%%
+%\section{Vantaggi/svantaggi} %%%%% TODO: valutare se è necessario ed
+%eventualmente scriverlo, con eventuali confronti con `latexmk' e `arara' %%%%%
 
 %\section{Consigli} %%%%% TODO: scrivere %%%%%
 

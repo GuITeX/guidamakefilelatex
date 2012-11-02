@@ -2,67 +2,102 @@
 \chapter{Introduzione}
 \label{cha:introduzione}
 
-Quando si scrive un documento \LaTeX{}
-molto elaborato, potrebbe diventare necessario dare numerosi comandi in fase di
-compilazione, comandi che a volte risultano molto lunghi o di difficile
-memorizzazione.  In questo caso viene in aiuto la utility dei sistemi UNIX
-\verb|make| che si utilizza da linea di comando.  Nella voce di Wikipedia in
-lingua italiana di \verb|make| (\url{http://it.wikipedia.org/wiki/Make})
-possiamo leggere la seguente descrizione:
+\section{Cos'è \texttt{make}}
+\label{sec:cose-make}
+
+La compilazione di un semplice documento \LaTeX{}
+richiede l'esecuzione di uno o due comandi, che generalmente possono essere
+facilmente eseguiti all'interno del proprio editor di testo preferito.
+All'aumentare delle dimensioni del sorgente si può decidere di suddividere il
+sorgente in differenti file di dimensioni più piccole, magari ciascuno contenete
+il codice di un intero capitolo, e più facili da gestire.  Anche questa
+situazione non costituisce normalmente un grosso problema perché i più diffusi
+editor di testo sono in grado di gestire automaticamente progetti di questo
+tipo.  L'utilizzo di alcuni pacchetti richiede, però, l'esecuzione di comandi
+particolari non accessibili all'interno dell'editor, oppure potrebbe esserci
+bisogno di esegui dei comandi su file completamente estranei all'infrastruttura
+\LaTeX{}.
+Per risolvere alcuni di questi problemi sono stati sviluppati recentemente dei
+programmi appositi, come
+\texttt{latexmk}\footnote{Per maggiori informazioni su questo programma visita
+  il sito \url{http://www.phys.psu.edu/~collins/software/latexmk-jcc/}.}
+e
+\texttt{arara}.\footnote{Per maggiori informazioni su questo programma visita il
+  sito \url{http://cereda.github.com/arara/}.}
+In questa guida, invece, ci occuperemo di un programma creato nel 1977 da Stuart
+Feldman: \texttt{make}.  Nella voce di Wikipedia in lingua italiana di
+\texttt{make} (\url{https://it.wikipedia.org/wiki/Make}) possiamo leggere la
+seguente descrizione:
 \begin{quoting}
   Il \textbf{make} è un'utility [...] che automatizza il processo di creazione
   di file che dipendono da altri file, risolvendo le dipendenze e invocando
   programmi esterni per il lavoro necessario.
 \end{quoting}
-\verb|make| è molto usata nella compilazione dei programmi, specie nell'ambiente
-del software libero, ma può essere utilmente sfruttata per automatizzare e
-semplificare anche la compilazione di sorgenti \LaTeX{}
-e anche altre operazioni quali la cancellazione di file temporanei non necessari
-e la creazione di un archivio compresso per conservare i file sorgenti.  Non ci
-sono limiti alla fantasia.
+\texttt{make} è molto usato nella compilazione dei programmi scritti in C o C++,
+specie nell'ambiente del software libero, ma può essere utilmente sfruttato per
+automatizzare e semplificare anche la compilazione di complessi documenti
+\LaTeX{}.
+Rispetto a software come \texttt{arara}, \texttt{make} permette di svolgere, su
+richiesta, altre operazioni quali la cancellazione di file temporanei non
+necessari e la creazione di un archivio compresso per conservare i file
+sorgenti.\footnote{\texttt{arara} permette di eseguire qualsiasi operazione,
+  però queste vengono eseguite tutte, ogni volta che viene invocato
+  \texttt{arara}, non è possibile scegliere selettivamente quali operazioni
+  svolgere.}  Non ci sono limiti alla fantasia.
 
-Per compilare un sorgente, \verb|make| non fa altro che leggere le istruzioni
-presenti in un file di testo, chiamato necessariamente
-\verb|Makefile|\footnote{In realtà potrebbe avere anche altri nomi, questo è
-  quello consigliato, vedi \textcite[12]{gnu:make}.}
-e scritto con una particolare sintassi.  I \verb|Makefile| sono dei file di
+Il programma \texttt{make} non fa altro che leggere le istruzioni presenti in un
+file di testo, chiamato necessariamente
+\texttt{Makefile}\footnote{In realtà potrebbe avere anche altri nomi, questo è
+  quello consigliato e riconosciuto in maniera predefinita, per ulteriori
+  informazioni vedi~\textcite[12]{gnu:make}.}
+e scritto con una particolare sintassi.  I \texttt{Makefile} sono dei file di
 testo puro, per scriverli c'è bisogno quindi di un normale editor di testo come
 Gedit o Kate per GNU/Linux, TextEdit per Mac OS X.
 
-Di \verb|make| esistono alcune versioni, le più famose sono \verb|GNU make| e
-\verb|BSD make|.  In questa guida verrà spiegato come scrivere \verb|Makefile|
-elementari per \verb|GNU make|, cioè il dialetto presente nei sistemi GNU/Linux
-e Mac OS X.
+Di \texttt{make} esistono alcune versioni, le più famose sono \texttt{GNU make},
+sviluppata da Richard Stallman e Roland McGrath, e \texttt{BSD make}.  In questa
+guida verrà spiegato come scrivere \texttt{Makefile} elementari per
+\texttt{GNU make}, il dialetto presente nei sistemi GNU/Linux e Mac OS X.
+Questo programma si utilizza da linea di comando, chi non dovesse avere
+familiarità con il terminale può leggere la guida
+di~\textcite{giacomelli:console}.  La guida di riferimento per
+\texttt{GNU make}, a cui rimando per qualsiasi approfondimento,
+è~\textcite{gnu:make}, ma è orientata soprattutto a programmatori che sviluppano
+software C, la presente guida vuole essere invece una semplice introduzione a
+\texttt{make} per gli utenti di \LaTeX{}.
 
-\textbf{Nota}: da qui in poi (tranne nel Paragrafo \ref{sec:installazione}),
-tutti i comandi da eseguire nel terminale devono essere lanciati trovandosi
-nella stessa cartella in cui è presente il \verb|Makefile| che si desidera
-utilizzare, se non diversamente specificato.
-
+Con questa guida non voglio convincere nessuno che \texttt{make} sia il
+programma migliore in assoluto, perché sicuramente \emph{non} lo è, ha i suoi
+pregi e anche qualche difetto.  Qui voglio solo illustrare le sue funzioni,
+starà poi al lettore decidere se \texttt{make} si adatta alle proprie necessità.
 
 \section{Installazione di \texttt{make}}
 \label{sec:installazione}
 
-Per ottenere \verb|make| in ambiente GNU/Linux, se non già presente nel sistema
-bisogna installare il pacchetto omonimo utilizzando il gestore pacchetti della
-propria distribuzione.  Per esempio, per Debian e sistemi derivati (come Ubuntu)
-bisogna dare il comando
+Per ottenere \texttt{make} in ambiente GNU/Linux, se non già presente nel
+sistema bisogna installare il pacchetto omonimo utilizzando il gestore pacchetti
+della propria distribuzione.  Per esempio, per Debian e sistemi derivati (come
+Ubuntu) bisogna dare il comando
 \begin{verbatim}
-apt-get install make
+# apt-get install make
 \end{verbatim}
-con i diritti di root.  In Fedora e derivate, invece, bisogna eseguire il
-comando
+con i diritti di amministratore.  In Fedora e derivate, invece, bisogna eseguire
+il comando
 \begin{verbatim}
-yum install make
+# yum install make
 \end{verbatim}
 
-Sui sistemi Mac OS X, \verb|make| dovrebbe essere preinstallato.  Per
+Sui sistemi Mac OS X, \texttt{make} dovrebbe essere preinstallato.  Per
 verificarlo si può dare il comando nel Terminale
 \begin{verbatim}
-make --version
-\end{verbatim}
+$ make --version
+\end{verbatim} % $
 che restituisce la versione del programma installata nel sistema.  Se il
 programma non è presente verrà mostrato un messaggio di errore.
+
+\textbf{Nota}: da qui in poi tutti i comandi da eseguire nel terminale devono
+essere lanciati trovandosi nella stessa cartella in cui è presente il
+\texttt{Makefile} che si desidera utilizzare, se non diversamente specificato.
 
 %%% Local Variables:
 %%% mode: latex

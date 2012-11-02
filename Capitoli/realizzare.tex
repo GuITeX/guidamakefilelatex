@@ -5,9 +5,8 @@
 \section{Le regole}
 \label{sec:le-regole}
 
-Un \verb|Makefile| basilare è composto essenzialmente da \emph{regole} (chiamate
-in inglese \emph{rules}) che hanno la seguente struttura (vedi
-\textcite[3]{gnu:make}):
+Un \texttt{Makefile} basilare è composto essenzialmente da \emph{regole}
+(chiamate in inglese \emph{rules}) che hanno la seguente struttura:
 \begin{lstlisting}[showtabs=true,tab=\rightarrowfill,caption={Struttura di una
 regola.},label=lst:rule]
 obiettivo: prerequisiti
@@ -16,24 +15,70 @@ obiettivo: prerequisiti
 	...
 \end{lstlisting}
 L'\emph{obiettivo} (in inglese \emph{target}), ciò che viene scritto prima dei
-due punti \verb|:|, di norma è il nome del file che verrà generato con la regola
-descritta.  Vedremo nel paragrafo~\ref{sec:phony} in che modo sia possibile
-usare un obiettivo che non sia il nome di un file da creare eseguendo la
-corrispondente regola.
+due punti \texttt{:}, di norma è il nome del file che verrà generato con la
+regola descritta.  Nel paragrafo~\ref{sec:phony} vedremo come usare un obiettivo
+che non sia il nome di un file da creare eseguendo la corrispondente regola.
 
-I \emph{prerequisiti} sono i file che devono essere presenti al momento
-dell'esecuzione di una regola e a partire dai quali viene generato il file
-obiettivo.  Spesso gli obiettivi dipendono da più file, che vengono elencati
-separati da uno spazio.  Per evitare problemi in fase di compilazione è
-conveniente che tutti i file non abbiano degli spazi nel proprio nome.  Le
-regole possono non avere alcun prerequisito.
+I \emph{prerequisiti} (in inglese \emph{prerequisites}) sono i file che devono
+essere presenti al momento dell'esecuzione di una regola e a partire dai quali
+viene generato il file obiettivo.  Spesso gli obiettivi dipendono da più file,
+che vengono elencati separati da uno spazio.  Per evitare problemi in fase di
+compilazione è conveniente che tutti i file non abbiano degli spazi nel proprio
+nome.  Le regole possono non avere alcun prerequisito.
 
-Il programma \verb|make| conosce i comandi necessari per eseguire una regola
+Il programma \texttt{make} conosce i comandi necessari per eseguire una regola
 leggendoli dall'elenco dei \emph{comandi}.  I comandi di ciascuna regola
 \emph{devono necessariamente} essere preceduti da una tabulazione (nel
 codice~\ref{lst:rule} è evidenziata dalla freccia
 \lstinline[showtabs=true,tab=\rightarrowfill]{	}), non da spazi altrimenti
 verrà segnalato un errore.
+
+Un \texttt{Makefile} deve contenere almeno una regola, ma possono essercene
+anche più di una, ciascuna corrispondente a un diverso file da creare, e
+l'ordine con cui le regole compaiono nel \texttt{Makefile} \emph{non} è
+importante.
+
+Un \texttt{Makefile} può contenere anche dei commenti, introdotti dal simbolo
+cancelletto \texttt{\#}: tutto ciò che si trova alla destra di \texttt{\#} sulla
+sua stessa riga viene trattato come commento.  Questo simbolo ha lo stesso
+comportamento del simbolo \texttt{\%} nel linguaggio \LaTeX{}.
+
+Se lo si desidera è possibile suddividere una riga di codice molto lunga su più
+righe inserendo \texttt{\textbackslash{}} seguito da un carattere di nuova linea
+(in pratica bisogna premere il tasto \keys{Invio} subito dopo l'inserimento del
+backslash).  Ciò non è obbligatorio, in quanto non sono posti limiti alla
+lunghezza delle righe di un \texttt{Makefile}, però può aiutare la leggibilità
+del codice.
+
+
+\section{Come funziona \texttt{make}}
+\label{sec:come-funziona}
+
+Tutta la logica di funzionamento di \texttt{make} si basa sul fatto che gli
+obiettivi dipendono dai prerequisiti:
+\emph{quando un prerequisito viene modificato allora probabilmente l'obiettivo
+  deve essere ricreato}.
+Questo meccanismo, forse un po' laborioso e difficile da comprendere
+inizialmente, dovrebbe risultare chiaro più avanti.
+
+Per eseguire la regola che ha per obiettivo il file \texttt{<obiettivo>} bisogna
+invocare \texttt{make} da terminale con il comando
+\begin{verbatim}
+$ make <obiettivo>
+\end{verbatim} % $
+\texttt{make} verifica se è necessario aggiornare l'obiettivo della regola
+corrispondente in questo modo: se l'obiettivo indicato da linea di comando non
+esiste oppure ha una data di ultima modifica precedente almeno a una di quelle
+dei file elencati nei \emph{prerequisiti} è considerato da aggiornare e la
+regola viene eseguita.  In caso contrario (l'obiettivo esiste ed è più recente
+di tutti i prerequisiti) la regola non viene eseguita e sul terminale si leggerà
+il messaggio
+\begin{verbatim}
+make: Nessuna operazione da eseguire per "<obiettivo>".
+\end{verbatim}
+Le istruzioni per aggiornare un obiettivo sono
+presenti nei \emph{comandi}: questi sono passati alla shell, normalmente la
+\texttt{sh}.
 
 \begin{figure}
   \centering
@@ -52,59 +97,22 @@ verrà segnalato un errore.
     regola e sono necessari per la creazione dell'obiettivo.}
   \label{fig:grafo-albero1}
 \end{figure}
-Per scrivere correttamente un \verb|Makefile| risulta utile disegnarsi un grafo
-ad albero che illustri le relazioni che ci sono fra i vari file, individuando
-quali dovranno essere gli obiettivi delle regole e quali saranno i prerequisiti
-delle regole.  Uno stesso file può svolgere il ruolo di prerequisito in una
-regola e di obiettivo in un'altra.  Nell'esempio della
-figura~\ref{fig:grafo-albero1} ci sono due obiettivi, \verb|obiettivo1| e
-\verb|prerequisito2|, per le quali verranno scritte le opportune regole.  I
-prerequisiti di \verb|obiettivo1| sono i file \verb|prerequisito1| e
-\verb|prerequisito2|, l'unico prerequisito di \verb|prerequisito2| è il file
-\verb|prerequisito3|.
+Poiché tutta la logica di funzionamento di \texttt{make} è basata sulle
+dipendenze fra i file, per scrivere correttamente un \texttt{Makefile} risulta
+utile disegnarsi un grafo ad albero che illustri le relazioni che ci sono fra i
+vari file, individuando quali dovranno essere gli obiettivi delle regole e quali
+saranno i prerequisiti delle regole.  Uno stesso file può svolgere il ruolo di
+prerequisito in una regola e di obiettivo in un'altra.  Nell'esempio della
+figura~\ref{fig:grafo-albero1} ci sono due obiettivi, \texttt{obiettivo1} e
+\texttt{prerequisito2}, per le quali verranno scritte le opportune regole.  I
+prerequisiti di \texttt{obiettivo1} sono i file \texttt{prerequisito1} e
+\texttt{prerequisito2}, l'unico prerequisito di \texttt{prerequisito2} è il file
+\texttt{prerequisito3}.
 
-Un \verb|Makefile| deve contenere almeno una regola, ma possono essercene anche
-più di una, ciascuna corrispondente a un diverso file da creare, e l'ordine con
-cui le regole compaiono nel \verb|Makefile| \emph{non} è importante.
-
-Un \verb|Makefile| può contenere, oltre alle regole, anche dei commenti,
-introdotti dal simbolo \verb|#|: tutto ciò che si trova alla destra di \verb|#|
-viene trattato come commento.  Questo simbolo ha lo stesso comportamento del
-simbolo \verb|%| nel linguaggio \LaTeX{}, vedi \textcite[26]{pantieri:latex}.
-
-Se lo si desidera è possibile suddividere una riga di codice molto lunga su più
-righe inserendo \verb|\| seguito da un carattere di nuova linea (in pratica
-bisogna premere il tasto \keystroke{Invio} subito dopo l'inserimento del
-backslash).  Ciò non è comunque obbligatorio, in quanto non sono posti limiti
-alla lunghezza delle righe di un \verb|Makefile|.
-
-
-\section{Come funziona \texttt{make}}
-\label{sec:come-funziona}
-
-Per eseguire la regola che ha per obiettivo il file \verb|<obiettivo>| bisogna
-invocare \verb|make| da terminale con il comando
-\begin{verbatim}
-make <obiettivo>
-\end{verbatim}
-\verb|make| verifica se è necessario aggiornare l'obiettivo della regola
-corrispondente in questo modo: se l'obiettivo indicato da linea di comando non
-esiste oppure ha una data di ultima modifica precedente almeno a una di quelle
-dei file elencati nei \emph{prerequisiti} è considerato da aggiornare e la
-regola viene eseguita.  In caso contrario (l'obiettivo esiste ed è più recente
-di tutti i prerequisiti) la regola non viene eseguita e sul terminale si leggerà
-il messaggio
-\begin{verbatim}
-make: Nessuna operazione da eseguire per "<obiettivo>".
-\end{verbatim}
-Le istruzioni per aggiornare un obiettivo sono
-presenti nei \emph{comandi}: questi sono passati alla shell, normalmente la
-\verb|sh|.
-
-Come detto, uno dei prerequisiti di una regola può essere l'obiettivo di
-un'altra regola.  In questo caso \verb|make| verifica se, prima di eseguire una
-regola, è necessario aggiornare uno o più dei file elencati fra i prerequisiti.
-Nel seguente \verb|Makefile|, corrispondente alla situazione illustrata nella
+Prima di eseguire una regola \texttt{make} verifica se è necessario aggiornare
+uno o più dei file elencati fra i prerequisiti e in questo caso esegue
+automaticamente le eventuali regole associate ai prerequisiti.  Nel seguente
+\texttt{Makefile}, corrispondente alla situazione illustrata nella
 figura~\ref{fig:grafo-albero1},
 \begin{lstlisting}
 obiettivo1: prerequisito1 prerequisito2
@@ -114,82 +122,76 @@ obiettivo1: prerequisito1 prerequisito2
 prerequisito2: prerequisito3
 	comando3
 \end{lstlisting}
-il \verb|prerequisito2| ha una propria regola: dando il comando
+il \texttt{prerequisito2} ha una propria regola: dando il comando
 \begin{verbatim}
-make obiettivo1
-\end{verbatim}
-\verb|make| verifica se è necessario aggiornare, eseguendo il \verb|comando3|
-specificato, il file \verb|prerequisito2| prima di eseguire la regola associata
-all'\verb|obiettivo1|.
+$ make obiettivo1
+\end{verbatim} % $
+\texttt{make} verifica se è necessario aggiornare, eseguendo in maniera
+automatica il \texttt{comando3} specificato, il file \texttt{prerequisito2}
+prima di eseguire la regola associata all'\texttt{obiettivo1}.  Uno dei pregi di
+\texttt{make} è che esso si occupa autonomamente di eseguire tutte le regole che
+servono per preparare i prerequisiti dell'obiettivo che si vuole creare,
+\texttt{obiettivo1} nell'esempio.  Per la buona riuscita di questo processo è
+cruciale la corretta e completa definizione delle dipendenze fra i file.
 
-Tutta la logica di funzionamento di \verb|make| si basa sul fatto che gli
-obiettivi dipendono dai prerequisiti:
-\emph{quando un prerequisito viene modificato allora probabilmente l'obiettivo
-  deve essere ricreato}.
-Questo meccanismo, forse un po' laborioso e difficile da comprendere
-inizialmente, dovrebbe risultare chiaro più avanti.
-
-Se si richiama \verb|make| senza argomenti, cioè si dà solo il comando
+Se si richiama \texttt{make} senza argomenti, cioè si dà solo il comando
 \begin{verbatim}
-make
-\end{verbatim}
-esso procede all'esecuzione della prima regola che trova nel \verb|Makefile|,
-per la precisione la prima regola il cui target non inizia con un punto \verb|.|
+$ make
+\end{verbatim} % $
+esso procede all'esecuzione della prima regola che trova nel \texttt{Makefile},
+per la precisione la prima regola il cui target non inizia con un punto \texttt{.}
 (questo comportamento può essere modificato, vedi \textcite[5]{gnu:make}).
 
-Se si vuole forzare l'esecuzione delle regola \verb|<obiettivo>|, ignorando le
+Se si vuole forzare l'esecuzione delle regola \texttt{<obiettivo>}, ignorando le
 date di modifica dell'obiettivo e dei suoi prerequisiti, bisogna utilizzare
 l'opzione \texttt{-B} in questo modo:
 \begin{verbatim}
-make -B <obiettivo>
-\end{verbatim}
+$ make -B <obiettivo>
+\end{verbatim} % $
 
 \section{Un semplice \texttt{Makefile}}
 \label{sec:makefile-semplice}
 
-Passiamo ora alla pratica vedendo un esempio di \verb|Makefile| molto semplice
-per compilare un documento \LaTeX{}:
+Passiamo ora alla pratica vedendo un esempio di \texttt{Makefile} molto semplice
+per compilare un documento \LaTeX{}.
+Supponiamo che il sorgente sia interamente contenuto nel solo file
+\texttt{documento.tex} e che vogliamo generare il file di output in formato DVI.
+Se il documento non contiene bibliografia, indice, indice analitico, ecc., per
+fare questo è sufficiente eseguire il comando
+\begin{verbatim}
+$ latex documento
+\end{verbatim} % $
+Il \texttt{Makefile} che descrive questa regola è il seguente
 \begin{lstlisting}[caption={Un semplice \texttt{Makefile}.},label=lst:base]
 documento.dvi: documento.tex
 	latex documento
 \end{lstlisting}
-Nel codice~\ref{lst:base}, il file \verb|documento.dvi| è l'\emph{obiettivo},
+Nel codice~\ref{lst:base}, il file \texttt{documento.dvi} è l'\emph{obiettivo},
 cioè il file ottenuto dopo la compilazione, il \emph{prerequisito} è il solo
-file \verb|documento.tex| e l'unico comando che deve essere eseguito è
-\verb|latex documento|.
-
-Per invocare \verb|make|, dopo aver aperto un terminale ed essersi spostati con
-il comando \verb|cd| nella cartella in cui si trova il \verb|Makefile|, bisogna
-utilizzare il comando
-\begin{verbatim}
-make obiettivo
-\end{verbatim}
-sostituendo a \verb|obiettivo| il nome dell'obiettivo che specificato nella
-regola che si desidera eseguire.  In questo caso dovremo eseguire il comando
+file \texttt{documento.tex} e l'unico comando che deve essere eseguito è
+\texttt{latex documento}.  Per generare il file di output \texttt{documento.dvi}
+bisogna eseguire il comando
 \begin{verbatim}
 make documento.dvi
 \end{verbatim}
-oppure semplicemente \verb|make| se la regola è la prima in ordine di
-apparizione nel \verb|Makefile|.
-
+oppure semplicemente \texttt{make} se la regola è la prima in ordine di
+apparizione nel \texttt{Makefile}.
 
 \section{Un \texttt{Makefile} un po' più elaborato}
 \label{sec:makefile-elaborato}
 
-Se nel nostro file di esempio \verb|documento.tex| è presente una bibliografia
+Se nel nostro file di esempio \texttt{documento.tex} è presente una bibliografia
 realizzata con \textsc{Bib}\TeX, per compilare il documento è necessario (vedi
 \textcite[120]{pantieri:latex}) eseguire i comandi
 \begin{verbatim}
-latex documento
-bibtex documento
-latex documento
-latex documento
+$ latex documento
+$ bibtex documento
+$ latex documento
+$ latex documento
 \end{verbatim}
-
 Ripetere questi cinque comandi ogni volta che si desidera compilare un documento
-può diventare, quindi, un'operazione noiosa.  È in questi casi che si vede
-l'utilità di \verb|make|.  Nel nostro \verb|Makefile| possiamo mettere la
-seguente regola
+può diventare un'operazione noiosa.  Già in questo caso si intravede l'utilità
+di \texttt{make}.  Nel \texttt{Makefile} si deve utilizzare la seguente regola
 \begin{lstlisting}
 documento.dvi: documento.tex bibliografia.bib
 	latex documento
@@ -197,20 +199,21 @@ documento.dvi: documento.tex bibliografia.bib
 	latex documento
 	latex documento
 \end{lstlisting}
-in cui i prerequisiti (cioè i file che devono essere presenti e aggiornati) sono
-il file principale \verb|documento.tex| e il file in cui abbiamo scritto la
-nostra base di dati dei riferimenti bibliografici.  Per compilare è sufficiente
-dare il comando
+in cui i prerequisiti sono il file principale \texttt{documento.tex} e il file
+in cui abbiamo scritto la nostra base di dati dei riferimenti bibliografici.
+Questi file sono modificati manualmente dall'autore del documento, non devono
+essere ricreati da programmi esterni, quindi non sono presenti regole associate
+a questi prerequisiti.  Per compilare il documento è sufficiente dare il comando
 \begin{verbatim}
-make documento.dvi
-\end{verbatim}
-oppure solo \verb|make| qualora quella regola fosse la prima presente nel
-\verb|Makefile|.
+$ make documento.dvi
+\end{verbatim} % $
+oppure solo \texttt{make} qualora quella regola fosse la prima presente nel
+\texttt{Makefile}.
 
 Si può anche mettere una regola per compilare lo stesso documento con \LaTeX{}
 e un'altra per compilarlo con \textsc{PDF}\LaTeX, per poter scegliere fra un
 file di output in formato \textsc{DVI} o \textsc{PDF}.  In questo caso il
-\verb|Makefile| apparirebbe così:
+\texttt{Makefile} apparirebbe così:
 \begin{lstlisting}[caption={La prima regola permette di compilare un documento con
 \LaTeX, la seconda con \textsc{PDF}\LaTeX.},label=lst:dvi-pdf]
 documento.dvi: documento.tex bibliografia.bib
@@ -226,8 +229,8 @@ documento.pdf: documento.tex bibliografia.bib
 	pdflatex documento
 \end{lstlisting}
 
-In alcune distribuzioni GNU/Linux sono presenti gli script \verb|texi2dvi| e
-\verb|texi2pdf| che eseguono rispettivamente \LaTeX{}
+In alcune distribuzioni GNU/Linux sono presenti gli script \texttt{texi2dvi} e
+\texttt{texi2pdf} che eseguono rispettivamente \LaTeX{}
 e \textsc{PDF}\TeX{}
 (e, se necessario, \textsc{Bib}\TeX) sul sorgente il numero strettamente
 necessario di volte per la corretta compilazione del documento (vedi
@@ -240,11 +243,12 @@ documento.dvi: documento.tex bibliografia.bib
 documento.pdf: documento.tex bibliografia.bib
 	texi2pdf documento
 \end{lstlisting}
-Anche lo script \verb|latexmk|, fornito dalle distribuzioni TeX Live e MikTeX,
+Anche lo script \texttt{latexmk}, fornito dalle distribuzioni TeX Live e MikTeX,
 offre funzionalità simili, bisogna però evidenziare che se il documento richiede
 comandi particolari per la compilazione (come quando si utilizza il pacchetto
 \verb|frontespizio|), \verb|texi2dvi|, \verb|texi2pdf| e \verb|latexmk| non sono
-più in grado di generare correttamente il documento finale.
+più in grado di generare correttamente il documento finale, a meno di istruirli
+opportunamente.
 
 \section{Phony target}
 \label{sec:phony}
@@ -762,19 +766,15 @@ chiarezza, nella figura~\ref{fig:grafo-albero2} è rappresentato il grafo ad
 albero che descrive le dipendenze fra i file del \verb|Makefile| mostrato nel
 codice~\ref{lst:complesso}.
 
-
 \section{Conclusione}
 \label{sec:conclusione}
+% TODO: scrivere qualcos'altro oppure cancellare questo paragrafo
 
 I \verb|Makefile| dei programmi spesso raggiungono svariate migliaia di righe di
 codice, per quanto riguarda un documento \LaTeX{}
 piuttosto complesso ne possono bastare anche poche decine.  Si possono comunque
 realizzare dei \verb|Makefile| molto più lunghi e avanzati di quelli visti in
-questa guida.  In Internet è possibile trovare molta documentazione riguardo ai
-\verb|Makefile| (in particolare però per compilare programmi).  Una guida
-sicuramente importante è la più volte citata \emph{GNU Make}, di Richard
-M. Stallman, Roland McGrath e Paul D. Smith che si può trovare all'indirizzo
-\url{http://www.gnu.org/software/make/manual/make.pdf}.
+questa guida.
 
 %%% Local Variables:
 %%% mode: latex
