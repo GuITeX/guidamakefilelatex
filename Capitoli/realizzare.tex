@@ -38,7 +38,7 @@ anche più di una, ciascuna corrispondente a un diverso file da creare, e
 l'ordine con cui le regole compaiono nel \texttt{Makefile} \emph{non} è
 importante.
 
-Un \texttt{Makefile} può contenere anche dei commenti, introdotti dal simbolo
+Un \texttt{Makefile} può contenere dei commenti, introdotti dal simbolo
 cancelletto \texttt{\#}: tutto ciò che si trova alla destra di \texttt{\#} sulla
 sua stessa riga viene trattato come commento.  Questo simbolo ha lo stesso
 comportamento del simbolo \texttt{\%} nel linguaggio \LaTeX{}.
@@ -46,7 +46,7 @@ comportamento del simbolo \texttt{\%} nel linguaggio \LaTeX{}.
 Se lo si desidera è possibile suddividere una riga di codice molto lunga su più
 righe inserendo \texttt{\textbackslash{}} seguito da un carattere di nuova linea
 (in pratica bisogna premere il tasto \keys{Invio} subito dopo l'inserimento del
-backslash).  Ciò non è obbligatorio, in quanto non sono posti limiti alla
+backslash).  Ciò non è obbligatorio in quanto non sono posti limiti alla
 lunghezza delle righe di un \texttt{Makefile}, però può aiutare la leggibilità
 del codice.
 
@@ -107,7 +107,10 @@ figura~\ref{fig:grafo-albero1} ci sono due obiettivi, \texttt{obiettivo1} e
 \texttt{prerequisito2}, per le quali verranno scritte le opportune regole.  I
 prerequisiti di \texttt{obiettivo1} sono i file \texttt{prerequisito1} e
 \texttt{prerequisito2}, l'unico prerequisito di \texttt{prerequisito2} è il file
-\texttt{prerequisito3}.
+\texttt{prerequisito3}.  I file \texttt{prerequisito1} e \texttt{prerequisito3}
+sono modificati ``manualmente'' dall'utente e non generati automaticamente con
+un programma esterno a partire da altri file, quindi non è necessario associare
+a questi due file delle corrispondenti regole.
 
 Prima di eseguire una regola \texttt{make} verifica se è necessario aggiornare
 uno o più dei file elencati fra i prerequisiti e in questo caso esegue
@@ -161,28 +164,30 @@ fare questo è sufficiente eseguire il comando
 \begin{verbatim}
 $ latex documento
 \end{verbatim} % $
-Il \texttt{Makefile} che descrive questa regola è il seguente
+dopo essersi posizionati, usando il comando \texttt{cd}, nella cartella in cui
+si trova il file \texttt{documento.tex}.  Il \texttt{Makefile} che descrive
+questa regola è il seguente
 \begin{lstlisting}[caption={Un semplice \texttt{Makefile}.},label=lst:base]
 documento.dvi: documento.tex
 	latex documento
 \end{lstlisting}
-Nel codice~\ref{lst:base}, il file \texttt{documento.dvi} è l'\emph{obiettivo},
-cioè il file ottenuto dopo la compilazione, il \emph{prerequisito} è il solo
-file \texttt{documento.tex} e l'unico comando che deve essere eseguito è
-\texttt{latex documento}.  Per generare il file di output \texttt{documento.dvi}
-bisogna eseguire il comando
+Questo \texttt{Makefile} deve essere posto nella cartella in cui si trova il
+file \texttt{documento.tex}.  Nel codice~\ref{lst:base}, il file
+\texttt{documento.dvi} è l'\emph{obiettivo}, cioè il file ottenuto dopo la
+compilazione, il \emph{prerequisito} è il solo file \texttt{documento.tex} e
+l'unico comando che deve essere eseguito è \texttt{latex documento}.  Per
+generare il file di output \texttt{documento.dvi} bisogna eseguire il comando
 \begin{verbatim}
-make documento.dvi
-\end{verbatim}
-oppure semplicemente \texttt{make} se la regola è la prima in ordine di
-apparizione nel \texttt{Makefile}.
+$ make documento.dvi
+\end{verbatim} % $
+oppure solo \texttt{make} se la regola è la prima in ordine di apparizione nel
+\texttt{Makefile}.
 
 \section{Un \texttt{Makefile} un po' più elaborato}
 \label{sec:makefile-elaborato}
 
-Se nel nostro file di esempio \texttt{documento.tex} è presente una bibliografia
-realizzata con \textsc{Bib}\TeX, per compilare il documento è necessario (vedi
-\textcite[120]{pantieri:latex}) eseguire i comandi
+Se nel file \texttt{documento.tex} è presente una bibliografia realizzata con
+\textsc{Bib}\TeX, per compilare il documento è necessario eseguire i comandi
 \begin{verbatim}
 $ latex documento
 $ bibtex documento
@@ -190,8 +195,8 @@ $ latex documento
 $ latex documento
 \end{verbatim}
 Ripetere questi cinque comandi ogni volta che si desidera compilare un documento
-può diventare un'operazione noiosa.  Già in questo caso si intravede l'utilità
-di \texttt{make}.  Nel \texttt{Makefile} si deve utilizzare la seguente regola
+può diventare un'operazione noiosa.  Nel \texttt{Makefile} si può scrivere la
+seguente regola
 \begin{lstlisting}
 documento.dvi: documento.tex bibliografia.bib
 	latex documento
@@ -208,9 +213,11 @@ a questi prerequisiti.  Per compilare il documento è sufficiente dare il comand
 $ make documento.dvi
 \end{verbatim} % $
 oppure solo \texttt{make} qualora quella regola fosse la prima presente nel
-\texttt{Makefile}.
+\texttt{Makefile}.  \texttt{make} eseguirà la regola solo se almeno uno dei
+prerequisiti è stato modificato dopo l'ultima modifica al file obiettivo, a meno
+di usare l'opzione \texttt{-B} illustrata in precedenza.
 
-Si può anche mettere una regola per compilare lo stesso documento con \LaTeX{}
+Si può aggiungere una regola per compilare lo stesso documento con \LaTeX{}
 e un'altra per compilarlo con \textsc{PDF}\LaTeX, per poter scegliere fra un
 file di output in formato \textsc{DVI} o \textsc{PDF}.  In questo caso il
 \texttt{Makefile} apparirebbe così:
@@ -246,9 +253,9 @@ documento.pdf: documento.tex bibliografia.bib
 Anche lo script \texttt{latexmk}, fornito dalle distribuzioni TeX Live e MikTeX,
 offre funzionalità simili, bisogna però evidenziare che se il documento richiede
 comandi particolari per la compilazione (come quando si utilizza il pacchetto
-\verb|frontespizio|), \verb|texi2dvi|, \verb|texi2pdf| e \verb|latexmk| non sono
-più in grado di generare correttamente il documento finale, a meno di istruirli
-opportunamente.
+\texttt{frontespizio}), \texttt{texi2dvi}, \texttt{texi2pdf} e \texttt{latexmk}
+non sono più in grado di generare correttamente il documento finale, a meno di
+istruirli opportunamente.
 
 \section{Phony target}
 \label{sec:phony}
@@ -261,28 +268,29 @@ come nome dei comandi. Per esempio, quando si esegue la regola
 clean:
 	rm -f *.aux *.log *.out
 \end{lstlisting}
-vengono cancellati tutti i file con estensione \verb|.aux|, \verb|.log| e
-\verb|.out| che vengono prodotti durante la compilazione di un semplice
+vengono cancellati tutti i file con estensione \texttt{.aux}, \texttt{.log} e
+\texttt{.out} che vengono prodotti durante la compilazione di un semplice
 documento
 \LaTeX.\footnote{Il comando \texttt{rm} cancella tutti i file che vengono
   elencati di seguito, l'opzione \texttt{-f} serve per non stampare eventuali
   messaggi di errore in caso di assenza dei file da cancellare.  Il
   metacarattere \texttt{*} sostituisce una qualsiasi sequenza di caratteri.}
 È consigliabile specificare esplicitamente quali sono i phony target utilizzati
-nel \verb|Makefile|: se nella cartella in cui si trova il \verb|Makefile| è
-presente un file chiamato \verb|clean| questa regola non verrebbe mai eseguita.
-Infatti, dal momento che la regola non ha prerequisiti, il file \texttt{clean}
-risulterebbe sempre aggiornato (vedi \textcite[31]{gnu:make}).  Per fare ciò
-bisogna mettere gli obbiettivi di queste regole come prerequisiti della regola
-speciale \verb|.PHONY|:
+nel \texttt{Makefile}: se nella cartella in cui si trova il \texttt{Makefile} è
+presente un file chiamato \texttt{clean} questa regola non verrebbe mai
+eseguita.  Infatti, dal momento che la regola non ha prerequisiti, il file
+\texttt{clean} risulterebbe sempre
+aggiornato.\footnote{Vedi~\textcite[31]{gnu:make}.}  Per fare ciò bisogna
+mettere gli obiettivi di queste regole come prerequisiti della regola speciale
+\texttt{.PHONY}:
 \begin{lstlisting}
 .PHONY: clean
 clean:
 	rm -f *.aux *.log *.out
 \end{lstlisting}
-In questo modo \verb|make| sa che \verb|clean| non è il nome del file che si
+In questo modo \texttt{make} sa che \texttt{clean} non è il nome del file che si
 deve ottenere e la regola verrà quindi sempre eseguita, indipendentemente dalla
-presenza di un eventuale file \verb|clean|.
+presenza di un eventuale file \texttt{clean}.
 
 I phony target possono essere anche usati per creare una sorta di \emph{alias}
 di altre regole.  Per esempio, inserendo il seguente
@@ -295,29 +303,29 @@ dvi: documento.dvi
 
 pdf: documento.pdf
 \end{lstlisting}
-in un \verb|Makefile|, prima del codice~\ref{lst:dvi-pdf}, per compilare il
+in un \texttt{Makefile}, prima del codice~\ref{lst:dvi-pdf}, per compilare il
 documento in formato \textsc{DVI} si potrà eseguire il comando
 \begin{verbatim}
-make dvi
-\end{verbatim}
+$ make dvi
+\end{verbatim} % $
 Analogamente, per ottenere il file \textsc{PDF} si potrà dare il comando
 \begin{verbatim}
-make pdf
-\end{verbatim}
+$ make pdf
+\end{verbatim} % $
 L'utilità dell'uso di questi alias è che i comandi da eseguire sono indipendenti
 dal nome del file di output.
 
-Accanto al phony target \verb|clean| si trova spesso \verb|distclean|:
-\verb|clean| cancella solo i file temporanei generati durante la compilazione,
-\verb|distclean| in più elimina anche i file di output (quindi gli eventuali
-file in formato \verb|.pdf| o \verb|.dvi|, nel caso di documenti
+Accanto al phony target \texttt{clean} si trova spesso \texttt{distclean}:
+\texttt{clean} cancella solo i file temporanei generati durante la compilazione,
+\texttt{distclean} in più elimina anche i file di output (quindi gli eventuali
+file in formato \texttt{.pdf} o \texttt{.dvi}, nel caso di documenti
 \LaTeX).\footnote{Queste sono solo delle convenzioni, in uso specialmente
   nell'ambito della programmazione.  L'utente è libero di creare regole diverse
   e con nomi differenti.}
-Poiché \verb|distclean|, \emph{oltre} a cancellare file rimossi da \verb|clean|
-ne cancella altri, è possibile inserire \verb|clean| come prerequisito di
-\verb|distclean|, in modo che quella regola venga eseguita \emph{anche} quando
-si dà il comando \verb|make distclean|:
+Poiché \texttt{distclean}, \emph{oltre} a cancellare file rimossi da
+\texttt{clean} ne cancella altri, è possibile inserire \texttt{clean} come
+prerequisito di \texttt{distclean}, in modo che quella regola venga eseguita
+\emph{anche} quando si dà il comando \texttt{make distclean}:
 \begin{lstlisting}[caption={Phony target \texttt{distclean} e \texttt{clean}.},
 label=lst:distclean]
 .PHONY: distclean clean
@@ -333,12 +341,12 @@ clean:
 \section{Le variabili}
 \label{sec:variabili}
 
-Uno dei punti di forza dell'utilizzo di \verb|make| per compilare documenti
-\LaTeX{}
-è che una volta che si possiede un \verb|Makefile| ben organizzato per compilare
-un documento, con pochissime modifiche si può adattare alla compilazione di un
-altro documento, strutturato in maniera simile.  Ciò è reso ancora più facile
-dall'uso delle variabili.
+Un evidente svantaggio dei \texttt{Makefile} è che essi devono essere
+completamente riscritti per ogni nuovo progetto.  Questo difetto può essere
+superato perché una volta che si possiede un \texttt{Makefile} ben organizzato
+per compilare un documento, con pochissime modifiche si può adattare alla
+compilazione di un altro documento strutturato in maniera simile (cioè con una
+simile struttura delle dipendenze fra i file), grazie all'uso delle variabili.
 
 Una variabile è un nome a cui è associato un \emph{valore} che in genere è una
 stringa di testo.  Per assegnare a una variabile il suo valore si usa la
@@ -346,49 +354,47 @@ sintassi
 \begin{lstlisting}
 VARIABILE = valore
 \end{lstlisting}
-Le variabili permettono di rendere il \verb|Makefile| più compatto perché i
+Le variabili permettono di rendere il \texttt{Makefile} più compatto perché i
 valori delle variabili sono spesso dei lunghi elenchi di file che dovrebbero
 essere ripetuti più volte all'interno del file: invece di scrivere ogni volta
 questa lunga stringa è sufficiente richiamare il valore della variabile che sarà
-poi automaticamente sostituito da \verb|make| durante la processazione del file.
-Inoltre quando diventa necessario modificare uno di questi elenchi, è
+poi automaticamente sostituito da \texttt{make} durante la processazione del
+file.  Inoltre quando diventa necessario modificare uno di questi elenchi, è
 sufficiente modificare solo una volta il valore della variabile, senza dover
 andare a cercare nel file tutte le occorrenze da sostituire.
 
 Le variabili, \emph{dopo} essere state dichiarate, possono essere referenziate
-usando il simbolo del dollaro seguito (senza spazi) da parantesi tonde o graffe:
-\begin{lstlisting}
-$(VARIABILE)
-${VARIABILE}
-\end{lstlisting}
-Per evitare di dimenticarsi di dichiarare una variabile prima di richiamarla può
-essere utile abituarsi a definire tutte le variabili all'inizio del
-\verb|Makefile|.
+usando il simbolo del dollaro seguito (senza spazi) dal nome della variabile
+racchiuso fra parentesi tonde o graffe: \texttt{\$(VARIABILE)} oppure
+\texttt{\$\{VARIABILE\}}.  Per evitare di dimenticarsi di dichiarare una
+variabile prima di richiamarla può essere utile abituarsi a definire tutte le
+variabili all'inizio del \texttt{Makefile}.
 
 Le variabili possono essere referenziate in qualsiasi parte di un
-\verb|Makefile|, come per esempio negli obiettivi, nei prerequisiti, nei
+\texttt{Makefile}, come per esempio negli obiettivi, nei prerequisiti, nei
 comandi, nel valore di altre variabili.  Le variabili possono rappresentare
 qualsiasi cosa: oltre a elenchi di file le variabili potrebbero avere come
 valore nomi di cartelle in cui cercare file o programmi da eseguire.
 
-Le variabili, come qualunque altra cosa scritta nel \verb|Makefile|, sono
-sensibili alle maiuscole, quindi \verb|Variabile|, \verb|variabile| e
-\verb|VARIABILE| sono stringhe distinte.  Inoltre il nome di una variabile può
+Le variabili, come qualunque altra cosa scritta nel \texttt{Makefile}, sono
+sensibili alle maiuscole, quindi \texttt{Variabile}, \texttt{variabile} e
+\texttt{VARIABILE} sono stringhe distinte.  Inoltre il nome di una variabile può
 essere una sequenza di qualsiasi carattere eccetto spazi o tabulazioni, siano
-essi iniziali o finali, o uno fra i tre seguenti simboli \verb|:| \verb|#|
-\verb|=|.  È comunque consigliabile utilizzare per i nomi delle variabili solo
-lettere, numeri e trattini bassi, vedi \textcite[57]{gnu:make}.  Eventuali
-caratteri di spaziatura o tabulazione presenti prima o dopo il nome di una
-variabile vengono ignorati, come nel codice~\ref{lst:variabili}.
+essi iniziali o finali, o uno fra i tre seguenti simboli \texttt{:} \texttt{\#}
+\texttt{=}.  È comunque consigliabile utilizzare per i nomi delle variabili solo
+lettere, numeri e trattini bassi.\footnote{Vedi~\textcite[57]{gnu:make}.}
+Eventuali caratteri di spaziatura o tabulazione presenti prima o dopo il nome di
+una variabile vengono ignorati, come nel codice~\ref{lst:variabili}.
 
 Vediamo ora un'applicazione dell'uso delle variabili.  Consideriamo il caso in
 cui abbiamo un documento \LaTeX{}
-principale chiamato \verb|documento.tex|, nel quale abbiamo inserito un indice
+principale chiamato \texttt{documento.tex}, nel quale abbiamo inserito un indice
 analitico e una bibliografia realizzata con \textsc{Bib}\TeX{}
-e che l'elenco dei libri consultati si trovi nel file \verb|bibliografia.bib|.
-Entrambi i file \verb|documento.tex| e \verb|bibliografia.bib|, inoltre, si
-trovano nella stessa cartella in cui è posizionato il seguente
-\verb|Makefile|:\footnote{Parte del \texttt{Makefile} è ripreso da quello
+e che l'elenco dei riferimenti bibliografici si trovi nel file
+\texttt{bibliografia.bib}.  Entrambi i file \texttt{documento.tex} e
+\texttt{bibliografia.bib}, inoltre, si trovano nella stessa cartella in cui è
+posizionato il seguente
+\texttt{Makefile}:\footnote{Parte del \texttt{Makefile} è ripreso da quello
   presente in \textcite[61]{caucci:tabelle}.}
 \begin{lstlisting}[caption={Esempio di \texttt{Makefile} che utilizza le
 variabili.},label=lst:variabili]
@@ -396,8 +402,7 @@ PRINCIPALE 		= documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
 PRINCIPALE_DVI		= $(PRINCIPALE).dvi
 PRINCIPALE_PDF		= $(PRINCIPALE).pdf
-BIBLIOGRAFIA		= bibliografia
-BIBLIOGRAFIA_BIB	= $(BIBLIOGRAFIA).bib
+BIBLIOGRAFIA		= bibliografia.bib
 FILE_CLEAN		= *.aux *.bbl *.blg *.brf *.idx \
 			  *.ilg *.ind *.log
 FILE_DISTCLEAN		= $(PRINCIPALE_DVI) \
@@ -409,14 +414,14 @@ dvi: $(PRINCIPALE_DVI)
 
 pdf: $(PRINCIPALE_PDF)
 
-$(PRINCIPALE_DVI): $(PRINCIPALE_TEX) $(BIBLIOGRAFIA_BIB)
+$(PRINCIPALE_DVI): $(PRINCIPALE_TEX) $(BIBLIOGRAFIA)
 	latex $(PRINCIPALE)
 	bibtex $(PRINCIPALE)
 	makeindex $(PRINCIPALE)
 	latex $(PRINCIPALE)
 	latex $(PRINCIPALE)
 
-$(PRINCIPALE_PDF): $(PRINCIPALE_TEX) $(BIBLIOGRAFIA_BIB)
+$(PRINCIPALE_PDF): $(PRINCIPALE_TEX) $(BIBLIOGRAFIA)
 	pdflatex $(PRINCIPALE)
 	bibtex $(PRINCIPALE)
 	makeindex $(PRINCIPALE)
@@ -429,34 +434,34 @@ distclean: clean
 clean:
 	rm -f $(FILE_CLEAN)
 \end{lstlisting}
-Le variabili specificate all'inizio del file vengono sostituite da \verb|make|
-quando viene invocato: tutte le occorrenze di
-\verb|$(PRINCIPALE)| verranno lette dal programma come se ci fosse scritto
-\verb|documento|, perciò la variabile \verb|$(PRINCIPALE_TEX)|
-assume il valore \verb|documento.tex|, e così via. Come nell'esempio del
-codice~\ref{lst:phony}, per compilare il documento in formato \textsc{DVI} è
-sufficiente dare il comando
+Le variabili definite vengono sostituite da \texttt{make} quando viene invocato:
+tutte le occorrenze di \texttt{\$(PRINCIPALE)} verranno lette dal programma come
+se ci fosse scritto \texttt{documento}, perciò la variabile
+\texttt{PRINCIPALE\_TEX} assume il valore \texttt{documento.tex}, e così
+via. Come nell'esempio del codice~\ref{lst:phony}, per compilare il documento in
+formato \textsc{DVI} è sufficiente dare il comando
 \begin{verbatim}
-make dvi
-\end{verbatim}
+$ make dvi
+\end{verbatim} % $
 e per ottenere un documento \textsc{PDF} bisogna invece utilizzare il comando
 \begin{verbatim}
-make pdf
-\end{verbatim}
+$ make pdf
+\end{verbatim} % $
 
-Nella variabile \verb|$(FILE_CLEAN)|
-abbiamo indicato tutti i file che dovranno essere cancellati nella regole
-\verb|clean|, analogamente la variabile \verb|FILE_DISTCLEAN| assume come valore
-i nomi dei file \verb|documento.dvi| e \verb|documento.pdf| che verranno rimossi
-se si esegue il comando \verb|make distclean|.  Notare che, come nel
-codice~\ref{lst:distclean}, \verb|clean| è un prerequisito di \verb|distclean|.
+Nella variabile \texttt{FILE\_CLEAN} abbiamo indicato tutti i file che dovranno
+essere cancellati nella regole \texttt{clean}, analogamente la variabile
+\texttt{FILE\_DISTCLEAN} assume come valore i nomi dei file
+\texttt{documento.dvi} e \texttt{documento.pdf} che verranno rimossi se si
+esegue il comando \texttt{make distclean}.  Notare che, come nel
+codice~\ref{lst:distclean}, \texttt{clean} è un prerequisito di
+\texttt{distclean}.
 
-Quando si dovrà compilare un documento \LaTeX{}
+Quando si dovrà compilare un altro documento \LaTeX{}
 che richiede gli stessi comandi del documento appena visto, si potrà facilmente
-riutilizzare lo stesso \verb|Makefile|, avendo solo cura di modificare il valore
-delle variabili \verb|PRINCIPALE| e \verb|BIBLIOGRAFIA| a seconda delle
-necessità. % Il \verb|Makefile| va sempre posto o copiato nella cartella in cui
-% si trova il nuovo documento.
+riutilizzare lo stesso \texttt{Makefile}, dopo averlo posto nell'opportuna
+cartella, avendo solo cura di modificare il valore delle variabili
+\texttt{PRINCIPALE} e \texttt{BIBLIOGRAFIA} per adattarlo alle proprie
+necessità.
 
 Esistono delle cosiddette funzioni per nomi di
 file.\footnote{Per un elenco esaustivo di queste funzioni vedi
@@ -464,49 +469,53 @@ file.\footnote{Per un elenco esaustivo di queste funzioni vedi
 \begin{lstlisting}
 $(wildcard modello)
 \end{lstlisting}
-Al posto di \verb|modello| bisogna inserire uno schema di nome di file,
+Al posto di \texttt{modello} bisogna inserire uno schema di nome di file,
 generalmente contenente un metacarattere. Per esempio, con
 \begin{lstlisting}
 $(wildcard *.tex)
 \end{lstlisting}
 si indica un elenco di tutti i file, presenti nella cartella, con estensione
-\verb|.tex|.  Risulta particolarmente utile per ottenere un elenco di file che
-hanno tutti uno stesso formato o uno stesso schema nel nome.
+\texttt{.tex}.  Risulta particolarmente utile per ottenere un elenco di file che
+hanno tutti uno stesso formato o uno stesso schema nel nome.  Negli esempi
+precedenti abbiamo usato il metacarattere \texttt{*} senza bisogno di usare la
+funzione \texttt{wildcard} perché l'espansione dei metacaratteri nel nome
+dell'obiettivo e nei prerequisiti è svolta automaticamente da \texttt{make} e
+all'interno dei comandi è svolta dalla shell.  In tutti gli altri contesti
+(compresa la definizione delle variabili) l'espansione dei metacaratteri avviene
+solo richiedendola con la funzione \texttt{wildcard}.
 
 Un ultimo strumento importante sono le funzioni per le sostituzioni di
 stringhe.\footnote{Per un elenco esaustivo di queste funzioni vedi
   \textcite[80]{gnu:make}.}  In particolare la funzione
 \begin{lstlisting}
 $(patsubst modello,sostituzione,testo)
-\end{lstlisting}
-permette di sostituire \verb|modello| con \verb|sostituzione| all'interno di
-\verb|testo|.  \verb|modello| potrebbe contenere il metacarattere \verb|%| che
-rappresenta una qualsiasi sequenza di caratteri e numeri.  Se anche
-\verb|sostituzione| contiene \emph{la stessa} sequenza indicata da \verb|%|
-allora la sostituzione viene eseguita.  Per esempio
+\end{lstlisting} %$
+permette di sostituire \texttt{modello} con \texttt{sostituzione} all'interno di
+\texttt{testo}.  \texttt{modello} potrebbe contenere il metacarattere
+\texttt{\%} che rappresenta una qualsiasi sequenza di caratteri e numeri.  Se
+anche \texttt{sostituzione} contiene \emph{la stessa} sequenza indicata da
+\texttt{\%} allora la sostituzione viene eseguita.  Per esempio
 \begin{lstlisting}
 $(patsubst %.png,%.eps,img1.png img2.jpg img3.png)
-\end{lstlisting}
-viene interpretato da \verb|make| come
-\begin{verbatim}
-img1.eps img3.eps
-\end{verbatim}
-\verb|img2.jpg| non ha lo stesso schema di \verb|modello|, non finisce cioè per
-\verb|.png|, e quindi la sostituzione non avviene, ma le altre due parole
-seguono lo schema del modello per cui \verb|img1.png| e \verb|img3.png| vengono
-sostituite rispettivamente con \verb|img1.eps| e \verb|img3.eps|.
+\end{lstlisting} %$
+viene interpretato da \texttt{make} come \texttt{img1.eps img3.eps}.  Si ottiene
+questo risultato perché \texttt{img2.jpg} non ha lo stesso schema di
+\texttt{modello}, non finisce cioè per \texttt{.png}, la sostituzione non
+avviene e questa parola viene soppressa dall'output della funzione
+\texttt{patsubst}, invece le altre due parole seguono lo schema del modello
+dunque \texttt{img1.png} e \texttt{img3.png} vengono sostituite rispettivamente
+con \texttt{img1.eps} e \texttt{img3.eps}.
 
 \subsection{Uso delle variabili nelle regole}
 \label{sec:uso-variabili}
 
 Abbiamo imparato che per richiamare una variabile definita all'interno del
-\verb|Makefile| bisogna usare la sintassi
-\verb|$(NOME_DELLA_VARIABILE)|.  Qualche volta, però, potremmo voler richiamare
-una variabile della shell.  Nella maggior parte delle shell Unix questo si fa
-usando proprio il metacarattere \verb|$|,
-però per far capire a \verb|make| che in questo caso vogliamo una variabile
-della shell e non del \verb|Makefile| dobbiamo raddoppiare il simbolo di dollaro
-\verb|$|: \verb|$$|.
+\texttt{Makefile} bisogna usare la sintassi \texttt{\$(NOME\_DELLA\_VARIABILE)}.
+Qualche volta, però, potremmo voler richiamare una variabile della shell.  Nella
+maggior parte delle shell Unix questo si fa usando proprio il metacarattere
+\texttt{\$}, però per far capire a \texttt{make} che in questo caso vogliamo una
+variabile della shell e non del \texttt{Makefile} dobbiamo raddoppiare il
+simbolo di dollaro: \texttt{\$\$}.
 
 Nel seguente esempio, tratto da~\textcite[43]{gnu:make},
 \begin{lstlisting}
@@ -516,14 +525,14 @@ foo:
 	  echo $$i; \
 	done
 \end{lstlisting}
-la variabile \verb|ELENCO| è stata richiamata normalmente con
-\verb|$(ELENCO)| poiché è una variabile del \verb|Makefile|, mentre la variabile
-\verb|i| del \verb|for| è stata richiamata con \verb|$$i|
+la variabile \texttt{ELENCO} è stata richiamata normalmente con
+\texttt{\$(ELENCO)} poiché è una variabile del \texttt{Makefile}, mentre la
+variabile \texttt{i} del \texttt{for} è stata richiamata con \texttt{\$\$i}
 poiché è una variabile della shell.
 
-Osserviamo che in un \verb|Makefile| i comandi che devono essere eseguiti in una
-regola vanno scritti, normalmente, uno su ciascuna riga.  Anche se generalmente
-i cicli \verb|for| delle shell Unix sono scritti nella forma
+In un \texttt{Makefile} i comandi che devono essere eseguiti in una regola vanno
+scritti, normalmente, uno su ciascuna riga.  Anche se generalmente i cicli
+\texttt{for} delle shell Unix sono scritti nella forma
 \begin{lstlisting}[language=bash]
 for <variabile> in <elenco>; do
   comandi
@@ -531,7 +540,7 @@ for <variabile> in <elenco>; do
   ...
 done
 \end{lstlisting}
-si tratta in realtà di \emph{un unico} comando e quindi nel \verb|Makefile|
+si tratta in realtà di \emph{un unico} comando e quindi nel \texttt{Makefile}
 andrebbe scritto su un'unica riga in questo modo
 \begin{lstlisting}[language=bash]
 for <variabile> in <elenco>; do comandi ; ... ; ... ; done
@@ -540,155 +549,160 @@ Per rendere il codice più leggibile si può effettuare l'escape del carattere d
 nuova linea (vedi paragrafo~\ref{sec:le-regole}) come fatto nell'esempio
 precedente.  Bisogna prendere questo accorgimento anche quando in una regola si
 vogliono eseguire gli altri tipi di cicli e verifiche condizionali delle shell
-quali \verb|if|, \verb|while| e \verb|until|.
+quali \texttt{if}, \texttt{while} e \texttt{until}.
 
 \subsection{Sostituzione di comando}
 \label{sec:sostituzione-comando}
 
 Nella principali shell Unix si può effettuare la sostituzione di comando con la
-sintassi \verb|`...`| e questa può essere usata anche all'interno di un
-\verb|Makefile|.  Inoltre nella bash e nella ksh la sostituzione di comando può
-essere eseguita con la sintassi \verb|$(...)| che però nei \verb|Makefile|
-abbiamo visto che si usa per richiamare il valore delle variabili.  La
-sostituzione di comando può essere eseguita, invece, sfruttando la funzione
-\verb|shell| in questo modo:
+sintassi \texttt{`...`} e questa può essere usata anche all'interno di un
+\texttt{Makefile}.  Inoltre nella bash e nella ksh la sostituzione di comando
+può essere eseguita con la sintassi \texttt{\$(...)} che però nei
+\texttt{Makefile} abbiamo visto che si usa per richiamare il valore delle
+variabili.  La sostituzione di comando può essere eseguita, invece, sfruttando
+la funzione \texttt{shell} in questo modo:
 \begin{lstlisting}
 $(shell <comando>)
-\end{lstlisting}
-sostituendo a \verb|<comando>| l'effettivo comando da eseguire.  Il comando
-viene passato alla shell impostata con la variabile \verb|SHELL| che in maniera
-predefinita è la \verb|sh|.
+\end{lstlisting} % $
+sostituendo a \texttt{<comando>} l'effettivo comando da eseguire.  Il comando
+viene passato alla shell impostata con la variabile \texttt{SHELL} che in
+maniera predefinita è la \texttt{sh}.
 
 Per esempio, se si vuole impostare una variabile che sia uguale alla data
 attuale si può usare una delle due seguenti alternative
 \begin{lstlisting}
-ORA = `date "+%Y%m%d-%H%M%S"`
-ORA = $(shell date "+%Y%m%d-%H%M%S")
-\end{lstlisting}
-L'argomento di \verb|date| può, naturalmente, essere cambiato in modo da
+DATA = `date "+%Y%m%d-%H%M%S"`
+DATA = $(shell date "+%Y%m%d-%H%M%S")
+\end{lstlisting} % $
+L'argomento di \texttt{date} può, naturalmente, essere cambiato in modo da
 adattarlo alle proprie esigenze.
 
 \section{Un \texttt{Makefile} ancora più complesso}
-Il codice~\ref{lst:variabili} è già un \verb|Makefile| abbastanza elaborato e
-utile per automatizzare comandi piuttosto lunghi.
+\label{sec:make-complesso}
 
-Quando in un documento si inseriscono delle immagini, queste devono avere un
-formato particolare a seconda che si compili il documento con \LaTeX{}
+Il codice~\ref{lst:variabili} è già un \texttt{Makefile} abbastanza elaborato e
+utile per automatizzare comandi piuttosto lunghi.  Quando in un documento si
+inseriscono delle immagini, queste devono avere un formato particolare a seconda
+che si compili il documento con \LaTeX{}
 o con \textsc{PDF}\LaTeX.  In particolare, \LaTeX{}
 richiede immagini in formato \textsc{EPS}, \textsc{PDF}\LaTeX{}
 accetta immagini in formato \textsc{PDF}, \textsc{JPG} e \textsc{PNG} (vedi
 \textcite[105]{pantieri:latex}).  Se si possiede un'immagine in un formato
 diverso da quello necessario per l'inserimento nel documento, si deve quindi
 procedere alla conversione da un formato all'altro.  Il programma
-\verb|ImageMagick| fornisce il comando da terminale \verb|convert|. Con la
-sintassi
+\texttt{ImageMagick} fornisce il programma da linea di comando
+\texttt{convert}. Con la sintassi
 \begin{verbatim}
-convert fileinput fileoutput
-\end{verbatim}
-si converte il primo file specificato, cioè \verb|fileinput|, nel secondo file,
-chiamato in questo caso \verb|fileoutput|.  Il formato dei due file, di input e
-output, viene riconosciuto dalle estensioni dei file.  Per esempio, il comando
+$ convert fileinput fileoutput
+\end{verbatim} % $
+si converte il primo file specificato, cioè \texttt{fileinput}, nel secondo
+file, chiamato in questo caso \texttt{fileoutput}.  Il formato dei due file, di
+input e output, viene riconosciuto dalle estensioni dei file.  Per esempio, il
+comando
 \begin{verbatim}
-convert nomefile.eps nomefile.pdf
-\end{verbatim}
-converte il file \verb|nomefile.eps|, in formato \textsc{EPS}, nel file
-\verb|nomefile.pdf|, in formato \textsc{PDF}.  Supponiamo di avere nella
-sottocartella \verb|Immagini| della cartella in cui si trovano il documento
+$ convert nomefile.eps nomefile.pdf
+\end{verbatim} % $
+converte il file \texttt{nomefile.eps}, in formato \textsc{EPS}, nel file
+\texttt{nomefile.pdf}, in formato \textsc{PDF}.  Supponiamo di avere nella
+sottocartella \texttt{Immagini} della cartella in cui si trovano il documento
 \LaTeX{}
-principale e il \verb|Makefile| tutte le immagini in formato \textsc{PDF}.  Per
-compilare in \textsc{DVI} è quindi necessario convertire tutte le immagini.  Per
-automatizzare la compilazione e la conversione delle immagini è possibile
+principale e il \texttt{Makefile} tutte le immagini in formato \textsc{PDF}.
+Per compilare in \textsc{DVI} è quindi necessario convertire tutte le immagini.
+Per automatizzare la compilazione e la conversione delle immagini è possibile
 scrivere queste regole utilizzando le funzioni apprese nel
 paragrafo~\ref{sec:variabili}:
 \begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PDF}
 vengono convertite in \textsc{EPS} nella compilazione con \LaTeX.},label=lst:pdf-eps]
-PRINCIPALE 		= documento
+PRINCIPALE              = documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
 PRINCIPALE_DVI		= $(PRINCIPALE).dvi
-BIBLIOGRAFIA		= bibliografia
-BIBLIOGRAFIA_BIB	= $(BIBLIOGRAFIA).bib
+BIBLIOGRAFIA		= bibliografia.bib
 TUTTI_LATEX		= $(PRINCIPALE_TEX) \
-			  $(BIBLIOGRAFIA_BIB)
+                          $(BIBLIOGRAFIA)
 CARTELLA_IMG		= Immagini
 IMMAGINI_PDF		= $(wildcard $(CARTELLA_IMG)/*.pdf)
 IMMAGINI_EPS		= $(patsubst $(CARTELLA_IMG)/%.eps,\
-			  $(CARTELLA_IMG)/%.pdf, $(IMMAGINI_PDF))
+                          $(CARTELLA_IMG)/%.pdf, $(IMMAGINI_PDF))
 
 .PHONY: dvi immagini-eps
 
 dvi: $(PRINCIPALE_DVI)
 
 $(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
-	latex $(PRINCIPALE)
-	bibtex $(PRINCIPALE)
-	makeindex $(PRINCIPALE)
-	latex $(PRINCIPALE)
-	latex $(PRINCIPALE)
+        latex $(PRINCIPALE)
+        bibtex $(PRINCIPALE)
+        makeindex $(PRINCIPALE)
+        latex $(PRINCIPALE)
+        latex $(PRINCIPALE)
 
 immagini-eps: $(IMMAGINI_EPS)
 
 Immagini/%.eps: Immagini/%.pdf
 	convert $^ $@
-\end{lstlisting}
-La variabile \verb|IMMAGINI_PDF| contiene l'elenco di tutti i file in formato
-\textsc{PDF} presenti nella sottocartella Immagini (il nome della sottocartella
-è salvato nella variabile \verb|CARTELLA_IMG| in modo che sarà sufficiente
-cambiare solo questo valore per cartelle con nomi differenti).  La variabile
-\verb|IMMAGINI_EPS|, invece, contiene l'elenco dei degli stessi file in formato
-\textsc{PDF}, ma questa volta con estensione \verb|.eps| (abbiamo utilizzato la
-funzione \verb|patsubst| per eseguire la sostituzione).  In questo
-\verb|Makefile| è presente una regola con una definizione un po' particolare:
+\end{lstlisting} % $
+La variabile \texttt{IMMAGINI\_PDF} contiene l'elenco di tutti i file in formato
+\textsc{PDF} presenti nella sottocartella \texttt{Immagini} (il nome della
+sottocartella è salvato nella variabile \texttt{CARTELLA\_IMG} in modo che sarà
+sufficiente cambiare solo questo valore per cartelle con nomi differenti).  La
+variabile \texttt{IMMAGINI\_EPS}, invece, contiene l'elenco dei degli stessi
+file in formato \textsc{PDF}, ma questa volta con estensione \texttt{.eps}
+(abbiamo utilizzato la funzione \texttt{patsubst} per eseguire la sostituzione).
+In questo \texttt{Makefile} è presente una regola con una definizione un po'
+particolare:
 \begin{lstlisting}
 Immagini/%.eps: Immagini/%.pdf
 	convert $^ $@
 \end{lstlisting}
 Il prerequisito di questa regola è un qualsiasi file della sottocartella
-\verb|Immagini| con estensione \verb|.pdf|, l'obiettivo, però, non è un
-qualsiasi file della sottocartella \verb|Immagini| con estensione \verb|.eps|,
-bensì il file che ha lo stesso nome base del prerequisito ed estensione
-\verb|.eps|.\footnote{Il metacarattere \texttt{\%} è stato introdotto nel
+\texttt{Immagini} con estensione \texttt{.pdf}, l'obiettivo, però, non è un
+qualsiasi file della sottocartella \texttt{Immagini} con estensione
+\texttt{.eps}, bensì il file che ha lo stesso nome base del prerequisito ed
+estensione
+\texttt{.eps}.\footnote{Il metacarattere \texttt{\%} è stato introdotto nel
   paragrafo~\ref{sec:variabili}.}
-Con questa regola verranno dunque generati solo file con estensione \verb|.eps|
-e nome base uguale a quello di file in formato \textsc{PDF} presente nella
-sottocartella \verb|Immagini|.  Il comando eseguito nella regola è
+Con questa regola verranno dunque generati solo file con estensione
+\texttt{.eps} e nome base uguale a quello di file in formato \textsc{PDF}
+presente nella sottocartella \texttt{Immagini}.  Il comando eseguito nella
+regola è
 \begin{lstlisting}
 	convert $^ $@
 \end{lstlisting}
-Le due variabili \verb|$^| e \verb|$@| sono delle variabili dette automatiche%
-\footnote{Per un elenco esaustivo di queste variabili vedi
+Le due variabili \texttt{\$\^} e \texttt{\$@} sono delle variabili dette
+\texttt{automatiche}\footnote{Per un elenco esaustivo di queste variabili vedi
   \textcite[112]{gnu:make}.}
-e che hanno un significato speciale: la prima indica tutti i prerequisiti della
-regola (in questo caso indica solo il file \textsc{PDF} che ha lo stesso nome
-dell'obiettivo), la seconda indica l'obiettivo della regola (in questo caso
-l'immagine \textsc{EPS} da generare).  Se volessimo convertire un determinato
-file chiamato, supponiamo, \verb|immagine.pdf| in formato \textsc{EPS} potremmo
-utilizzare il comando nel terminale:
+e che hanno un significato speciale: \texttt{\$\^} indica tutti i prerequisiti
+della regola (in questo caso indica il solo file \textsc{PDF} che ha lo stesso
+nome di base dell'obiettivo), la seconda indica l'obiettivo della regola (in
+questo caso l'immagine \textsc{EPS} da generare).  Se volessimo convertire un
+determinato file chiamato, supponiamo, \texttt{immagine.pdf} in formato
+\textsc{EPS} potremmo utilizzare il comando nel terminale:
 \begin{verbatim}
-make immagine.eps
-\end{verbatim}
-Per come è scritta la regola con obiettivo \verb|$(PRINCIPALE_DVI)|
-nel \verb|Makefile| del codice~\ref{lst:pdf-eps} non è però necessario
-convertire una a una le immagini quando si vuole generare il documento in
-formato \textsc{DVI}.  Infatti, compilando con il comando
+$ make immagine.eps
+\end{verbatim} % $
+Per come è scritta la regola con obiettivo \texttt{\$(PRINCIPALE\_DVI)} nel
+\texttt{Makefile} del codice~\ref{lst:pdf-eps} non è però necessario convertire
+una a una le immagini quando si vuole generare il documento in formato
+\textsc{DVI}.  Infatti, compilando con il comando
 \begin{verbatim}
-make dvi
-\end{verbatim}
-il programma \verb|make| si preoccupa di verificare se tutti i prerequisiti
-elencati in questa regola sono aggiornati.  Uno di essi è \verb|immagini-eps|
-che è un phony target: \verb|immagini-eps| ha il compito di convertire tutte le
-immagini in formato \textsc{PDF} presenti nella sottocartella \verb|Immagini|
-nel formato \textsc{EPS}, adatto per l'inclusione di immagini nel documento
-finale \textsc{DVI}.
+$ make dvi
+\end{verbatim} % $
+il programma \texttt{make} si preoccupa di verificare se tutti i prerequisiti
+elencati in questa regola sono aggiornati.  Uno di essi è \texttt{immagini-eps}
+che è un phony target: \texttt{immagini-eps} ha il compito di convertire tutte
+le immagini in formato \textsc{PDF} presenti nella sottocartella
+\texttt{Immagini} nel formato \textsc{EPS}, adatto per l'inclusione di immagini
+nel documento finale \textsc{DVI}.
 
-Riportiamo ora un \verb|Makefile| ancora più complesso di quelli visti fino ad
-adesso. Immaginiamo di avere in una cartella il file \verb|documento.tex| come
-file \LaTeX{}
-principale, \verb|bibliografia.bib| come raccolta dei riferimenti bibliografici.
-Nella sottocartella \verb|Capitoli| sono presenti vari file \verb|.tex| inclusi
-in \verb|documento.tex|; nella sottocartella \verb|Immagini|, invece, sono
-presenti immagini nel solo formato \textsc{PDF} che saranno eventualmente
-convertite nel formato \textsc{EPS} nel caso di compilazione con \LaTeX.  Un
-\verb|Makefile| per compilare questo progetto potrebbe apparire così:
+% $
+Immaginiamo di avere in una cartella il file \texttt{documento.tex} come file
+\LaTeX{}
+principale, \texttt{bibliografia.bib} come raccolta dei riferimenti
+bibliografici.  Nella sottocartella \texttt{Capitoli} sono presenti vari file
+\texttt{.tex} inclusi in \texttt{documento.tex}; nella sottocartella
+\texttt{Immagini}, invece, sono presenti immagini nel solo formato \textsc{PDF}
+che saranno eventualmente convertite nel formato \textsc{EPS} nel caso di
+compilazione con \LaTeX.  Un \texttt{Makefile} per compilare questo progetto
+potrebbe apparire così:
 \begin{lstlisting}[caption={Un \texttt{Makefile} complesso.},
 label=lst:complesso]
 PRINCIPALE 		= documento
@@ -696,10 +710,9 @@ PRINCIPALE_TEX		= $(PRINCIPALE).tex
 PRINCIPALE_DVI		= $(PRINCIPALE).dvi
 PRINCIPALE_PDF		= $(PRINCIPALE).pdf
 CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
-BIBLIOGRAFIA		= bibliografia
-BIBLIOGRAFIA_BIB	= $(BIBLIOGRAFIA).bib
+BIBLIOGRAFIA		= bibliografia.bib
 TUTTI_LATEX		= $(PRINCIPALE_TEX) \
-			  $(BIBLIOGRAFIA_BIB) \
+			  $(BIBLIOGRAFIA) \
 			  $(CAPITOLI_TEX)
 IMMAGINI_PDF		= $(wildcard Immagini/*.pdf)
 IMMAGINI_EPS		= $(patsubst Immagini/%.eps,\
@@ -760,20 +773,20 @@ clean:
   \label{fig:grafo-albero2}
 \end{figure}
 Con gli strumenti acquisiti fino a questo punto dovrebbe essere comprensibile
-come funziona questo \verb|Makefile|, cosa compie ciascuna regola e quali
+come funziona questo \texttt{Makefile}, cosa compie ciascuna regola e quali
 comandi bisogna dare nel terminale per compilare il documento.  Per maggiore
 chiarezza, nella figura~\ref{fig:grafo-albero2} è rappresentato il grafo ad
-albero che descrive le dipendenze fra i file del \verb|Makefile| mostrato nel
+albero che descrive le dipendenze fra i file del \texttt{Makefile} mostrato nel
 codice~\ref{lst:complesso}.
 
 \section{Conclusione}
 \label{sec:conclusione}
 % TODO: scrivere qualcos'altro oppure cancellare questo paragrafo
 
-I \verb|Makefile| dei programmi spesso raggiungono svariate migliaia di righe di
-codice, per quanto riguarda un documento \LaTeX{}
+I \texttt{Makefile} dei programmi spesso raggiungono svariate migliaia di righe
+di codice, per quanto riguarda un documento \LaTeX{}
 piuttosto complesso ne possono bastare anche poche decine.  Si possono comunque
-realizzare dei \verb|Makefile| molto più lunghi e avanzati di quelli visti in
+realizzare dei \texttt{Makefile} molto più lunghi e avanzati di quelli visti in
 questa guida.
 
 %%% Local Variables:
