@@ -1,8 +1,7 @@
-\cleardoublepage
-\chapter{Realizzare un \texttt{Makefile}}
-\label{cha:realizzare-makefile}
+\section{Realizzare un \texttt{Makefile}}
+\label{sec:realizzare-makefile}
 
-\section{Le regole}
+\subsection{Le regole}
 \label{sec:le-regole}
 
 Un \texttt{Makefile} basilare è composto essenzialmente da \emph{regole}
@@ -51,7 +50,7 @@ lunghezza delle righe di un \texttt{Makefile}, però può aiutare la leggibilit�
 del codice.
 
 
-\section{Come funziona \texttt{make}}
+\subsection{Come funziona \texttt{make}}
 \label{sec:come-funziona}
 
 Tutta la logica di funzionamento di \texttt{make} si basa sul fatto che gli
@@ -152,7 +151,7 @@ l'opzione \texttt{-B} in questo modo:
 $ make -B <obiettivo>
 \end{verbatim} % $
 
-\section{Un semplice \texttt{Makefile}}
+\subsection{Un semplice \texttt{Makefile}}
 \label{sec:makefile-semplice}
 
 Passiamo ora alla pratica vedendo un esempio di \texttt{Makefile} molto semplice
@@ -183,7 +182,7 @@ $ make documento.dvi
 oppure solo \texttt{make} se la regola è la prima in ordine di apparizione nel
 \texttt{Makefile}.
 
-\section{Un \texttt{Makefile} un po' più elaborato}
+\subsection{Un \texttt{Makefile} un po' più elaborato}
 \label{sec:makefile-elaborato}
 
 Se nel file \texttt{documento.tex} è presente una bibliografia realizzata con
@@ -257,7 +256,7 @@ comandi particolari per la compilazione (come quando si utilizza il pacchetto
 non sono più in grado di generare correttamente il documento finale, a meno di
 istruirli opportunamente.
 
-\section{Phony target}
+\subsection{Phony target}
 \label{sec:phony}
 
 È possibile specificare delle regole che non hanno come obiettivo il nome del
@@ -338,7 +337,7 @@ clean:
 \end{lstlisting}
 
 
-\section{Le variabili}
+\subsection{Le variabili}
 \label{sec:variabili}
 
 Un evidente svantaggio dei \texttt{Makefile} è che essi devono essere
@@ -506,7 +505,7 @@ avviene e questa parola viene soppressa dall'output della funzione
 dunque \texttt{img1.png} e \texttt{img3.png} vengono sostituite rispettivamente
 con \texttt{img1.eps} e \texttt{img3.eps}.
 
-\subsection{Uso delle variabili nelle regole}
+\subsubsection{Uso delle variabili nelle regole}
 \label{sec:uso-variabili}
 
 Abbiamo imparato che per richiamare una variabile definita all'interno del
@@ -551,7 +550,7 @@ precedente.  Bisogna prendere questo accorgimento anche quando in una regola si
 vogliono eseguire gli altri tipi di cicli e verifiche condizionali delle shell
 quali \texttt{if}, \texttt{while} e \texttt{until}.
 
-\subsection{Sostituzione di comando}
+\subsubsection{Sostituzione di comando}
 \label{sec:sostituzione-comando}
 
 Nella principali shell Unix si può effettuare la sostituzione di comando con la
@@ -577,7 +576,7 @@ DATA = $(shell date "+%Y%m%d-%H%M%S")
 L'argomento di \texttt{date} può, naturalmente, essere cambiato in modo da
 adattarlo alle proprie esigenze.
 
-\section{Un \texttt{Makefile} ancora più complesso}
+\subsection{Un \texttt{Makefile} ancora più complesso}
 \label{sec:make-complesso}
 
 Il codice~\ref{lst:variabili} è già un \texttt{Makefile} abbastanza elaborato e
@@ -779,7 +778,7 @@ chiarezza, nella figura~\ref{fig:grafo-albero2} è rappresentato il grafo ad
 albero che descrive le dipendenze fra i file del \texttt{Makefile} mostrato nel
 codice~\ref{lst:complesso}.
 
-\section{Conclusione}
+\subsection{Conclusione}
 \label{sec:conclusione}
 % TODO: scrivere qualcos'altro oppure cancellare questo paragrafo
 

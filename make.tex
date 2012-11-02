@@ -1,4 +1,4 @@
-\documentclass[a4paper]{book}
+\documentclass[a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
@@ -46,36 +46,26 @@
 \author{Mosè Giordano}
 
 \bibliography{bibliografia} % nome del file contenente la bibliografia
-\defbibheading{bibliography}[\refname]{\chapter*{#1}\markboth{#1}{#1}}
+\defbibheading{bibliography}[\refname]{\section*{#1}\markboth{#1}{#1}}
 
 \begin{document}
 
-\frontmatter
 \maketitle
-
-\input{MaterialeInizialeFinale/licenza}
 
 \tableofcontents
 
-\mainmatter
-
 \input{Capitoli/intro}
 \input{Capitoli/realizzare}
-
-%\appendix %%%%% TODO: scrivere le appendici %%%%%
-
-%\section{Convenzioni GNU nei \texttt{Makefile}} %%%%% TODO: scrivere %%%%%
 
 %\section{Vantaggi/svantaggi} %%%%% TODO: valutare se è necessario ed
 %eventualmente scriverlo, con eventuali confronti con `latexmk' e `arara' %%%%%
 
 %\section{Consigli} %%%%% TODO: scrivere %%%%%
 
-\backmatter
-
-\cleardoublepage
 \phantomsection{}
-\addcontentsline{toc}{chapter}{\refname}
+\addcontentsline{toc}{section}{\refname}
 \printbibliography
+
+\input{MaterialeInizialeFinale/licenza}
 
 \end{document}
