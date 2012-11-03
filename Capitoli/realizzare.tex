@@ -15,8 +15,7 @@ obiettivo: prerequisiti
 \end{lstlisting}
 L'\emph{obiettivo} (in inglese \emph{target}), ciò che viene scritto prima dei
 due punti \texttt{:}, di norma è il nome del file che verrà generato con la
-regola descritta.  Nel paragrafo~\ref{sec:phony} vedremo come usare un obiettivo
-che non sia il nome di un file da creare eseguendo la corrispondente regola.
+regola descritta.
 
 I \emph{prerequisiti} (in inglese \emph{prerequisites}) sono i file che devono
 essere presenti al momento dell'esecuzione di una regola e a partire dai quali
@@ -26,10 +25,11 @@ compilazione è conveniente che tutti i file non abbiano degli spazi nel proprio
 nome.  Le regole possono non avere alcun prerequisito.
 
 Il programma \texttt{make} conosce i comandi necessari per eseguire una regola
-leggendoli dall'elenco dei \emph{comandi}.  I comandi di ciascuna regola
-\emph{devono necessariamente} essere preceduti da una tabulazione (nel
+leggendoli dall'elenco dei \emph{comandi}.  I comandi di ogni regola sono
+scritti l'uno sotto l'altro nell'ordine con cui devono essere eseguiti e
+ciascuna riga \emph{deve necessariamente} iniziare con una tabulazione (nel
 codice~\ref{lst:rule} è evidenziata dalla freccia
-\lstinline[showtabs=true,tab=\rightarrowfill]{	}), non da spazi altrimenti
+\lstinline[showtabs=true,tab=\rightarrowfill]{	}), non con spazi altrimenti
 verrà segnalato un errore.
 
 Un \texttt{Makefile} deve contenere almeno una regola, ma possono essercene
