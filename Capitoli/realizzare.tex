@@ -141,8 +141,11 @@ Se si richiama \texttt{make} senza argomenti, cioè si dà solo il comando
 $ make
 \end{verbatim} % $
 esso procede all'esecuzione della prima regola che trova nel \texttt{Makefile},
-per la precisione la prima regola il cui target non inizia con un punto \texttt{.}
-(questo comportamento può essere modificato, vedi \textcite[5]{gnu:make}).
+per la precisione la prima regola il cui target non inizia con un punto
+\texttt{.}  (questo comportamento può essere modificato, vedi
+\textcite[5]{gnu:make}).  Dunque è preferibile scrivere come prima regola quella
+che si intende utilizzare più spesso, per esempio quella per compilare il
+documento completo.
 
 Se si vuole forzare l'esecuzione delle regola \texttt{<obiettivo>}, ignorando le
 date di modifica dell'obiettivo e dei suoi prerequisiti, bisogna utilizzare

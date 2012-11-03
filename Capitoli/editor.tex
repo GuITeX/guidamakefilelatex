@@ -4,12 +4,43 @@
 Può essere utile poter richiamare \texttt{make} direttamente dal proprio editor
 di testo preferito.  In generale consiglio di aggiungere il comando
 \texttt{make} all'elenco dei comandi di composizione dell'editor.  In questo
-modo sarà possibile eseguire la regola predefinita del \texttt{Makefile}, di
-norma la prima, quindi è preferibile scrivere come prima regola quella che si
-intende utilizzare più spesso, per esempio quella per compilare il documento
-completo.  Di seguito sono riportate le istruzioni per aggiungere \texttt{make}
-all'elenco dei programmi di composizione di alcuni dei più diffusi editor di
-testo specifici per \LaTeX{}.
+modo sarà possibile eseguire la regola predefinita del \texttt{Makefile}.  Di
+seguito sono riportate le istruzioni per aggiungere \texttt{make} all'elenco dei
+programmi di composizione di alcuni dei più diffusi editor di testo specifici
+per \LaTeX{}.
+Affinché tutti gli editor di testo seguenti possano effettuare correttamente il
+parsing dell'output di \texttt{make} è necessario compilare in modalità
+\texttt{nonstopmode}.  Questo può essere fatto aggiungendo nel \texttt{Makefile}
+ai comandi \texttt{latex} o \texttt{pdflatex} (o l'eventuale altro compilatore
+usato) l'opzione \texttt{-interaction=nonstopmode}
+\begin{lstlisting}
+$(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
+	latex -interaction=nonstopmode $(PRINCIPALE)
+	bibtex $(PRINCIPALE)
+	makeindex $(PRINCIPALE)
+	latex -interaction=nonstopmode $(PRINCIPALE)
+	latex -interaction=nonstopmode $(PRINCIPALE)
+
+$(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
+	pdflatex -interaction=nonstopmode $(PRINCIPALE)
+	bibtex $(PRINCIPALE)
+	makeindex $(PRINCIPALE)
+	pdflatex -interaction=nonstopmode $(PRINCIPALE)
+	pdflatex -interaction=nonstopmode $(PRINCIPALE)
+\end{lstlisting}
+
+\section{Emacs}
+\label{sec:emacs}
+
+Aggiungere al proprio file di inizializzazione \texttt{.emacs} il seguente codice
+\begin{lstlisting}[language=lisp,morekeywords={eval-after-load}]
+(eval-after-load "tex"
+  (add-to-list 'TeX-command-list
+	       '("Make" "make" TeX-run-TeX nil t)))
+\end{lstlisting}
+È necessario utilizzare il pacchetto AUC\TeX{}.
+Con questa modifica sarà possibile eseguire \texttt{make} con
+\texttt{C-c C-c Make RET}.
 
 \subsection{Texmaker}
 \label{sec:texmaker}
@@ -32,7 +63,7 @@ personalizzati.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth]{figure/texstudio}  
+  \includegraphics[width=0.8\textwidth]{figure/texstudio}
   \caption{Finestra di configurazione di TeXstudio.}
   \label{fig:texstudio}
 \end{figure}
@@ -59,7 +90,7 @@ riportata nella figura~\ref{fig:texworks}, scrivere ``Make'' nel campo ``Nome''
 e ``make'' nel campo ``Programma''.  Dopo di ciò \texttt{make} sarà disponibile
 nell'elenco dei programmi di composizione di questo editor di testo.
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../make"
-%%% End: 
+%%% End:
