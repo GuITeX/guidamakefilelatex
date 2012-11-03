@@ -3,13 +3,12 @@
 
 Può essere utile poter richiamare \texttt{make} direttamente dal proprio editor
 di testo preferito.  In generale consiglio di aggiungere il comando
-\texttt{make} all'elenco dei comandi di composizione dell'editor.  In questo
-modo sarà possibile eseguire la regola predefinita del \texttt{Makefile}.  Di
-seguito sono riportate le istruzioni per aggiungere \texttt{make} all'elenco dei
-programmi di composizione di alcuni dei più diffusi editor di testo specifici
-per \LaTeX{}.
-Affinché tutti gli editor di testo seguenti possano effettuare correttamente il
-parsing dell'output di \texttt{make} è necessario compilare in modalità
+\texttt{make} all'elenco dei comandi di composizione dell'editor, in modo da
+poter eseguire la regola predefinita del \texttt{Makefile}.  Di seguito sono
+riportate le istruzioni per aggiungere \texttt{make} all'elenco dei programmi di
+composizione di alcuni dei più diffusi editor di testo specifici per \LaTeX{}.
+Affinché tutti gli editor di testo possano effettuare correttamente l'analisi
+dell'output di \texttt{make} è necessario compilare in modalità
 \texttt{nonstopmode}.  Questo può essere fatto aggiungendo nel \texttt{Makefile}
 ai comandi \texttt{latex} o \texttt{pdflatex} (o l'eventuale altro compilatore
 usato) l'opzione \texttt{-interaction=nonstopmode}
@@ -29,7 +28,7 @@ $(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
 	pdflatex -interaction=nonstopmode $(PRINCIPALE)
 \end{lstlisting}
 
-\section{Emacs}
+\subsection{Emacs}
 \label{sec:emacs}
 
 Aggiungere al proprio file di inizializzazione \texttt{.emacs} il seguente codice
