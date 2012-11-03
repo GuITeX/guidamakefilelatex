@@ -128,9 +128,9 @@ il \texttt{prerequisito2} ha una propria regola: dando il comando
 \begin{verbatim}
 $ make obiettivo1
 \end{verbatim} % $
-\texttt{make} verifica se è necessario aggiornare, eseguendo in maniera
-automatica il \texttt{comando3} specificato, il file \texttt{prerequisito2}
-prima di eseguire la regola associata all'\texttt{obiettivo1}.  Uno dei pregi di
+\texttt{make} verifica se è necessario aggiornare il file
+\texttt{prerequisito2}, eseguendo in maniera automatica il \texttt{comando3}
+specificato, prima di eseguire la regola \texttt{obiettivo1}.  Uno dei pregi di
 \texttt{make} è che esso si occupa autonomamente di eseguire tutte le regole che
 servono per preparare i prerequisiti dell'obiettivo che si vuole creare,
 \texttt{obiettivo1} nell'esempio.  Per la buona riuscita di questo processo è
@@ -256,13 +256,13 @@ comandi particolari per la compilazione (come quando si utilizza il pacchetto
 non sono più in grado di generare correttamente il documento finale, a meno di
 istruirli opportunamente.
 
-\subsection{Phony target}
+\subsection{Phony targets}
 \label{sec:phony}
 
 È possibile specificare delle regole che non hanno come obiettivo il nome del
 file che verrà ottenuto.  Questo tipo di obiettivi vengono chiamati in inglese
-\emph{phony targets} (cioè \emph{falsi obiettivi}).  Spesso i phony target hanno
-come nome dei comandi. Per esempio, quando si esegue la regola
+\emph{phony targets} (cioè \emph{falsi obiettivi}).  Spesso i phony targets
+hanno come nome dei comandi. Per esempio, quando si esegue la regola
 \begin{lstlisting}
 clean:
 	rm -f *.aux *.log *.out
@@ -271,10 +271,10 @@ vengono cancellati tutti i file con estensione \texttt{.aux}, \texttt{.log} e
 \texttt{.out} che vengono prodotti durante la compilazione di un semplice
 documento
 \LaTeX.\footnote{Il comando \texttt{rm} cancella tutti i file che vengono
-  elencati di seguito, l'opzione \texttt{-f} serve per non stampare eventuali
-  messaggi di errore in caso di assenza dei file da cancellare.  Il
-  metacarattere \texttt{*} sostituisce una qualsiasi sequenza di caratteri.}
-È consigliabile specificare esplicitamente quali sono i phony target utilizzati
+  elencati di seguito, l'opzione \texttt{-f} serve per ignorare l'eventuale
+  assenza dei file da cancellare.  Il metacarattere \texttt{*} sostituisce una
+  qualsiasi sequenza di caratteri.}
+È consigliabile specificare esplicitamente quali sono i phony targets utilizzati
 nel \texttt{Makefile}: se nella cartella in cui si trova il \texttt{Makefile} è
 presente un file chiamato \texttt{clean} questa regola non verrebbe mai
 eseguita.  Infatti, dal momento che la regola non ha prerequisiti, il file
@@ -291,10 +291,10 @@ In questo modo \texttt{make} sa che \texttt{clean} non è il nome del file che s
 deve ottenere e la regola verrà quindi sempre eseguita, indipendentemente dalla
 presenza di un eventuale file \texttt{clean}.
 
-I phony target possono essere anche usati per creare una sorta di \emph{alias}
+I phony targets possono essere anche usati per creare una sorta di \emph{alias}
 di altre regole.  Per esempio, inserendo il seguente
 \begin{lstlisting}[caption={I prerequisiti della regola dell'obiettivo
-\texttt{.PHONY} sono i nomi dei phony target che vengono successivamente
+\texttt{.PHONY} sono i nomi dei phony targets che vengono successivamente
 specificati.},label=lst:phony]
 .PHONY: dvi pdf
 
@@ -325,7 +325,7 @@ Poiché \texttt{distclean}, \emph{oltre} a cancellare file rimossi da
 \texttt{clean} ne cancella altri, è possibile inserire \texttt{clean} come
 prerequisito di \texttt{distclean}, in modo che quella regola venga eseguita
 \emph{anche} quando si dà il comando \texttt{make distclean}:
-\begin{lstlisting}[caption={Phony target \texttt{distclean} e \texttt{clean}.},
+\begin{lstlisting}[caption={Phony targets \texttt{distclean} e \texttt{clean}.},
 label=lst:distclean]
 .PHONY: distclean clean
 
@@ -457,7 +457,7 @@ codice~\ref{lst:distclean}, \texttt{clean} è un prerequisito di
 
 Quando si dovrà compilare un altro documento \LaTeX{}
 che richiede gli stessi comandi del documento appena visto, si potrà facilmente
-riutilizzare lo stesso \texttt{Makefile}, dopo averlo posto nell'opportuna
+utilizzare lo stesso \texttt{Makefile}, dopo averlo posto nell'opportuna
 cartella, avendo solo cura di modificare il valore delle variabili
 \texttt{PRINCIPALE} e \texttt{BIBLIOGRAFIA} per adattarlo alle proprie
 necessità.
@@ -687,10 +687,10 @@ $ make dvi
 \end{verbatim} % $
 il programma \texttt{make} si preoccupa di verificare se tutti i prerequisiti
 elencati in questa regola sono aggiornati.  Uno di essi è \texttt{immagini-eps}
-che è un phony target: \texttt{immagini-eps} ha il compito di convertire tutte
-le immagini in formato \textsc{PDF} presenti nella sottocartella
-\texttt{Immagini} nel formato \textsc{EPS}, adatto per l'inclusione di immagini
-nel documento finale \textsc{DVI}.
+che è un phony target: questo ha il compito di convertire tutte le immagini in
+formato \textsc{PDF} presenti nella sottocartella \texttt{Immagini} nel formato
+\textsc{EPS}, adatto per l'inclusione di immagini nel documento finale
+\textsc{DVI}.
 
 % $
 Immaginiamo di avere in una cartella il file \texttt{documento.tex} come file
@@ -762,13 +762,14 @@ clean:
       child {node[rounded corners,draw] {\texttt{\$(IMMAGINI\_EPS)}}
         child {node {\texttt{\$(IMMAGINI\_PDF)}}}
       };
-    \node at ($(dvi)+(7,0)$) [rounded corners,draw]
+    \node at ($(dvi)+(6.9,0)$) [rounded corners,draw]
       {\texttt{\$(PRINCIPALE\_PDF)}}
       child {node {\texttt{\$(TUTTI\_LATEX)}}}
       child {node {\texttt{\$(IMMAGINI\_PDF)}}};
   \end{tikzpicture}
-  \caption{Grafo ad albero che rappresenta le dipendenze fra i file del
-    \texttt{Makefile} del codice~\ref{lst:complesso}, eccetto i phony target.}
+  \caption{Grafo ad albero rappresentante le dipendenze fra i file del
+    \texttt{Makefile} contenuto nel codice~\ref{lst:complesso}, eccetto i phony
+    targets.}
   \label{fig:grafo-albero2}
 \end{figure}
 Con gli strumenti acquisiti fino a questo punto dovrebbe essere comprensibile
