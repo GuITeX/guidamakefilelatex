@@ -6,10 +6,8 @@ MAIN_PDF		= $(MAIN).pdf
 BIBLIO			= bibliografia
 BIBLIO_BIB		= $(BIBLIO).bib
 CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
-INIZIALEFINALE_TEX	= $(wildcard MaterialeInizialeFinale/*.tex)
 SHELL			= /bin/sh
-ALL_TEX			= $(MAIN_TEX) $(CAPITOLI_TEX) $(INIZIALEFINALE_TEX) \
-			  $(BIBLIO_BIB)
+ALL_TEX			= $(MAIN_TEX) $(CAPITOLI_TEX) $(BIBLIO_BIB)
 CLEAN_FILES		= *.aux *.bbl *.bcf *.blg *-blx.bib *.brf *.fdb_latexmk \
 			  *.idx *.ilg *.ind *.log *.out *.run.xml *.toc *~
 DISTCLEAN_FILES		= $(MAIN_PDF) $(MAIN_DVI)
