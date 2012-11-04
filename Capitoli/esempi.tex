@@ -1,0 +1,365 @@
+\section{Esempi d'uso}
+\label{sec:esempi}
+
+Il codice~\ref{lst:variabili} è un \texttt{Makefile} già abbastanza elaborato.
+In realtà, come già osservato, tutte le operazioni che esso svolge possono
+essere eseguite anche dai comuni editor di testo specializzati per \LaTeX{},
+quindi ci si potrebbe chiedere, a ragione, perché scrivere un \texttt{Makefile}
+piuttosto che affidarsi agli strumenti già disponibili.  \texttt{make} è utile
+quando è necessario eseguire operazioni non comuni difficilmente eseguibili con
+altri strumenti.  In questo paragrafo vedremo alcuni esempi di operazioni che un
+\texttt{Makefile} permette di automatizzare.
+
+\subsection{Convertire immagini \textsc{PDF} in formato \textsc{EPS}}
+\label{sec:immagini-eps}
+
+Quando in un documento si inseriscono delle immagini, queste devono avere un
+formato particolare a seconda che si compili il documento con \LaTeX{}
+o con \textsc{PDF}\LaTeX.  In particolare, \LaTeX{}
+richiede immagini in formato \textsc{EPS}, \textsc{PDF}\LaTeX{}
+accetta immagini in formato \textsc{PDF}, \textsc{JPG} e \textsc{PNG} (vedi
+\textcite[105]{pantieri:latex}).  Se si possiede un'immagine in un formato
+diverso da quello necessario per l'inserimento nel documento, si deve quindi
+procedere alla conversione da un formato all'altro.  La suite
+\texttt{ImageMagick} fornisce il programma da linea di comando
+\texttt{convert}. Con la sintassi
+\begin{verbatim}
+$ convert fileinput fileoutput
+\end{verbatim} % $
+si converte il primo file specificato, cioè \texttt{fileinput}, nel secondo
+file, chiamato in questo caso \texttt{fileoutput}.  Il formato dei due file, di
+input e output, è dedotto dalle estensioni dei file.  Per esempio, il comando
+\begin{verbatim}
+$ convert nomefile.eps nomefile.pdf
+\end{verbatim} % $
+converte il file \texttt{nomefile.eps}, in formato \textsc{EPS}, nel file
+\texttt{nomefile.pdf}, in formato \textsc{PDF}.  Supponiamo di avere nella
+sottocartella \texttt{Immagini} della cartella in cui si trovano il documento
+\LaTeX{}
+principale e il \texttt{Makefile} tutte le immagini in formato \textsc{PDF}.
+Per compilare in \textsc{DVI} è quindi necessario convertire tutte le immagini.
+Per automatizzare la compilazione e la conversione delle immagini è possibile
+scrivere queste regole utilizzando le funzioni apprese nel
+paragrafo~\ref{sec:variabili}:
+\begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PDF}
+vengono convertite in \textsc{EPS} nella compilazione con \LaTeX.},label=lst:pdf-eps]
+PRINCIPALE              = documento
+PRINCIPALE_TEX		= $(PRINCIPALE).tex
+PRINCIPALE_DVI		= $(PRINCIPALE).dvi
+BIBLIOGRAFIA		= bibliografia.bib
+TUTTI_LATEX		= $(PRINCIPALE_TEX) \
+                          $(BIBLIOGRAFIA)
+CARTELLA_IMG		= Immagini
+IMMAGINI_PDF		= $(wildcard $(CARTELLA_IMG)/*.pdf)
+IMMAGINI_EPS		= $(patsubst $(CARTELLA_IMG)/%.eps,\
+                          $(CARTELLA_IMG)/%.pdf, $(IMMAGINI_PDF))
+
+.PHONY: dvi immagini-eps
+
+dvi: $(PRINCIPALE_DVI)
+
+$(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
+        latex $(PRINCIPALE)
+        bibtex $(PRINCIPALE)
+        makeindex $(PRINCIPALE)
+        latex $(PRINCIPALE)
+        latex $(PRINCIPALE)
+
+immagini-eps: $(IMMAGINI_EPS)
+
+Immagini/%.eps: Immagini/%.pdf
+	convert $^ $@
+\end{lstlisting} % $
+La variabile \texttt{IMMAGINI\_PDF} contiene l'elenco di tutti i file in formato
+\textsc{PDF} presenti nella sottocartella \texttt{Immagini} (il nome della
+sottocartella è salvato nella variabile \texttt{CARTELLA\_IMG} in modo che sarà
+sufficiente cambiare solo questo valore per cartelle con nomi differenti).  La
+variabile \texttt{IMMAGINI\_EPS}, invece, contiene l'elenco dei degli stessi
+file in formato \textsc{PDF}, ma questa volta con estensione \texttt{.eps}
+(abbiamo utilizzato la funzione \texttt{patsubst} per eseguire la sostituzione).
+In questo \texttt{Makefile} è presente una regola con una definizione un po'
+particolare:
+\begin{lstlisting}
+Immagini/%.eps: Immagini/%.pdf
+	convert $^ $@
+\end{lstlisting}
+Il prerequisito di questa regola è un qualsiasi file della sottocartella
+\texttt{Immagini} con estensione \texttt{.pdf}, l'obiettivo, però, non è un
+qualsiasi file della sottocartella \texttt{Immagini} con estensione
+\texttt{.eps}, bensì il file che ha lo stesso nome base del prerequisito ed
+estensione
+\texttt{.eps}.\footnote{Il metacarattere \texttt{\%} è stato introdotto nel
+  paragrafo~\ref{sec:variabili}.}
+Con questa regola verranno dunque generati solo file con estensione
+\texttt{.eps} e nome base uguale a quello di file in formato \textsc{PDF}
+presente nella sottocartella \texttt{Immagini}.  Il comando eseguito nella
+regola è
+\begin{lstlisting}
+	convert $^ $@
+\end{lstlisting}
+Le due variabili \texttt{\$\^} e \texttt{\$@} sono delle variabili dette
+\texttt{automatiche}\footnote{Per un elenco esaustivo di queste variabili vedi
+  \textcite[112]{gnu:make}.}
+e che hanno un significato speciale: \texttt{\$\^} indica tutti i prerequisiti
+della regola (in questo caso indica il solo file \textsc{PDF} che ha lo stesso
+nome di base dell'obiettivo), la seconda indica l'obiettivo della regola (in
+questo caso l'immagine \textsc{EPS} da generare).  Un'altra variabile automatica
+utile è \texttt{\$<} che è uguale al primo prerequisito.  Se volessimo
+convertire un determinato file chiamato, supponiamo, \texttt{immagine.pdf} in
+formato \textsc{EPS} potremmo utilizzare il comando nel terminale:
+\begin{verbatim}
+$ make immagine.eps
+\end{verbatim} % $
+Per come è scritta la regola con obiettivo \texttt{\$(PRINCIPALE\_DVI)} nel
+\texttt{Makefile} del codice~\ref{lst:pdf-eps} non è però necessario convertire
+una a una le immagini quando si vuole generare il documento in formato
+\textsc{DVI}.  Infatti, compilando con il comando
+\begin{verbatim}
+$ make dvi
+\end{verbatim} % $
+il programma \texttt{make} si preoccupa di verificare se tutti i prerequisiti
+elencati in questa regola sono aggiornati.  Uno di essi è \texttt{immagini-eps}
+che è un phony target: questo ha il compito di convertire tutte le immagini in
+formato \textsc{PDF} presenti nella sottocartella \texttt{Immagini} nel formato
+\textsc{EPS}, adatto per l'inclusione di immagini nel documento finale
+\textsc{DVI}.
+
+% $
+Immaginiamo di avere in una cartella il file \texttt{documento.tex} come file
+\LaTeX{}
+principale, \texttt{bibliografia.bib} come raccolta dei riferimenti
+bibliografici.  Nella sottocartella \texttt{Capitoli} sono presenti vari file
+\texttt{.tex} inclusi in \texttt{documento.tex}; nella sottocartella
+\texttt{Immagini}, invece, sono presenti immagini nel solo formato \textsc{PDF}
+che saranno eventualmente convertite nel formato \textsc{EPS} nel caso di
+compilazione con \LaTeX.  Un \texttt{Makefile} per compilare questo progetto
+potrebbe apparire così:
+\begin{lstlisting}[caption={\texttt{Makefile} in cui la prima regola compila il
+documento in \textsc{DVI} convertendo le immagini \textsc{PDF} in \textsc{EPS},
+la seconda regola compila in formato \textsc{PDF}.},
+label=lst:dvi+pdf]
+PRINCIPALE 		= documento
+PRINCIPALE_TEX		= $(PRINCIPALE).tex
+PRINCIPALE_DVI		= $(PRINCIPALE).dvi
+PRINCIPALE_PDF		= $(PRINCIPALE).pdf
+CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
+BIBLIOGRAFIA		= bibliografia.bib
+TUTTI_LATEX		= $(PRINCIPALE_TEX) \
+			  $(BIBLIOGRAFIA) \
+			  $(CAPITOLI_TEX)
+IMMAGINI_PDF		= $(wildcard Immagini/*.pdf)
+IMMAGINI_EPS		= $(patsubst Immagini/%.eps,\
+			  Immagini/%.pdf, $(IMMAGINI_PDF))
+FILE_CLEAN		= *.aux *.bbl *.blg *.brf *.idx \
+			  *.ilg *.ind *.log
+FILE_DISTCLEAN		= $(PRINCIPALE_DVI) \
+			  $(PRINCIPALE_PDF) \
+			  $(IMMAGINI_EPS)
+
+.PHONY: dvi pdf distclean clean immagini-eps
+
+dvi: $(PRINCIPALE_DVI)
+
+pdf: $(PRINCIPALE_PDF)
+
+$(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
+	latex $(PRINCIPALE)
+	bibtex $(PRINCIPALE)
+	makeindex $(PRINCIPALE)
+	latex $(PRINCIPALE)
+	latex $(PRINCIPALE)
+
+$(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
+	pdflatex $(PRINCIPALE)
+	bibtex $(PRINCIPALE)
+	makeindex $(PRINCIPALE)
+	pdflatex $(PRINCIPALE)
+	pdflatex $(PRINCIPALE)
+
+immagini-eps: $(IMMAGINI_EPS)
+
+Immagini/%.eps: Immagini/%.pdf
+	convert $^ $@
+
+distclean: clean
+	rm -f $(FILE_DISTCLEAN)
+
+clean:
+	rm -f $(FILE_CLEAN)
+\end{lstlisting}
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[level 1/.style={sibling distance=90},
+    edge from parent/.style={draw,<-}]
+    \node (dvi) [rounded corners,draw] {\texttt{\$(PRINCIPALE\_DVI)}}
+      child {node {\texttt{\$(TUTTI\_LATEX)}}}
+      child {node[rounded corners,draw] {\texttt{\$(IMMAGINI\_EPS)}}
+        child {node {\texttt{\$(IMMAGINI\_PDF)}}}
+      };
+    \node at ($(dvi)+(6.9,0)$) [rounded corners,draw]
+      {\texttt{\$(PRINCIPALE\_PDF)}}
+      child {node {\texttt{\$(TUTTI\_LATEX)}}}
+      child {node {\texttt{\$(IMMAGINI\_PDF)}}};
+  \end{tikzpicture}
+  \caption{Grafo ad albero rappresentante le dipendenze fra i file del
+    \texttt{Makefile} contenuto nel codice~\ref{lst:dvi+pdf}, eccetto i phony
+    targets.}
+  \label{fig:grafo-albero2}
+\end{figure}
+Con gli strumenti acquisiti fino a questo punto dovrebbe essere comprensibile
+come funziona questo \texttt{Makefile}, cosa compie ciascuna regola e quali
+comandi bisogna dare nel terminale per compilare il documento.  Per maggiore
+chiarezza, nella figura~\ref{fig:grafo-albero2} è rappresentato il grafo ad
+albero che descrive le dipendenze fra i file del \texttt{Makefile} mostrato nel
+codice~\ref{lst:dvi+pdf}.
+
+\subsection{Creare un archivio compresso}
+\label{sec:creare-archivio}
+
+Spesso si vuole creare un archivio compresso contenente il codice sorgente del
+proprio documento, in modo da poterlo distribuire in maniera semplice.  Questo
+può essere fatto con un codice come quello seguente
+\begin{lstlisting}
+CARTELLA	= $(shell basename $$(pwd))
+PRINCIPALE	= documento
+DATA		= $(shell date "+%Y%m%d-%H%M%S")
+
+.PHONY: dist distclean
+
+# Questo Makefile è incompleto, per la definizione del
+# phony target `distclean' vedi gli esempi precedenti
+
+dist: distclean
+	cd ..; tar -cvaf $(PRINCIPALE)-$(DATA).tar.xz \
+	  --exclude-vcs $(CARTELLA)/
+\end{lstlisting} % $
+La variabile \texttt{CARTELLA} ha come valore il nome della cartella corrente:
+nella shell il percorso della cartella corrente si ottiene con il comando
+\texttt{pwd}, il suo nome base si estrae con \texttt{basename \$(pwd)}.  La
+sostituzione di comando con \texttt{\$\$} è stata spiegata nel
+paragrafo~\ref{sec:sostituzione-comando}, la funzione \texttt{\$(shell ...)} è
+stata introdotta nel paragrafo~\ref{sec:uso-variabili}.  Il phony target
+\texttt{dist} esegue queste operazione: cambia la cartella attuale di lavoro
+nella cartella superiore (con il comando \texttt{cd ..}) e crea in questa
+posizione un archivio, compresso con il programma, \texttt{xz} della cartella
+\texttt{\$(CARTELLA)}.  Il nome dell'archivio è
+\texttt{\$(PRINCIPALE)-\$(DATA).tar.xz}, in modo da individuare facilmente la
+data in cui è stato creato, e con l'opzione \texttt{--exclude-vcs} si escludono
+dall'archivio gli eventuali file legati al sistema di controllo delle revisioni
+usato.  Per maggiori informazioni sulle opzioni di \texttt{tar} si rimanda al
+suo manuale consultabile con il comando
+\begin{verbatim}
+$ man tar
+\end{verbatim} % $
+
+Si noti che nell'elenco dei comandi \texttt{cd} e \texttt{tar} devono trovarsi
+sulla stessa riga, separati da un punto e virgola \texttt{;} per separarli, e
+uno per riga come ci si potrebbe aspettare, perché, come detto nel
+paragrafo~\ref{sec:le-regole}, \texttt{make} in maniera predefinita invoca una
+nuova subshell per ogni riga dell'elenco dei comandi.  Quindi se si scrivesse
+\begin{lstlisting}
+dist: distclean
+	cd ..
+	tar -cvaf $(PRINCIPALE)-$(DATA).tar.xz \
+	  --exclude-vcs $(CARTELLA)/
+\end{lstlisting} % $
+il comando \texttt{tar} sarebbe eseguito nella stessa cartella del codice
+sorgente e non nella cartella superiore, come vorremmo.
+
+In questo esempio il phony target \texttt{distclean}, già mostrata negli esempi
+precedenti, è un prerequisito di \texttt{dist}, quindi eseguendo da terminale il
+comando
+\begin{verbatim}
+$ make dist
+\end{verbatim} % $
+verranno prima cancellati tutti i file generati dalla compilazione del documento
+e poi verrà creato l'archivio, che in questo conterrà esclusivamente il codice
+sorgente.  Se invece si vuole che l'archivio contenga, per esempio, il file di
+output in formato \textsc{PDF} ma non tutti i file temporanei generati, i
+prerequisiti della regola \texttt{dist} possono essere cambiati in questo modo
+\begin{lstlisting}
+dist: pdf clean
+\end{lstlisting}
+I phony targets \texttt{pdf} e \texttt{clean} sono gli stessi già illustrati in
+precedenza e devono essere elencati fra i prerequisiti nel preciso ordine
+riportato qui, in modo che prima venga generato il \textsc{PDF} e
+successivamente vengano cancellati i file temporanei.
+
+\subsection{Includere immagini esterne da compilare}
+\label{sec:includere-immagini-esterne}
+
+Ti\emph{k}Z è un potente pacchetto \LaTeX{}
+per la realizzazione di disegni.  Se in un documento si inseriscono numerosi
+disegni realizzati con Ti\emph{k}Z e anche molto elaborati, i tempi di
+compilazione potrebbero aumentare sensibilmente.  Una soluzione a questo
+problema potrebbe essere la seguente: mettere il codice di ciascuna figura
+Ti\emph{k}Z in un file con estensione \texttt{.tikz} usando la classe
+\texttt{standalone}, compilare tutti questi file con \textsc{PDF}\LaTeX{}
+per ottenere il documento in formato \textsc{PDF} e poi includere i file così
+prodotti nel documento principale con la macro
+\texttt{\textbackslash{}includegraphics\{\}}.  In questa situazione diventa
+importante assicurarsi che le figure PDF siano aggiornate, infatti è facile
+dimenticarsi di ricompilare la figura dopo aver fatto una piccola modifica al
+suo codice sorgente.  È evidente che in questo caso \texttt{make} può risultare
+molto utile per controllare in maniera efficiente che le figure Ti\emph{k}Z
+siano sempre aggiornate.
+
+Supponiamo che tutti i file \texttt{*.tikz} siano posti nella sottocartella
+\texttt{img-tikz} della directory in cui si trovano il \texttt{Makefile} e il
+file principale del documento, chiamato \texttt{documento.tex}. Per i codici
+delle figure si potrebbe più semplicemente usare la classica estensione
+\texttt{.tex}, ho preferito \texttt{.tikz} per evidenziare che si tratta di
+codici di figure Ti\emph{k}Z.  Inoltre questa scelta permette di riservare
+l'estensione \texttt{.tex} a un eventuale file, da non compilare, posto nella
+cartella \texttt{img-tikz} e contenente solo il preambolo comune per tutti i
+file \texttt{*.tikz}, all'interno dei quali viene incluso con la macro
+\texttt{\textbackslash{}input\{\}}.  Nell'esempio seguente il file di preambolo
+è chiamato \texttt{preambolo.tex}.
+
+Un \texttt{Makefile} che permette di compilare il file \texttt{documento.tex} in
+formato \textsc{PDF} è il seguente
+\begin{lstlisting}
+PRINCIPALE 		= documento
+PRINCIPALE_TEX		= $(PRINCIPALE).tex
+PRINCIPALE_PDF		= $(PRINCIPALE).pdf
+CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
+TUTTI_LATEX		= $(PRINCIPALE_TEX) \
+			  $(CAPITOLI_TEX)
+IMMAGINI_TIKZ		= $(wildcard img-tikz/*.tikz)
+IMMAGINI_TIKZ_PDF	= $(patsubst img-tikz/%.tikz,\
+			  img-tikz/%.pdf, $(IMMAGINI_TIKZ))
+FILE_CLEAN		= *.aux *.log \
+			  $(wildcard img-tikz/*.aux) \
+			  $(wildcard img-tikz/*.log)
+FILE_DISTCLEAN		= $(PRINCIPALE_PDF) \
+			  $(IMMAGINI_TIKZ_PDF)
+
+.PHONY: pdf distclean clean
+
+pdf: $(PRINCIPALE_PDF)
+
+# Supponiamo per brevità che per compilare il documento
+# principale sia sufficiente eseguire due volte pdflatex
+$(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_TIKZ_PDF)
+	pdflatex $(PRINCIPALE)
+	pdflatex $(PRINCIPALE)
+
+img-tikz/%.pdf: img-tikz/%.tikz img-tikz/prambolo.tex
+	cd img-tikz ; pdflatex $(shell basename $<)
+
+distclean: clean
+	rm -f $(FILE_DISTCLEAN)
+
+clean:
+	rm -f $(FILE_CLEAN)
+\end{lstlisting}
+La duplice utilità di un simile \texttt{Makefile} è che le figure \textsc{PDF}
+realizzate con Ti\emph{k}Z sono sicuramente sempre aggiornate quando si genera
+il documento finale con \texttt{make} ed esse vengono ricompilate solo se il
+corrispondente codice sorgente è stato modificato, riducendo al minimo
+indispensabile il tempo di compilazione totale.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../make"
+%%% End:

@@ -5,7 +5,7 @@
 
 \usepackage{tgpagella}
 \usepackage[font=small,format=hang,labelfont=bf]{caption}
-\usepackage{emptypage,layaureo,quoting}
+\usepackage{emptypage,layaureo,quoting,multicol}
 \usepackage{listings} % per inserire codice
 \usepackage[autostyle=true]{csquotes}
 \usepackage[style=authoryear,backref,hyperref,backend=biber]{biblatex}
@@ -34,11 +34,17 @@
   language=[gnu]make,
   basicstyle=\small\ttfamily,
   keywordstyle=\color{blue}\bfseries,
-  commentstyle=\color{green},
-  stringstyle=\color{red},
+  commentstyle=\color{red},
+  stringstyle=\color{purple},
   showstringspaces=false,
   frame=single,
-  frameround=tttt
+  frameround=tttt,
+  literate=
+  {à}{{\`a}}1
+  {è}{{\`e}}1
+  {ì}{{\`i}}1
+  {ò}{{\`o}}1
+  {ù}{{\`u}}1,
 }
 
 \title{Introduzione ai Makefile \\
@@ -69,16 +75,14 @@ target: dependencies ...
   \end{minipage}
 \end{figure}
 
-{\small \tableofcontents}
+\begin{multicols}{2}
+  \small \tableofcontents
+\end{multicols}
 
 \input{Capitoli/intro}
-\input{Capitoli/realizzare}
+\input{Capitoli/concetti}
+\input{Capitoli/esempi}
 \input{Capitoli/editor}
-
-%\section{Vantaggi/svantaggi} %%%%% TODO: valutare se è necessario ed
-%eventualmente scriverlo, con eventuali confronti con `latexmk' e `arara' %%%%%
-
-%\section{Consigli} %%%%% TODO: scrivere %%%%%
 
 \phantomsection{}
 \addcontentsline{toc}{section}{\refname}
@@ -93,7 +97,8 @@ all'indirizzo \url{http://creativecommons.org/licenses/by/3.0/deed.it}.
 È possibile scaricare un archivio compresso contenente il codice sorgente di
 questa guida all'indirizzo
 \url{https://github.com/giordano/makefile-latex/tarball/master}.  Chi fosse
-interessato a contribuire, può trovare il repository Git in cui viene gestito lo
-sviluppo all'indirizzo \url{https://github.com/giordano/makefile-latex}.
+interessato a contribuire segnalando errori oppure suggerendo miglioramenti può
+trovare il repository Git in cui viene gestito lo sviluppo all'indirizzo
+\url{https://github.com/giordano/makefile-latex}.
 
 \end{document}
