@@ -1,5 +1,6 @@
-\section{Esempi d'uso}
-\label{sec:esempi}
+\cleardoublepage{}
+\chapter{Esempi d'uso}
+\label{cha:esempi}
 
 Il codice~\ref{lst:variabili} è un \texttt{Makefile} già abbastanza elaborato.
 In realtà, come già osservato, tutte le operazioni che esso svolge possono
@@ -10,7 +11,7 @@ quando è necessario eseguire operazioni non comuni difficilmente eseguibili con
 altri strumenti.  In questo paragrafo vedremo alcuni esempi di operazioni che un
 \texttt{Makefile} permette di automatizzare.
 
-\subsection{Convertire immagini \textsc{PDF} in formato \textsc{EPS}}
+\section{Convertire immagini \textsc{PDF} in formato \textsc{EPS}}
 \label{sec:immagini-eps}
 
 Quando in un documento si inseriscono delle immagini, queste devono avere un
@@ -18,20 +19,21 @@ formato particolare a seconda che si compili il documento con \LaTeX{}
 o con \textsc{PDF}\LaTeX.  In particolare, \LaTeX{}
 richiede immagini in formato \textsc{EPS}, \textsc{PDF}\LaTeX{}
 accetta immagini in formato \textsc{PDF}, \textsc{JPG} e \textsc{PNG} (vedi
-\textcite[105]{pantieri:latex}).  Se si possiede un'immagine in un formato
+\cite[pagina 105]{pantieri:latex}).  Se si possiede un'immagine in un formato
 diverso da quello necessario per l'inserimento nel documento, si deve quindi
 procedere alla conversione da un formato all'altro.  La suite
 \texttt{ImageMagick} fornisce il programma da linea di comando
 \texttt{convert}. Con la sintassi
-\begin{verbatim}
-$ convert fileinput fileoutput
-\end{verbatim} % $
-si converte il primo file specificato, cioè \texttt{fileinput}, nel secondo
-file, chiamato in questo caso \texttt{fileoutput}.  Il formato dei due file, di
-input e output, è dedotto dalle estensioni dei file.  Per esempio, il comando
+\begin{sintassi}
+  \texttt{\$ convert} \meta{file di input} \meta{file di output}
+\end{sintassi}
+si converte il primo file specificato, cioè \meta{file di input}, nel secondo
+file, \texttt{file di output}.  Il formato dei due file, di input e output, è
+dedotto dalle estensioni dei file.  Per esempio, il comando
 \begin{verbatim}
 $ convert nomefile.eps nomefile.pdf
-\end{verbatim} % $
+\end{verbatim}
+% $
 converte il file \texttt{nomefile.eps}, in formato \textsc{EPS}, nel file
 \texttt{nomefile.pdf}, in formato \textsc{PDF}.  Supponiamo di avere nella
 sottocartella \texttt{Immagini} della cartella in cui si trovano il documento
@@ -43,16 +45,17 @@ scrivere queste regole utilizzando le funzioni apprese nel
 paragrafo~\ref{sec:variabili}:
 \begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PDF}
 vengono convertite in \textsc{EPS} nella compilazione con \LaTeX.},label=lst:pdf-eps]
-PRINCIPALE              = documento
-PRINCIPALE_TEX		= $(PRINCIPALE).tex
-PRINCIPALE_DVI		= $(PRINCIPALE).dvi
-BIBLIOGRAFIA		= bibliografia.bib
-TUTTI_LATEX		= $(PRINCIPALE_TEX) \
-                          $(BIBLIOGRAFIA)
-CARTELLA_IMG		= Immagini
-IMMAGINI_PDF		= $(wildcard $(CARTELLA_IMG)/*.pdf)
-IMMAGINI_EPS		= $(patsubst $(CARTELLA_IMG)/%.eps,\
-                          $(CARTELLA_IMG)/%.pdf, $(IMMAGINI_PDF))
+PRINCIPALE     = documento
+PRINCIPALE_TEX = $(PRINCIPALE).tex
+PRINCIPALE_DVI = $(PRINCIPALE).dvi
+BIBLIOGRAFIA   = bibliografia.bib
+TUTTI_LATEX    = $(PRINCIPALE_TEX) \
+                 $(BIBLIOGRAFIA)
+CARTELLA_IMG   = Immagini
+IMMAGINI_PDF   = $(wildcard $(CARTELLA_IMG)/*.pdf)
+IMMAGINI_EPS   = $(patsubst $(CARTELLA_IMG)/%.eps,\
+                 $(CARTELLA_IMG)/%.pdf, \
+		 $(IMMAGINI_PDF))
 
 .PHONY: dvi immagini-eps
 
@@ -83,7 +86,7 @@ particolare:
 Immagini/%.eps: Immagini/%.pdf
 	convert $^ $@
 \end{lstlisting}
-Il prerequisito di questa regola è un qualsiasi file della sottocartella
+Il prerequisito di questa regola è un qualsiasi file della cartella
 \texttt{Immagini} con estensione \texttt{.pdf}, l'obiettivo, però, non è un
 qualsiasi file della sottocartella \texttt{Immagini} con estensione
 \texttt{.eps}, bensì il file che ha lo stesso nome base del prerequisito ed
@@ -99,7 +102,7 @@ regola è
 \end{lstlisting}
 Le due variabili \texttt{\$\^} e \texttt{\$@} sono delle variabili dette
 \texttt{automatiche}\footnote{Per un elenco esaustivo di queste variabili vedi
-  \textcite[112]{gnu:make}.}
+  \cite[pagina 112]{gnu:make}.}
 e che hanno un significato speciale: \texttt{\$\^} indica tutti i prerequisiti
 della regola (in questo caso indica il solo file \textsc{PDF} che ha lo stesso
 nome di base dell'obiettivo), la seconda indica l'obiettivo della regola (in
@@ -109,14 +112,16 @@ convertire un determinato file chiamato, supponiamo, \texttt{immagine.pdf} in
 formato \textsc{EPS} potremmo utilizzare il comando nel terminale:
 \begin{verbatim}
 $ make immagine.eps
-\end{verbatim} % $
+\end{verbatim}
+% $
 Per come è scritta la regola con obiettivo \texttt{\$(PRINCIPALE\_DVI)} nel
 \texttt{Makefile} del codice~\ref{lst:pdf-eps} non è però necessario convertire
 una a una le immagini quando si vuole generare il documento in formato
 \textsc{DVI}.  Infatti, compilando con il comando
 \begin{verbatim}
 $ make dvi
-\end{verbatim} % $
+\end{verbatim}
+% $
 il programma \texttt{make} si preoccupa di verificare se tutti i prerequisiti
 elencati in questa regola sono aggiornati.  Uno di essi è \texttt{immagini-eps}
 che è un phony target: questo ha il compito di convertire tutte le immagini in
@@ -138,23 +143,23 @@ potrebbe apparire così:
 documento in \textsc{DVI} convertendo le immagini \textsc{PDF} in \textsc{EPS},
 la seconda regola compila in formato \textsc{PDF}.},
 label=lst:dvi+pdf]
-PRINCIPALE 		= documento
-PRINCIPALE_TEX		= $(PRINCIPALE).tex
-PRINCIPALE_DVI		= $(PRINCIPALE).dvi
-PRINCIPALE_PDF		= $(PRINCIPALE).pdf
-CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
-BIBLIOGRAFIA		= bibliografia.bib
-TUTTI_LATEX		= $(PRINCIPALE_TEX) \
-			  $(BIBLIOGRAFIA) \
-			  $(CAPITOLI_TEX)
-IMMAGINI_PDF		= $(wildcard Immagini/*.pdf)
-IMMAGINI_EPS		= $(patsubst Immagini/%.eps,\
-			  Immagini/%.pdf, $(IMMAGINI_PDF))
-FILE_CLEAN		= *.aux *.bbl *.blg *.brf *.idx \
-			  *.ilg *.ind *.log
-FILE_DISTCLEAN		= $(PRINCIPALE_DVI) \
-			  $(PRINCIPALE_PDF) \
-			  $(IMMAGINI_EPS)
+PRINCIPALE 	= documento
+PRINCIPALE_TEX	= $(PRINCIPALE).tex
+PRINCIPALE_DVI	= $(PRINCIPALE).dvi
+PRINCIPALE_PDF	= $(PRINCIPALE).pdf
+CAPITOLI_TEX	= $(wildcard Capitoli/*.tex)
+BIBLIOGRAFIA	= bibliografia.bib
+TUTTI_LATEX	= $(PRINCIPALE_TEX) \
+		  $(BIBLIOGRAFIA) \
+		  $(CAPITOLI_TEX)
+IMMAGINI_PDF	= $(wildcard Immagini/*.pdf)
+IMMAGINI_EPS	= $(patsubst Immagini/%.eps,\
+		  Immagini/%.pdf, $(IMMAGINI_PDF))
+FILE_CLEAN	= *.aux *.bbl *.blg *.brf *.idx \
+		  *.ilg *.ind *.log
+FILE_DISTCLEAN	= $(PRINCIPALE_DVI) \
+		  $(PRINCIPALE_PDF) \
+		  $(IMMAGINI_EPS)
 
 .PHONY: dvi pdf distclean clean immagini-eps
 
@@ -190,13 +195,13 @@ clean:
 \begin{figure}
   \centering
   \begin{tikzpicture}[level 1/.style={sibling distance=90},
-    edge from parent/.style={draw,<-}]
+    edge from parent/.style={draw,<-},font=\small]
     \node (dvi) [rounded corners,draw] {\texttt{\$(PRINCIPALE\_DVI)}}
       child {node {\texttt{\$(TUTTI\_LATEX)}}}
       child {node[rounded corners,draw] {\texttt{\$(IMMAGINI\_EPS)}}
         child {node {\texttt{\$(IMMAGINI\_PDF)}}}
       };
-    \node at ($(dvi)+(6.9,0)$) [rounded corners,draw]
+    \node at ($(dvi)+(6.2,0)$) [rounded corners,draw]
       {\texttt{\$(PRINCIPALE\_PDF)}}
       child {node {\texttt{\$(TUTTI\_LATEX)}}}
       child {node {\texttt{\$(IMMAGINI\_PDF)}}};
@@ -213,7 +218,7 @@ chiarezza, nella figura~\ref{fig:grafo-albero2} è rappresentato il grafo ad
 albero che descrive le dipendenze fra i file del \texttt{Makefile} mostrato nel
 codice~\ref{lst:dvi+pdf}.
 
-\subsection{Creare un archivio compresso}
+\section{Creare un archivio compresso}
 \label{sec:creare-archivio}
 
 Spesso si vuole creare un archivio compresso contenente il codice sorgente del
@@ -250,7 +255,8 @@ usato.  Per maggiori informazioni sulle opzioni di \texttt{tar} si rimanda al
 suo manuale consultabile con il comando
 \begin{verbatim}
 $ man tar
-\end{verbatim} % $
+\end{verbatim}
+% $
 
 Si noti che nell'elenco dei comandi \texttt{cd} e \texttt{tar} devono trovarsi
 sulla stessa riga, separati da un punto e virgola \texttt{;} per separarli, e
@@ -262,7 +268,8 @@ dist: distclean
 	cd ..
 	tar -cvaf $(PRINCIPALE)-$(DATA).tar.xz \
 	  --exclude-vcs $(CARTELLA)/
-\end{lstlisting} % $
+\end{lstlisting}
+% $
 il comando \texttt{tar} sarebbe eseguito nella stessa cartella del codice
 sorgente e non nella cartella superiore, come vorremmo.
 
@@ -271,7 +278,8 @@ precedenti, è un prerequisito di \texttt{dist}, quindi eseguendo da terminale i
 comando
 \begin{verbatim}
 $ make dist
-\end{verbatim} % $
+\end{verbatim}
+% $
 verranno prima cancellati tutti i file generati dalla compilazione del documento
 e poi verrà creato l'archivio, che in questo conterrà esclusivamente il codice
 sorgente.  Se invece si vuole che l'archivio contenga, per esempio, il file di
@@ -285,7 +293,7 @@ precedenza e devono essere elencati fra i prerequisiti nel preciso ordine
 riportato qui, in modo che prima venga generato il \textsc{PDF} e
 successivamente vengano cancellati i file temporanei.
 
-\subsection{Includere immagini esterne da compilare}
+\section{Includere immagini esterne da compilare}
 \label{sec:includere-immagini-esterne}
 
 Ti\emph{k}Z è un potente pacchetto \LaTeX{}
@@ -319,27 +327,28 @@ file \texttt{*.tikz}, all'interno dei quali viene incluso con la macro
 Un \texttt{Makefile} che permette di compilare il file \texttt{documento.tex} in
 formato \textsc{PDF} è il seguente
 \begin{lstlisting}
-PRINCIPALE 		= documento
-PRINCIPALE_TEX		= $(PRINCIPALE).tex
-PRINCIPALE_PDF		= $(PRINCIPALE).pdf
-CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
-TUTTI_LATEX		= $(PRINCIPALE_TEX) \
-			  $(CAPITOLI_TEX)
-IMMAGINI_TIKZ		= $(wildcard img-tikz/*.tikz)
-IMMAGINI_TIKZ_PDF	= $(patsubst img-tikz/%.tikz,\
-			  img-tikz/%.pdf, $(IMMAGINI_TIKZ))
-FILE_CLEAN		= *.aux *.log \
-			  $(wildcard img-tikz/*.aux) \
-			  $(wildcard img-tikz/*.log)
-FILE_DISTCLEAN		= $(PRINCIPALE_PDF) \
-			  $(IMMAGINI_TIKZ_PDF)
+PRINCIPALE 	    = documento
+PRINCIPALE_TEX	    = $(PRINCIPALE).tex
+PRINCIPALE_PDF	    = $(PRINCIPALE).pdf
+CAPITOLI_TEX	    = $(wildcard Capitoli/*.tex)
+TUTTI_LATEX	    = $(PRINCIPALE_TEX) \
+		      $(CAPITOLI_TEX)
+IMMAGINI_TIKZ	    = $(wildcard img-tikz/*.tikz)
+IMMAGINI_TIKZ_PDF   = $(patsubst img-tikz/%.tikz,\
+		      img-tikz/%.pdf, $(IMMAGINI_TIKZ))
+FILE_CLEAN	    = *.aux *.log \
+		      $(wildcard img-tikz/*.aux) \
+		      $(wildcard img-tikz/*.log)
+FILE_DISTCLEAN	    = $(PRINCIPALE_PDF) \
+		      $(IMMAGINI_TIKZ_PDF)
 
 .PHONY: pdf distclean clean
 
 pdf: $(PRINCIPALE_PDF)
 
-# Supponiamo per brevità che per compilare il documento
-# principale sia sufficiente eseguire due volte pdflatex
+# Supponiamo per brevità che per compilare il
+# documento principale sia sufficiente eseguire
+# due volte pdflatex
 $(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_TIKZ_PDF)
 	pdflatex $(PRINCIPALE)
 	pdflatex $(PRINCIPALE)

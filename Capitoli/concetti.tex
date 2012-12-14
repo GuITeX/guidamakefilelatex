@@ -1,7 +1,8 @@
-\section{Concetti di base}
-\label{sec:concetti-base}
+\cleardoublepage{}
+\chapter{Concetti di base}
+\label{cha:concetti-base}
 
-\subsection{Le regole}
+\section{Le regole}
 \label{sec:le-regole}
 
 Un \texttt{Makefile} basilare è composto essenzialmente da \emph{regole}
@@ -32,7 +33,7 @@ codice~\ref{lst:rule} è evidenziata dalla freccia
 \lstinline[showtabs=true,tab=\rightarrowfill]{	}), non con spazi altrimenti
 verrà segnalato un errore.  \texttt{make} invoca una nuova subshell per ogni
 riga dei comandi, per fare in modo che venga eseguita una sola subshell per
-tutto l'elenco dei comandi vedi~\textcite[44]{gnu:make}.
+tutto l'elenco dei comandi vedi~\cite[pagina 44]{gnu:make}.
 
 Un \texttt{Makefile} deve contenere almeno una regola, ma possono essercene
 anche più di una, ciascuna corrispondente a un diverso file da creare, e
@@ -52,7 +53,7 @@ lunghezza delle righe di un \texttt{Makefile}, però può aiutare la leggibilit�
 del codice.
 
 
-\subsection{Come funziona \texttt{make}}
+\section{Come funziona \texttt{make}}
 \label{sec:come-funziona}
 
 Tutta la logica di funzionamento di \texttt{make} si basa sul fatto che gli
@@ -62,11 +63,11 @@ obiettivi dipendono dai prerequisiti:
 Questo meccanismo, forse un po' laborioso e difficile da comprendere
 inizialmente, dovrebbe risultare chiaro più avanti.
 
-Per eseguire la regola che ha per obiettivo il file \texttt{<obiettivo>} bisogna
+Per eseguire la regola che ha per obiettivo il file \meta{obiettivo} bisogna
 invocare \texttt{make} da terminale con il comando
-\begin{verbatim}
-$ make <obiettivo>
-\end{verbatim} % $
+\begin{sintassi}
+  \small \texttt{\$ make} \meta{obiettivo}
+\end{sintassi}
 \texttt{make} verifica se è necessario aggiornare l'obiettivo della regola
 corrispondente in questo modo: se l'obiettivo indicato da linea di comando non
 esiste oppure ha una data di ultima modifica precedente almeno a una di quelle
@@ -74,9 +75,9 @@ dei file elencati nei \emph{prerequisiti} è considerato da aggiornare e la
 regola viene eseguita.  In caso contrario (l'obiettivo esiste ed è più recente
 di tutti i prerequisiti) la regola non viene eseguita e sul terminale si leggerà
 il messaggio
-\begin{verbatim}
-make: Nessuna operazione da eseguire per "<obiettivo>".
-\end{verbatim}
+\begin{flushleft}
+  \texttt{make: Nessuna operazione da eseguire per "}\meta{obiettivo}\texttt{".}
+\end{flushleft}
 Le istruzioni per aggiornare un obiettivo sono
 presenti nei \emph{comandi}: questi sono passati alla shell, normalmente la
 \texttt{sh}.
@@ -129,7 +130,8 @@ prerequisito2: prerequisito3
 il \texttt{prerequisito2} ha una propria regola: dando il comando
 \begin{verbatim}
 $ make obiettivo1
-\end{verbatim} % $
+\end{verbatim}
+% $
 \texttt{make} verifica se è necessario aggiornare il file
 \texttt{prerequisito2}, eseguendo in maniera automatica il \texttt{comando3}
 specificato, prima di eseguire la regola \texttt{obiettivo1}.  Uno dei pregi di
@@ -141,22 +143,23 @@ cruciale la corretta e completa definizione delle dipendenze fra i file.
 Se si richiama \texttt{make} senza argomenti, cioè si dà solo il comando
 \begin{verbatim}
 $ make
-\end{verbatim} % $
+\end{verbatim}
+% $
 esso procede all'esecuzione della prima regola che trova nel \texttt{Makefile},
 per la precisione la prima regola il cui target non inizia con un punto
 \texttt{.}  (questo comportamento può essere modificato, vedi
-\textcite[5]{gnu:make}).  Dunque è preferibile scrivere come prima regola quella
-che si intende utilizzare più spesso, per esempio quella per compilare il
+\cite[pagina 5]{gnu:make}).  Dunque è preferibile scrivere come prima regola
+quella che si intende utilizzare più spesso, per esempio quella per compilare il
 documento completo.
 
-Se si vuole forzare l'esecuzione delle regola \texttt{<obiettivo>}, ignorando le
+Se si vuole forzare l'esecuzione delle regola \meta{obiettivo}, ignorando le
 date di modifica dell'obiettivo e dei suoi prerequisiti, bisogna utilizzare
 l'opzione \texttt{-B} in questo modo:
-\begin{verbatim}
-$ make -B <obiettivo>
-\end{verbatim} % $
+\begin{sintassi}
+  \small \texttt{\$ make -B} \meta{obiettivo}
+\end{sintassi}
 
-\subsection{Un semplice \texttt{Makefile}}
+\section{Un semplice \texttt{Makefile}}
 \label{sec:makefile-semplice}
 
 Passiamo ora alla pratica vedendo un esempio di \texttt{Makefile} molto semplice
@@ -167,7 +170,8 @@ Se il documento non contiene bibliografia, indice, indice analitico, ecc., per
 fare questo è sufficiente eseguire il comando
 \begin{verbatim}
 $ latex documento
-\end{verbatim} % $
+\end{verbatim}
+% $
 dopo essersi posizionati, usando il comando \texttt{cd}, nella cartella in cui
 si trova il file \texttt{documento.tex}.  Il \texttt{Makefile} che descrive
 questa regola è il seguente
@@ -183,7 +187,8 @@ l'unico comando che deve essere eseguito è \texttt{latex documento}.  Per
 generare il file di output \texttt{documento.dvi} bisogna eseguire il comando
 \begin{verbatim}
 $ make documento.dvi
-\end{verbatim} % $
+\end{verbatim}
+% $
 oppure solo \texttt{make} se la regola è la prima in ordine di apparizione nel
 \texttt{Makefile}.
 
@@ -212,7 +217,8 @@ essere ricreati da programmi esterni, quindi non sono presenti regole associate
 a questi prerequisiti.  Per compilare il documento è sufficiente dare il comando
 \begin{verbatim}
 $ make documento.dvi
-\end{verbatim} % $
+\end{verbatim}
+% $
 oppure solo \texttt{make} qualora quella regola fosse la prima presente nel
 \texttt{Makefile}.  \texttt{make} eseguirà la regola solo se almeno uno dei
 prerequisiti è stato modificato dopo l'ultima modifica al file obiettivo, a meno
@@ -242,7 +248,7 @@ In alcune distribuzioni GNU/Linux sono presenti gli script \texttt{texi2dvi} e
 e \textsc{PDF}\TeX{}
 (e, se necessario, \textsc{Bib}\TeX) sul sorgente il numero strettamente
 necessario di volte per la corretta compilazione del documento (vedi
-\textcite[63]{caucci:tabelle}).  Utilizzando questi due comandi il
+\cite[pagina 63]{caucci:tabelle}).  Utilizzando questi due comandi il
 codice~\ref{lst:dvi-pdf} si potrebbe ridurrebbe quindi a
 \begin{lstlisting}
 documento.dvi: documento.tex bibliografia.bib
@@ -258,7 +264,7 @@ comandi particolari per la compilazione (come quando si utilizza il pacchetto
 non sono più in grado di generare correttamente il documento finale, a meno di
 istruirli opportunamente.
 
-\subsection{Phony targets}
+\section{Phony targets}
 \label{sec:phony}
 
 È possibile specificare delle regole che non hanno come obiettivo il nome del
@@ -281,7 +287,7 @@ nel \texttt{Makefile}: se nella cartella in cui si trova il \texttt{Makefile} è
 presente un file chiamato \texttt{clean} questa regola non verrebbe mai
 eseguita.  Infatti, dal momento che la regola non ha prerequisiti, il file
 \texttt{clean} risulterebbe sempre
-aggiornato.\footnote{Vedi~\textcite[31]{gnu:make}.}  Per fare ciò bisogna
+aggiornato.\footnote{Vedi~\cite[pagina 31]{gnu:make}.}  Per fare ciò bisogna
 mettere gli obiettivi di queste regole come prerequisiti della regola speciale
 \texttt{.PHONY}:
 \begin{lstlisting}
@@ -308,11 +314,13 @@ in un \texttt{Makefile}, prima del codice~\ref{lst:dvi-pdf}, per compilare il
 documento in formato \textsc{DVI} si potrà eseguire il comando
 \begin{verbatim}
 $ make dvi
-\end{verbatim} % $
+\end{verbatim}
+% $
 Analogamente, per ottenere il file \textsc{PDF} si potrà dare il comando
 \begin{verbatim}
 $ make pdf
-\end{verbatim} % $
+\end{verbatim}
+% $
 L'utilità dell'uso di questi alias è che i comandi da eseguire sono indipendenti
 dal nome del file di output.
 
@@ -320,7 +328,7 @@ Accanto al phony target \texttt{clean} si trova spesso \texttt{distclean}:
 \texttt{clean} cancella solo i file temporanei generati durante la compilazione,
 \texttt{distclean} in più elimina anche i file di output (quindi gli eventuali
 file in formato \texttt{.pdf} o \texttt{.dvi}, nel caso di documenti
-\LaTeX).\footnote{Queste sono solo delle convenzioni, in uso specialmente
+\LaTeX).\footnote{Queste sono solo delle convenzioni, diffuse in particolare
   nell'ambito della programmazione.  L'utente è libero di creare regole diverse
   e con nomi differenti.}
 Poiché \texttt{distclean}, \emph{oltre} a cancellare file rimossi da
@@ -339,7 +347,7 @@ clean:
 \end{lstlisting}
 
 
-\subsection{Le variabili}
+\section{Le variabili}
 \label{sec:variabili}
 
 Un evidente svantaggio dei \texttt{Makefile} è che essi devono essere
@@ -352,9 +360,9 @@ simile struttura delle dipendenze fra i file), grazie all'uso delle variabili.
 Una variabile è un nome a cui è associato un \emph{valore} che in genere è una
 stringa di testo.  Per assegnare a una variabile il suo valore si usa la
 sintassi
-\begin{lstlisting}
-VARIABILE = valore
-\end{lstlisting}
+\begin{sintassi}
+  \small \meta{variabile} \texttt{=} \meta{valore}
+\end{sintassi}
 Le variabili permettono di rendere il \texttt{Makefile} più compatto perché i
 valori delle variabili sono spesso dei lunghi elenchi di file che dovrebbero
 essere ripetuti più volte all'interno del file: invece di scrivere ogni volta
@@ -383,7 +391,7 @@ sensibili alle maiuscole, quindi \texttt{Variabile}, \texttt{variabile} e
 essere una sequenza di qualsiasi carattere eccetto spazi o tabulazioni, siano
 essi iniziali o finali, o uno fra i tre seguenti simboli \texttt{:} \texttt{\#}
 \texttt{=}.  È comunque consigliabile utilizzare per i nomi delle variabili solo
-lettere, numeri e trattini bassi.\footnote{Vedi~\textcite[57]{gnu:make}.}
+lettere, numeri e trattini bassi.\footnote{Vedi~\cite[pagina 57]{gnu:make}.}
 Eventuali caratteri di spaziatura o tabulazione presenti prima o dopo il nome di
 una variabile vengono ignorati, come nel codice~\ref{lst:variabili}.
 
@@ -396,7 +404,7 @@ e che l'elenco dei riferimenti bibliografici si trovi nel file
 \texttt{bibliografia.bib}, inoltre, si trovano nella stessa cartella in cui è
 posizionato il seguente
 \texttt{Makefile}:\footnote{Parte del \texttt{Makefile} è ripreso da quello
-  presente in \textcite[61]{caucci:tabelle}.}
+  presente in \cite[pagina 61]{caucci:tabelle}.}
 \begin{lstlisting}[caption={Esempio di \texttt{Makefile} che utilizza le
 variabili.},label=lst:variabili]
 PRINCIPALE 		= documento
@@ -404,8 +412,8 @@ PRINCIPALE_TEX		= $(PRINCIPALE).tex
 PRINCIPALE_DVI		= $(PRINCIPALE).dvi
 PRINCIPALE_PDF		= $(PRINCIPALE).pdf
 BIBLIOGRAFIA		= bibliografia.bib
-FILE_CLEAN		= *.aux *.bbl *.blg *.brf *.idx \
-			  *.ilg *.ind *.log
+FILE_CLEAN		= *.aux *.bbl *.blg *.brf \
+			  *.idx *.ilg *.ind *.log
 FILE_DISTCLEAN		= $(PRINCIPALE_DVI) \
 			  $(PRINCIPALE_PDF)
 
@@ -443,14 +451,16 @@ via. Come nell'esempio del codice~\ref{lst:phony}, per compilare il documento in
 formato \textsc{DVI} è sufficiente dare il comando
 \begin{verbatim}
 $ make dvi
-\end{verbatim} % $
+\end{verbatim}
+% $
 e per ottenere un documento \textsc{PDF} bisogna invece utilizzare il comando
 \begin{verbatim}
 $ make pdf
-\end{verbatim} % $
+\end{verbatim}
+% $
 
 Nella variabile \texttt{FILE\_CLEAN} abbiamo indicato tutti i file che dovranno
-essere cancellati nella regole \texttt{clean}, analogamente la variabile
+essere cancellati nella regole \texttt{clean}, la variabile
 \texttt{FILE\_DISTCLEAN} assume come valore i nomi dei file
 \texttt{documento.dvi} e \texttt{documento.pdf} che verranno rimossi se si
 esegue il comando \texttt{make distclean}.  Notare che, come nel
@@ -466,11 +476,12 @@ necessità.
 
 Esistono delle cosiddette funzioni per nomi di
 file.\footnote{Per un elenco esaustivo di queste funzioni vedi
-  \textcite[83]{gnu:make}.} Fra tutte ne ricordiamo una:
-\begin{lstlisting}
-$(wildcard modello)
-\end{lstlisting}
-Al posto di \texttt{modello} bisogna inserire uno schema di nome di file,
+  \cite[pagina 83]{gnu:make}.}  Fra tutte ne ricordiamo una:
+\begin{sintassi}
+  \small \texttt{\$(\textcolor{blue}{\textbf{wildcard}}}
+  \meta{modello}\texttt{)}
+\end{sintassi}
+Al posto di \meta{modello} bisogna inserire uno schema di nome di file,
 generalmente contenente un metacarattere. Per esempio, con
 \begin{lstlisting}
 $(wildcard *.tex)
@@ -487,38 +498,40 @@ solo richiedendola con la funzione \texttt{wildcard}.
 
 Un ultimo strumento importante sono le funzioni per le sostituzioni di
 stringhe.\footnote{Per un elenco esaustivo di queste funzioni vedi
-  \textcite[80]{gnu:make}.}  In particolare la funzione
-\begin{lstlisting}
-$(patsubst modello,sostituzione,testo)
-\end{lstlisting} %$
-permette di sostituire \texttt{modello} con \texttt{sostituzione} all'interno di
-\texttt{testo}.  \texttt{modello} potrebbe contenere il metacarattere
-\texttt{\%} che rappresenta una qualsiasi sequenza di caratteri e numeri.  Se
-anche \texttt{sostituzione} contiene \emph{la stessa} sequenza indicata da
-\texttt{\%} allora la sostituzione viene eseguita.  Per esempio
+  \cite[pagina 80]{gnu:make}.}  In particolare la funzione
+\begin{sintassi}
+  \small \texttt{\$(\textcolor{blue}{\textbf{patsubst}}}
+  \meta{modello}\texttt{,}\meta{sostituzione}\texttt{,}\meta{testo}\texttt{)}
+\end{sintassi}
+permette di sostituire \meta{modello} con \meta{sostituzione} all'interno di
+\meta{testo}.  \meta{modello} potrebbe contenere il metacarattere \texttt{\%}
+che rappresenta una qualsiasi sequenza di caratteri e numeri.  Se anche
+\meta{sostituzione} contiene \emph{la stessa} sequenza indicata da \texttt{\%}
+allora la sostituzione viene eseguita.  Per esempio
 \begin{lstlisting}
 $(patsubst %.png,%.eps,img1.png img2.jpg img3.png)
 \end{lstlisting} %$
 viene interpretato da \texttt{make} come \texttt{img1.eps img3.eps}.  Si ottiene
 questo risultato perché \texttt{img2.jpg} non ha lo stesso schema di
-\texttt{modello}, non finisce cioè per \texttt{.png}, la sostituzione non
-avviene e questa parola viene soppressa dall'output della funzione
-\texttt{patsubst}, invece le altre due parole seguono lo schema del modello
-dunque \texttt{img1.png} e \texttt{img3.png} vengono sostituite rispettivamente
-con \texttt{img1.eps} e \texttt{img3.eps}.
+\meta{modello}, non finisce cioè per \texttt{.png}, la sostituzione non avviene
+e questa parola viene soppressa dall'output della funzione \texttt{patsubst},
+invece le altre due parole seguono lo schema del modello dunque
+\texttt{img1.png} e \texttt{img3.png} vengono sostituite rispettivamente con
+\texttt{img1.eps} e \texttt{img3.eps}.
 
-\subsubsection{Uso delle variabili nelle regole}
+\subsection{Uso delle variabili nelle regole}
 \label{sec:uso-variabili}
 
 Abbiamo imparato che per richiamare una variabile definita all'interno del
-\texttt{Makefile} bisogna usare la sintassi \texttt{\$(NOME\_DELLA\_VARIABILE)}.
-Qualche volta, però, potremmo voler richiamare una variabile della shell.  Nella
-maggior parte delle shell Unix questo si fa usando proprio il metacarattere
-\texttt{\$}, però per far capire a \texttt{make} che in questo caso vogliamo una
-variabile della shell e non del \texttt{Makefile} dobbiamo raddoppiare il
-simbolo di dollaro: \texttt{\$\$}.
+\texttt{Makefile} bisogna usare la sintassi
+\texttt{\$(}\meta{nome della variabile}\texttt{)}.  Qualche volta, però,
+potremmo voler richiamare una variabile della shell.  Nella maggior parte delle
+shell Unix questo si fa usando proprio il metacarattere \texttt{\$}, però per
+far capire a \texttt{make} che in questo caso vogliamo una variabile della shell
+e non del \texttt{Makefile} dobbiamo raddoppiare il simbolo di dollaro:
+\texttt{\$\$}.
 
-Nel seguente esempio, tratto da~\textcite[43]{gnu:make},
+Nel seguente esempio, tratto da~\cite[pagina 43]{gnu:make},
 \begin{lstlisting}
 ELENCO = uno due tre
 foo:
@@ -543,16 +556,18 @@ done
 \end{lstlisting}
 si tratta in realtà di \emph{un unico} comando e quindi nel \texttt{Makefile}
 andrebbe scritto su un'unica riga in questo modo
-\begin{lstlisting}[language=bash]
-for <variabile> in <elenco>; do comandi ; ... ; ... ; done
-\end{lstlisting}
+\begin{sintassi}
+  \small \texttt{\textcolor{blue}{\textbf{for}}} \meta{variabile} in
+  \meta{elenco}; \texttt{\textcolor{blue}{\textbf{do}}} \meta{comandi}
+  \texttt{; ... ; ... ;} \texttt{\textcolor{blue}{\textbf{done}}}
+\end{sintassi}
 Per rendere il codice più leggibile si può effettuare l'escape del carattere di
 nuova linea (vedi paragrafo~\ref{sec:le-regole}) come fatto nell'esempio
 precedente.  Bisogna prendere questo accorgimento anche quando in una regola si
 vogliono eseguire gli altri tipi di cicli e verifiche condizionali delle shell
 quali \texttt{if}, \texttt{while} e \texttt{until}.
 
-\subsubsection{Sostituzione di comando}
+\subsection{Sostituzione di comando}
 \label{sec:sostituzione-comando}
 
 Nella principali shell Unix si può effettuare la sostituzione di comando con la
@@ -562,12 +577,12 @@ può essere eseguita con la sintassi \texttt{\$(...)} che però nei
 \texttt{Makefile} abbiamo visto che si usa per richiamare il valore delle
 variabili.  La sostituzione di comando può essere eseguita, invece, sfruttando
 la funzione \texttt{shell} in questo modo:
-\begin{lstlisting}
-$(shell <comando>)
-\end{lstlisting} % $
-sostituendo a \texttt{<comando>} l'effettivo comando da eseguire.  Il comando
-viene passato alla shell impostata con la variabile \texttt{SHELL} che in
-maniera predefinita è la \texttt{sh}.
+\begin{sintassi}
+  \small \texttt{\$(\textcolor{blue}{\textbf{shell}}} \meta{comando}\texttt{)}
+\end{sintassi}
+sostituendo a \meta{comando} l'effettivo comando da eseguire.  Il comando viene
+passato alla shell impostata con la variabile \texttt{SHELL} che in maniera
+predefinita è la \texttt{sh}.
 
 Per esempio, se si vuole impostare una variabile che sia uguale alla data
 attuale si può usare una delle due seguenti alternative

@@ -1,5 +1,6 @@
-\section{Integrare \texttt{make} negli editor di testo}
-\label{sec:editor}
+\cleardoublepage{}
+\chapter{Integrare \texttt{make} negli editor di testo}
+\label{cha:editor}
 
 Può essere utile poter richiamare \texttt{make} direttamente dal proprio editor
 di testo preferito.  In generale consiglio di aggiungere il comando
@@ -28,7 +29,7 @@ $(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
 	pdflatex -interaction=nonstopmode $(PRINCIPALE)
 \end{lstlisting}
 
-\subsection{Emacs}
+\section{Emacs}
 \label{sec:emacs}
 
 Aggiungere al proprio file di inizializzazione \texttt{.emacs} o il seguente codice
@@ -41,7 +42,7 @@ Aggiungere al proprio file di inizializzazione \texttt{.emacs} o il seguente cod
 Con questa modifica sarà possibile eseguire \texttt{make} con
 \texttt{C-c C-c Make RET}.
 
-\subsection{Kile}
+\section{Kile}
 \label{sec:kile}
 
 Andare nel menu \menu{Impostazioni > Configura Kile}, nella scheda
@@ -58,12 +59,12 @@ aggiuntivi'' (questo se nei \texttt{Makefile} ci sono già le istruzioni
 necessaria per eseguire automaticamente tutti gli eventuali strumenti
 aggiuntivi).  Nella scheda ``Avanzate'' assicurarsi che il campo ``Tipo'' sia
 impostato a ``Esegui al di fuori di Kile'', il campo ``Classe'' a ``LaTeX'' e il
-campo ``Stato'' a ``Editor''.  Infine nella scheda ``Menu'' selezionare
-``Compila'' nel menu a tendina relativo alla voce ``Aggiungi strumento al meno
-di costruzione'', in questo modo sarà possibile eseguire \texttt{make}
-dall'elenco di tutti gli strumenti di compilazione.
+campo ``Stato'' a ``Editor''.  Nella scheda ``Menu'' selezionare ``Compila'' nel
+menu a tendina relativo alla voce ``Aggiungi strumento al meno di costruzione'',
+in questo modo sarà possibile eseguire \texttt{make} dall'elenco di tutti gli
+strumenti di compilazione.
 
-\subsection{Texmaker}
+\section{Texmaker}
 \label{sec:texmaker}
 
 \begin{figure}
@@ -79,7 +80,7 @@ scrivere ``Make'' nel campo ``Voce di menu'' e ``make'' nel campo ``Comando''.
 In questo modo \texttt{make} sarà eseguibile dall'elenco dei comandi
 personalizzati.
 
-\subsection{TeXstudio}
+\section{TeXstudio}
 \label{sec:texstudio}
 
 \begin{figure}
@@ -95,7 +96,7 @@ una finestra come quella riportata nella figura~\ref{fig:texstudio} e nel campo
 Dopo di ciò sarà possibile eseguire \texttt{make} dall'elenco dei comandi
 utente.
 
-\subsection{Texworks}
+\section{Texworks}
 \label{sec:texworks}
 
 \begin{figure}
