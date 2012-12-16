@@ -28,7 +28,6 @@ per compilare documenti LaTeX]
   stringstyle=\color{purple},
   showstringspaces=false,
   frame=single,
-  % frameround=tttt,
   literate=
   {à}{{\`a}}1
   {è}{{\`e}}1
@@ -44,14 +43,16 @@ per compilare documenti LaTeX]
 \title{Introduzione ai Makefile \\
   per compilare documenti \LaTeX}
 \author{Mosè Giordano}
+\GetFileInfo{make.tex}
+\date{\filename\ \fileversion\ del \filedate}
 
 \maketitle
 
 \input{Capitoli/note}
+\input{Capitoli/intro}
 \newpage\tableofcontents
 
 \mainmatter{}
-\input{Capitoli/intro}
 \input{Capitoli/concetti}
 \input{Capitoli/esempi}
 \input{Capitoli/editor}

@@ -2,9 +2,6 @@
 \chapter{Introduzione}
 \label{cha:introduzione}
 
-\section{Cos'è \texttt{make}}
-\label{sec:cose-make}
-
 La compilazione di un semplice documento \LaTeX{}
 richiede l'esecuzione di uno o due comandi, che generalmente possono essere
 facilmente eseguiti all'interno del proprio editor di testo preferito.
@@ -44,15 +41,6 @@ sorgenti.\footnote{\texttt{arara} permette di eseguire qualsiasi operazione,
   \texttt{arara}, non è possibile scegliere selettivamente quali operazioni
   svolgere.}  Non ci sono limiti alla fantasia.
 
-Il programma \texttt{make} non fa altro che leggere le istruzioni presenti in un
-file di testo, chiamato necessariamente
-\texttt{Makefile}\footnote{In realtà potrebbe avere anche altri nomi, questo è
-  quello consigliato e riconosciuto in maniera predefinita, per ulteriori
-  informazioni vedi~\cite[pagina 12]{gnu:make}.}
-e scritto con una particolare sintassi.  I \texttt{Makefile} sono dei file di
-testo puro, per scriverli c'è bisogno quindi di un normale editor di testo come
-Gedit o Kate per GNU/Linux, TextEdit per Mac OS X.
-
 Di \texttt{make} esistono alcune versioni, le più famose sono \texttt{GNU make},
 sviluppata da Richard Stallman e Roland McGrath, e \texttt{BSD make}.  In questa
 guida verrà spiegato come scrivere \texttt{Makefile} elementari per
@@ -61,47 +49,24 @@ Questo programma si utilizza da linea di comando, chi non dovesse avere
 familiarità con il terminale può leggere la guida di~\cite{giacomelli:console}.
 La guida di riferimento per \texttt{GNU make}, a cui rimando per qualsiasi
 approfondimento, è~\cite{gnu:make}, ma è orientata soprattutto a programmatori
-che sviluppano software C, la presente guida vuole essere invece una semplice
-introduzione a \texttt{make} per gli utenti di \LaTeX{}.
+che sviluppano software nel linguaggio C, la presente guida vuole essere invece
+una semplice introduzione a \texttt{make} per gli utenti di \LaTeX{}.
 
 Con questa guida non voglio convincere nessuno che \texttt{make} sia il
 programma migliore in assoluto, perché sicuramente \emph{non} lo è, ha i suoi
 pregi e anche qualche difetto.  Qui voglio solo illustrare le sue funzioni e
-potenzialità, starà poi al lettore decidere se \texttt{make} si adatta alle
-proprie necessità.
+potenzialità fornendo anche degli esempi d'uso, starà poi al lettore decidere se
+\texttt{make} si adatta alle proprie necessità.
 
-\section{Installazione di \texttt{make}}
-\label{sec:installazione}
+Sono ben accetti suggerimenti per migliorare la guida, segnalazioni di errori e
+richieste di chiarimenti.
 
-Per verificare se \texttt{make} è già presente nel proprio sistema si può
-eseguire in un terminale il seguente comando
-\begin{verbatim}
-$ make --version
-\end{verbatim}
-% $
-che restituisce la versione del programma installata nel sistema.  Se il
-programma non è presente verrà mostrato un messaggio di errore.
-
-Per ottenere \texttt{make} in ambiente GNU/Linux bisogna installare il pacchetto
-omonimo utilizzando il gestore pacchetti della propria distribuzione.  Per
-esempio, per Debian e sistemi derivati (come Ubuntu) bisogna dare il comando
-\begin{verbatim}
-# apt-get install make
-\end{verbatim}
-con i diritti di amministratore.  In Fedora e derivate, invece, bisogna eseguire
-il comando
-\begin{verbatim}
-# yum install make
-\end{verbatim}
-
-Fino a qualche anno fa, \texttt{make} era preinstallato sui sistemi Mac OS X.
-Per installare \texttt{make} nei sistemi Mac OS X sui quali non è già presente,
-si deve installare il software Xcode, disponibile nel Mac App Store, e poi
-scaricare gli strumenti a linea di comando dalle preferenze del programma.
-
-\textsc{Nota}: da qui in poi tutti i comandi da eseguire nel terminale devono
-essere lanciati trovandosi nella stessa cartella in cui è presente il
-\texttt{Makefile} che si desidera utilizzare, se non diversamente specificato.
+\begin{flushright}
+\begin{minipage}{0.6\textwidth}\centering
+Mosè Giordano \\
+\texttt{giordano dot mose at libero dot it}
+\end{minipage}
+\end{flushright}
 
 %%% Local Variables:
 %%% mode: latex

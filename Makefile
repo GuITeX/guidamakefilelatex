@@ -9,7 +9,7 @@ CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
 SHELL			= /bin/sh
 ALL_TEX			= $(MAIN_TEX) $(CAPITOLI_TEX) $(BIBLIO_BIB)
 CLEAN_FILES		= *.aux *.bbl *.bcf *.blg *-blx.bib *.brf *.fdb_latexmk \
-			  *.idx *.ilg *.ind *.log *.out *.run.xml *.toc *~
+			  *.fls *.idx *.ilg *.ind *.log *.out *.run.xml *.toc *~
 DISTCLEAN_FILES		= $(MAIN_PDF) $(MAIN_DVI)
 TODAY			= $(shell date "+%Y%m%d.%H%M%S")
 

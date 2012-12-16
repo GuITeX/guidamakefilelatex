@@ -2,11 +2,52 @@
 \chapter{Concetti di base}
 \label{cha:concetti-base}
 
+\section{Installazione di \texttt{make}}
+\label{sec:installazione}
+
+Per verificare se \texttt{make} è già presente nel proprio sistema si può
+eseguire in un terminale il seguente comando
+\begin{verbatim}
+$ make --version
+\end{verbatim}
+% $
+che restituisce la versione del programma installata nel sistema.  Se il
+programma non è presente verrà mostrato un messaggio di errore.
+
+Per ottenere \texttt{make} in ambiente GNU/Linux bisogna installare il pacchetto
+omonimo utilizzando il gestore pacchetti della propria distribuzione.  Per
+esempio, per Debian e sistemi derivati (come Ubuntu) bisogna dare il comando
+\begin{verbatim}
+# apt-get install make
+\end{verbatim}
+con i diritti di amministratore.  In Fedora e derivate, invece, bisogna eseguire
+il comando
+\begin{verbatim}
+# yum install make
+\end{verbatim}
+
+Fino a qualche anno fa, \texttt{make} era preinstallato sui sistemi Mac OS X.
+Per installare \texttt{make} nei sistemi Mac OS X sui quali non è già presente,
+si deve installare il software Xcode, disponibile nel Mac App Store, e poi
+scaricare gli strumenti a linea di comando dalle preferenze del programma.
+
+\textsc{Nota}\quad Da qui in poi tutti i comandi da eseguire nel terminale
+devono essere lanciati trovandosi nella stessa cartella in cui è presente il
+\texttt{Makefile} che si desidera utilizzare, se non diversamente specificato.
+
 \section{Le regole}
 \label{sec:le-regole}
 
-Un \texttt{Makefile} basilare è composto essenzialmente da \emph{regole}
-(chiamate in inglese \emph{rules}) che hanno la seguente struttura:
+Il programma \texttt{make} non fa altro che leggere le istruzioni presenti in un
+file di testo, chiamato necessariamente
+\texttt{Makefile}\footnote{In realtà potrebbe avere anche altri nomi, questo è
+  quello consigliato e riconosciuto in maniera predefinita, per ulteriori
+  informazioni vedi~\cite[pagina 12]{gnu:make}.}
+e scritto con una particolare sintassi.  I \texttt{Makefile} sono dei file di
+testo puro, per scriverli c'è bisogno quindi di un normale editor di testo come
+Gedit o Kate per GNU/Linux, TextEdit per Mac OS X.  Un \texttt{Makefile}
+basilare è composto essenzialmente da \emph{regole} (chiamate in inglese
+\emph{rules}) che hanno la seguente struttura:
 \begin{lstlisting}[showtabs=true,tab=\rightarrowfill,caption={Struttura di una
 regola.},label=lst:rule]
 obiettivo: prerequisiti
@@ -85,7 +126,7 @@ presenti nei \emph{comandi}: questi sono passati alla shell, normalmente la
 \begin{figure}
   \centering
   \begin{tikzpicture}[level 1/.style={sibling distance=100},
-    edge from parent/.style={draw,<-}]
+    edge from parent/.style={draw,latex-}]
     \node[rounded corners,draw] {\texttt{obiettivo1}}
          child { node {\texttt{prerequisito1}}}
          child { node[rounded corners,draw] {\texttt{prerequisito2}}
@@ -241,6 +282,18 @@ documento.pdf: documento.tex bibliografia.bib
 	bibtex documento
 	pdflatex documento
 	pdflatex documento
+\end{lstlisting}
+
+Eseguendo \texttt{make} in un terminale, viene scritto nel terminale il comando
+che si sta eseguendo, seguito dall'output di quel comando.  Se non si vuole che
+il comando venga scritto nel terminale, nel \texttt{Makefile} deve essere
+preceduto dalla chiocciola \texttt{\@}, per esempio
+\begin{lstlisting}
+documento.pdf: documento.tex bibliografia.bib
+	@pdflatex documento
+	@bibtex documento
+	@pdflatex documento
+	@pdflatex documento
 \end{lstlisting}
 
 In alcune distribuzioni GNU/Linux sono presenti gli script \texttt{texi2dvi} e
@@ -485,7 +538,7 @@ Al posto di \meta{modello} bisogna inserire uno schema di nome di file,
 generalmente contenente un metacarattere. Per esempio, con
 \begin{lstlisting}
 $(wildcard *.tex)
-\end{lstlisting}
+\end{lstlisting} % $
 si indica un elenco di tutti i file, presenti nella cartella, con estensione
 \texttt{.tex}.  Risulta particolarmente utile per ottenere un elenco di file che
 hanno tutti uno stesso formato o uno stesso schema nel nome.  Negli esempi
@@ -494,7 +547,32 @@ funzione \texttt{wildcard} perché l'espansione dei metacaratteri nel nome
 dell'obiettivo e nei prerequisiti è svolta automaticamente da \texttt{make} e
 all'interno dei comandi è svolta dalla shell.  In tutti gli altri contesti
 (compresa la definizione delle variabili) l'espansione dei metacaratteri avviene
-solo richiedendola con la funzione \texttt{wildcard}.
+solo richiedendola con la funzione \texttt{wildcard}.  Consideriamo il seguente
+\texttt{Makefile} di esempio
+\begin{lstlisting}
+VAR1 = *.tex
+VAR2 = $(wildcard *.tex)
+
+.PHONY: prova
+
+prova:
+	@echo "Valore di 'VAR1': $(VAR1)"
+	@echo "Valore di 'VAR2': $(VAR2)"
+	@echo "La shell interpreta 'VAR1' come" $(VAR1)
+	@echo "La shell interpreta 'VAR2' come" $(VAR2)
+\end{lstlisting}
+L'output della regola fittizia \texttt{prova} è qualcosa del tipo
+\begin{verbatim}
+Valore di 'VAR1': *.tex
+Valore di 'VAR2': make.tex
+La shell interpreta 'VAR1' come make.tex
+La shell interpreta 'VAR2' come make.tex
+\end{verbatim}
+Solo la variabile \texttt{VAR2} è stata espansa già nella sua definizione,
+poiché fa uso della funzione \texttt{wildcard}, comunque la shell interpreta le
+due variabili allo stesso modo poiché espande il metacarattere \texttt{*}.  È
+preferibile usare la funzione \texttt{wildcard} quando si vuole che l'espansione
+avvenga già nella definizione della variabile.
 
 Un ultimo strumento importante sono le funzioni per le sostituzioni di
 stringhe.\footnote{Per un elenco esaustivo di queste funzioni vedi
