@@ -3,6 +3,7 @@
 *.bcf
 *.blg
 *.dvi
+*.eps
 *.fdb_latexmk
 *.fls
 *.log
