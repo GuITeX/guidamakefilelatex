@@ -6,11 +6,14 @@ MAIN_PDF		= $(MAIN).pdf
 BIBLIO			= bibliografia
 BIBLIO_BIB		= $(BIBLIO).bib
 CAPITOLI_TEX		= $(wildcard Capitoli/*.tex)
+CARTELLA_IMG		= figure
+IMMAGINI_PNG		= $(wildcard $(CARTELLA_IMG)/*.png)
+IMMAGINI_EPS		= $(patsubst $(CARTELLA_IMG)/%.png, $(CARTELLA_IMG)/%.eps, $(IMMAGINI_PNG))
 SHELL			= /bin/sh
 ALL_TEX			= $(MAIN_TEX) $(CAPITOLI_TEX) $(BIBLIO_BIB)
 CLEAN_FILES		= *.aux *.bbl *.bcf *.blg *-blx.bib *.brf *.fdb_latexmk \
 			  *.fls *.idx *.ilg *.ind *.log *.out *.run.xml *.toc *~
-DISTCLEAN_FILES		= $(MAIN_PDF) $(MAIN_DVI)
+DISTCLEAN_FILES		= $(MAIN_PDF) $(MAIN_DVI) $(IMMAGINI_EPS)
 TODAY			= $(shell date "+%Y%m%d.%H%M%S")
 
 .PHONY: pdf dvi clean distclean dist
@@ -22,8 +25,11 @@ dvi: $(MAIN_DVI)
 $(MAIN_PDF): $(ALL_TEX)
 	latexmk -pdf $(MAIN)
 
-$(MAIN_DVI): $(ALL_TEX)
+$(MAIN_DVI): $(ALL_TEX) $(IMMAGINI_EPS)
 	latexmk $(MAIN)
+
+$(CARTELLA_IMG)/%.eps: $(CARTELLA_IMG)/%.png
+	convert $^ $@
 
 dist: distclean
 	cd ..; tar cvzpf $(MAIN)-$(TODAY).tar.gz --exclude-vcs --exclude $(CARTELLA)/auto $(CARTELLA)/

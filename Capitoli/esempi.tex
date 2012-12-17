@@ -53,24 +53,22 @@ TUTTI_LATEX    = $(PRINCIPALE_TEX) \
                  $(BIBLIOGRAFIA)
 CARTELLA_IMG   = Immagini
 IMMAGINI_PDF   = $(wildcard $(CARTELLA_IMG)/*.pdf)
-IMMAGINI_EPS   = $(patsubst $(CARTELLA_IMG)/%.eps,\
-                 $(CARTELLA_IMG)/%.pdf, \
+IMMAGINI_EPS   = $(patsubst $(CARTELLA_IMG)/%.pdf,\
+                 $(CARTELLA_IMG)/%.eps, \
 		 $(IMMAGINI_PDF))
 
-.PHONY: dvi immagini-eps
+.PHONY: dvi
 
 dvi: $(PRINCIPALE_DVI)
 
-$(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
+$(PRINCIPALE_DVI): $(TUTTI_LATEX) $(IMMAGINI_EPS)
         latex $(PRINCIPALE)
         bibtex $(PRINCIPALE)
         makeindex $(PRINCIPALE)
         latex $(PRINCIPALE)
         latex $(PRINCIPALE)
 
-immagini-eps: $(IMMAGINI_EPS)
-
-Immagini/%.eps: Immagini/%.pdf
+$(CARTELLA_IMG)/%.eps: $(CARTELLA_IMG)/%.pdf
 	convert $^ $@
 \end{lstlisting} % $
 La variabile \texttt{IMMAGINI\_PDF} contiene l'elenco di tutti i file in formato
@@ -83,9 +81,9 @@ file in formato \textsc{PDF}, ma questa volta con estensione \texttt{.eps}
 In questo \texttt{Makefile} è presente una regola con una definizione un po'
 particolare:
 \begin{lstlisting}
-Immagini/%.eps: Immagini/%.pdf
+$(CARTELLA_IMG)/%.eps: $(CARTELLA_IMG)/%.pdf
 	convert $^ $@
-\end{lstlisting}
+\end{lstlisting} %$
 Il prerequisito di questa regola è un qualsiasi file della cartella
 \texttt{Immagini} con estensione \texttt{.pdf}, l'obiettivo, però, non è un
 qualsiasi file della sottocartella \texttt{Immagini} con estensione
@@ -101,7 +99,7 @@ regola è
 	convert $^ $@
 \end{lstlisting}
 Le due variabili \texttt{\$\^} e \texttt{\$@} sono delle variabili dette
-\texttt{automatiche}\footnote{Per un elenco esaustivo di queste variabili vedi
+\emph{automatiche}\footnote{Per un elenco esaustivo di queste variabili vedi
   \cite[pagina 112]{gnu:make}.}
 e che hanno un significato speciale: \texttt{\$\^} indica tutti i prerequisiti
 della regola (in questo caso indica il solo file \textsc{PDF} che ha lo stesso
@@ -123,11 +121,9 @@ $ make dvi
 \end{verbatim}
 % $
 il programma \texttt{make} si preoccupa di verificare se tutti i prerequisiti
-elencati in questa regola sono aggiornati.  Uno di essi è \texttt{immagini-eps}
-che è un phony target: questo ha il compito di convertire tutte le immagini in
-formato \textsc{PDF} presenti nella sottocartella \texttt{Immagini} nel formato
-\textsc{EPS}, adatto per l'inclusione di immagini nel documento finale
-\textsc{DVI}.
+elencati in questa regola sono aggiornati.  Fra questi ci sono le figure
+\texttt{\$(IMMAGINI\_EPS)} che verranno generate a partire dalle corrispondenti
+immagini in formato \textsc{PDF} grazie alla regola vista in precedenza.
 
 % $
 Immaginiamo di avere in una cartella il file \texttt{documento.tex} come file
@@ -139,6 +135,8 @@ bibliografici.  Nella sottocartella \texttt{Capitoli} sono presenti vari file
 che saranno eventualmente convertite nel formato \textsc{EPS} nel caso di
 compilazione con \LaTeX.  Un \texttt{Makefile} per compilare questo progetto
 potrebbe apparire così:
+% ho aggiunto un paio di righe bianche in più del necessario, sopra e sotto i
+% phony targets, per evitare un underfull box
 \begin{lstlisting}[caption={\texttt{Makefile} in cui la prima regola compila il
 documento in \textsc{DVI} convertendo le immagini \textsc{PDF} in \textsc{EPS},
 la seconda regola compila in formato \textsc{PDF}.},
@@ -161,13 +159,15 @@ FILE_DISTCLEAN	= $(PRINCIPALE_DVI) \
 		  $(PRINCIPALE_PDF) \
 		  $(IMMAGINI_EPS)
 
-.PHONY: dvi pdf distclean clean immagini-eps
+
+.PHONY: dvi pdf distclean clean
+
 
 dvi: $(PRINCIPALE_DVI)
 
 pdf: $(PRINCIPALE_PDF)
 
-$(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
+$(PRINCIPALE_DVI): $(TUTTI_LATEX) $(IMMAGINI_EPS)
 	latex $(PRINCIPALE)
 	bibtex $(PRINCIPALE)
 	makeindex $(PRINCIPALE)
@@ -180,8 +180,6 @@ $(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
 	makeindex $(PRINCIPALE)
 	pdflatex $(PRINCIPALE)
 	pdflatex $(PRINCIPALE)
-
-immagini-eps: $(IMMAGINI_EPS)
 
 Immagini/%.eps: Immagini/%.pdf
 	convert $^ $@
