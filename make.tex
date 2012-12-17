@@ -2,7 +2,6 @@
 \ProvidesFile{make.tex}[2012/12/14 v.1.0 Introduzione alla scrittura di Makefile
 per compilare documenti LaTeX]
 
-\usepackage[font=small,format=hang,labelfont=sc]{caption}
 \usepackage{quoting,multicol}
 \usepackage{menukeys} % `menukeys' carica automaticamente `tikz'
 \usepackage{hyperref}
@@ -27,6 +26,7 @@ per compilare documenti LaTeX]
   commentstyle=\color{red},
   stringstyle=\color{purple},
   showstringspaces=false,
+  belowcaptionskip=\bigskipamount,
   frame=single,
   literate=
   {à}{{\`a}}1
