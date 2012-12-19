@@ -31,9 +31,10 @@ Per installare \texttt{make} nei sistemi Mac OS X sui quali non è già presente
 si deve installare il software Xcode, disponibile nel Mac App Store, e poi
 scaricare gli strumenti a linea di comando dalle preferenze del programma.
 
-\textsc{Nota}\quad Da qui in poi tutti i comandi da eseguire nel terminale
-devono essere lanciati trovandosi nella stessa cartella in cui è presente il
-\texttt{Makefile} che si desidera utilizzare, se non diversamente specificato.
+Il programma di installazione di \texttt{make} per Windows può essere scaricato
+all'indirizzo \url{http://gnuwin32.sourceforge.net/packages/make.htm}.
+\texttt{make} è fornito anche insieme a Cygwin (\textsc{Url}:
+\url{http://cygwin.com/index.html}).
 
 \section{Le regole}
 \label{sec:le-regole}
@@ -93,6 +94,9 @@ backslash).  Ciò non è obbligatorio in quanto non sono posti limiti alla
 lunghezza delle righe di un \texttt{Makefile}, però può aiutare la leggibilità
 del codice.
 
+\textsc{Nota}\quad Da qui in poi tutti i comandi da eseguire nel terminale
+devono essere lanciati trovandosi nella stessa cartella in cui è presente il
+\texttt{Makefile} che si desidera utilizzare, se non diversamente specificato.
 
 \section{Come funziona \texttt{make}}
 \label{sec:come-funziona}
@@ -142,7 +146,7 @@ presenti nei \emph{comandi}: questi sono passati alla shell, normalmente la
 \end{figure}
 Poiché tutta la logica di funzionamento di \texttt{make} è basata sulle
 dipendenze fra i file, per scrivere correttamente un \texttt{Makefile} risulta
-utile disegnarsi un grafo ad albero che illustri le relazioni che ci sono fra i
+utile disegnare un grafo ad albero che illustri le relazioni che ci sono fra i
 vari file, individuando quali dovranno essere gli obiettivi delle regole e quali
 saranno i prerequisiti delle regole.  Uno stesso file può svolgere il ruolo di
 prerequisito in una regola e di obiettivo in un'altra.  Nell'esempio della
@@ -302,7 +306,7 @@ e \textsc{PDF}\TeX{}
 (e, se necessario, \textsc{Bib}\TeX) sul sorgente il numero strettamente
 necessario di volte per la corretta compilazione del documento (vedi
 \cite[pagina 63]{caucci:tabelle}).  Utilizzando questi due comandi il
-codice~\ref{lst:dvi-pdf} si potrebbe ridurrebbe quindi a
+codice~\ref{lst:dvi-pdf} si potrebbe ridurre quindi a
 \begin{lstlisting}
 documento.dvi: documento.tex bibliografia.bib
 	texi2dvi documento
@@ -414,7 +418,7 @@ Una variabile è un nome a cui è associato un \emph{valore} che in genere è un
 stringa di testo.  Per assegnare a una variabile il suo valore si usa la
 sintassi
 \begin{sintassi}
-  \small \meta{variabile} \texttt{=} \meta{valore}
+  \small \meta{nome della variabile} \texttt{=} \meta{valore}
 \end{sintassi}
 Le variabili permettono di rendere il \texttt{Makefile} più compatto perché i
 valori delle variabili sono spesso dei lunghi elenchi di file che dovrebbero
@@ -427,10 +431,11 @@ andare a cercare nel file tutte le occorrenze da sostituire.
 
 Le variabili, \emph{dopo} essere state dichiarate, possono essere referenziate
 usando il simbolo del dollaro seguito (senza spazi) dal nome della variabile
-racchiuso fra parentesi tonde o graffe: \texttt{\$(VARIABILE)} oppure
-\texttt{\$\{VARIABILE\}}.  Per evitare di dimenticarsi di dichiarare una
-variabile prima di richiamarla può essere utile abituarsi a definire tutte le
-variabili all'inizio del \texttt{Makefile}.
+racchiuso fra parentesi tonde o graffe:
+\texttt{\$(}\meta{nome della variabile}\texttt{)} oppure
+\texttt{\$\{}\meta{nome della variabile}\texttt{\}}.  Per evitare di
+dimenticarsi di dichiarare una variabile prima di richiamarla può essere utile
+abituarsi a definire tutte le variabili all'inizio del \texttt{Makefile}.
 
 Le variabili possono essere referenziate in qualsiasi parte di un
 \texttt{Makefile}, come per esempio negli obiettivi, nei prerequisiti, nei
@@ -628,18 +633,19 @@ poiché è una variabile della shell.
 In un \texttt{Makefile} i comandi che devono essere eseguiti in una regola vanno
 scritti, normalmente, uno su ciascuna riga.  Anche se generalmente i cicli
 \texttt{for} delle shell Unix sono scritti nella forma
-\begin{lstlisting}[language=bash]
-for <variabile> in <elenco>; do
-  comandi
-  ...
-  ...
-done
-\end{lstlisting}
+\begin{sintassi} \obeylines{}
+  \small \texttt{\textcolor{blue}{\textbf{for}}} \meta{variabile} \texttt{in}\
+  \meta{elenco}\texttt{; \textcolor{blue}{\textbf{do}}}
+  \texttt{\ \ }\meta{comandi}
+  \texttt{\ \ ...
+    \ \ ...
+    \textcolor{blue}{\textbf{done}}}
+\end{sintassi}
 si tratta in realtà di \emph{un unico} comando e quindi nel \texttt{Makefile}
 andrebbe scritto su un'unica riga in questo modo
 \begin{sintassi}
-  \small \texttt{\textcolor{blue}{\textbf{for}}} \meta{variabile} in
-  \meta{elenco}; \texttt{\textcolor{blue}{\textbf{do}}} \meta{comandi}
+  \small \texttt{\textcolor{blue}{\textbf{for}}} \meta{variabile} \texttt{in}
+  \meta{elenco}\texttt{; \textcolor{blue}{\textbf{do}}} \meta{comandi}
   \texttt{; ... ; ... ;} \texttt{\textcolor{blue}{\textbf{done}}}
 \end{sintassi}
 Per rendere il codice più leggibile si può effettuare l'escape del carattere di

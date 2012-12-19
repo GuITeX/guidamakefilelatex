@@ -3,7 +3,7 @@
 \label{cha:editor}
 
 Può essere utile poter richiamare \texttt{make} direttamente dal proprio editor
-di testo preferito.  In generale consiglio di aggiungere il comando
+di testo preferito.  In generale si consiglia di aggiungere il comando
 \texttt{make} all'elenco dei comandi di composizione dell'editor, in modo da
 poter eseguire la regola predefinita del \texttt{Makefile}.  Di seguito sono
 riportate le istruzioni per aggiungere \texttt{make} all'elenco dei programmi di
@@ -14,19 +14,25 @@ dell'output di \texttt{make} è necessario compilare in modalità
 ai comandi \texttt{latex} o \texttt{pdflatex} (o l'eventuale altro compilatore
 usato) l'opzione \texttt{-interaction=nonstopmode}
 \begin{lstlisting}
+# Variabili contenenti i nomi dei comandi da eseguire
+# e le relative opzioni.  Per cambiare le opzioni dei
+# comandi sarà sufficiente cambiare le variabili
+LATEX     = latex -interaction=nonstopmode
+PDFLATEX  = pdflatex -interaction=nonstopmode
+
 $(PRINCIPALE_DVI): $(TUTTI_LATEX) immagini-eps
-	latex -interaction=nonstopmode $(PRINCIPALE)
+	$(LATEX) $(PRINCIPALE)
 	bibtex $(PRINCIPALE)
 	makeindex $(PRINCIPALE)
-	latex -interaction=nonstopmode $(PRINCIPALE)
-	latex -interaction=nonstopmode $(PRINCIPALE)
+	$(LATEX) $(PRINCIPALE)
+	$(LATEX) $(PRINCIPALE)
 
 $(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
-	pdflatex -interaction=nonstopmode $(PRINCIPALE)
+	$(PDFLATEX) $(PRINCIPALE)
 	bibtex $(PRINCIPALE)
 	makeindex $(PRINCIPALE)
-	pdflatex -interaction=nonstopmode $(PRINCIPALE)
-	pdflatex -interaction=nonstopmode $(PRINCIPALE)
+	$(PDFLATEX) $(PRINCIPALE)
+	$(PDFLATEX) $(PRINCIPALE)
 \end{lstlisting}
 
 \section{Emacs}
@@ -39,8 +45,8 @@ Aggiungere al proprio file di inizializzazione \texttt{.emacs} o il seguente cod
 	       '("Make" "make" TeX-run-TeX nil t)))
 \end{lstlisting}
 È necessario utilizzare il pacchetto AUC\TeX{}.
-Con questa modifica sarà possibile eseguire \texttt{make} con
-\texttt{C-c C-c Make RET}.
+Con questa modifica sarà possibile eseguire \texttt{make} con la combinazione di
+tasti \texttt{C-c C-c Make RET}.
 
 \section{Kile}
 \label{sec:kile}
@@ -55,14 +61,14 @@ tendina della classe a cui fare riferimento, quindi fare clic sul pulsante
 ``Comando'' della scheda ``Generale'' scrivere ``make'', assicurarsi che le
 opzioni ``Controlla se il documento radice'' e ``Salta al primo errore'' siano
 attive e deselezionare l'opzione ``Esegui automaticamente gli strumenti
-aggiuntivi'' (questo se nei \texttt{Makefile} ci sono già le istruzioni
-necessaria per eseguire automaticamente tutti gli eventuali strumenti
-aggiuntivi).  Nella scheda ``Avanzate'' assicurarsi che il campo ``Tipo'' sia
-impostato a ``Esegui al di fuori di Kile'', il campo ``Classe'' a ``LaTeX'' e il
-campo ``Stato'' a ``Editor''.  Nella scheda ``Menu'' selezionare ``Compila'' nel
-menu a tendina relativo alla voce ``Aggiungi strumento al meno di costruzione'',
-in questo modo sarà possibile eseguire \texttt{make} dall'elenco di tutti gli
-strumenti di compilazione.
+aggiuntivi'' (se nei \texttt{Makefile} ci sono già le istruzioni necessaria per
+eseguire automaticamente tutti gli eventuali strumenti aggiuntivi).  Nella
+scheda ``Avanzate'' assicurarsi che il campo ``Tipo'' sia impostato a ``Esegui
+al di fuori di Kile'', il campo ``Classe'' a ``LaTeX'' e il campo ``Stato'' a
+``Editor''.  Nella scheda ``Menu'' selezionare ``Compila'' nel menu a tendina
+relativo alla voce ``Aggiungi strumento al meno di costruzione'', in questo modo
+sarà possibile eseguire \texttt{make} dall'elenco di tutti gli strumenti di
+compilazione.
 
 \section{Texmaker}
 \label{sec:texmaker}

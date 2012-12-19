@@ -21,23 +21,21 @@ richiede immagini in formato \textsc{EPS}, \textsc{PDF}\LaTeX{}
 accetta immagini in formato \textsc{PDF}, \textsc{JPG} e \textsc{PNG} (vedi
 \cite[pagina 105]{pantieri:latex}).  Se si possiede un'immagine in un formato
 diverso da quello necessario per l'inserimento nel documento, si deve quindi
-procedere alla conversione da un formato all'altro.  La suite
-\texttt{ImageMagick} fornisce il programma da linea di comando
-\texttt{convert}. Con la sintassi
+procedere alla conversione da un formato all'altro.
+
+Nelle distribuzioni GNU/Linux e con la distribuzione TeX Live è disponibile il
+programma da linea di comando \texttt{pdftops}. Con la sintassi
 \begin{sintassi}
-  \texttt{\$ convert} \meta{file di input} \meta{file di output}
+  \small \texttt{\$ pdftops -eps} \meta{file PDF} \meta{file EPS}
 \end{sintassi}
-si converte il primo file specificato, cioè \meta{file di input}, nel secondo
-file, \texttt{file di output}.  Il formato dei due file, di input e output, è
-dedotto dalle estensioni dei file.  Per esempio, il comando
-\begin{verbatim}
-$ convert nomefile.eps nomefile.pdf
-\end{verbatim}
-% $
-converte il file \texttt{nomefile.eps}, in formato \textsc{EPS}, nel file
-\texttt{nomefile.pdf}, in formato \textsc{PDF}.  Supponiamo di avere nella
-sottocartella \texttt{Immagini} della cartella in cui si trovano il documento
-\LaTeX{}
+si converte il cioè \meta{file PDF} in formato \textsc{EPS}.  Il nome del nuovo
+file è dedotto automaticamente dal file originale, cambiando solo l'estensione
+da \texttt{.pdf} a \texttt{.eps}.  Se si vuole specificare un nome differente
+per il file di output lo si può specificare come secondo argomento, opzionale,
+del comando.
+
+Supponiamo di avere nella sottocartella \texttt{Immagini} della cartella in cui
+si trovano il documento \LaTeX{}
 principale e il \texttt{Makefile} tutte le immagini in formato \textsc{PDF}.
 Per compilare in \textsc{DVI} è quindi necessario convertire tutte le immagini.
 Per automatizzare la compilazione e la conversione delle immagini è possibile
@@ -69,7 +67,7 @@ $(PRINCIPALE_DVI): $(TUTTI_LATEX) $(IMMAGINI_EPS)
         latex $(PRINCIPALE)
 
 $(CARTELLA_IMG)/%.eps: $(CARTELLA_IMG)/%.pdf
-	convert $^ $@
+	pdftops -eps $^ $@
 \end{lstlisting} % $
 La variabile \texttt{IMMAGINI\_PDF} contiene l'elenco di tutti i file in formato
 \textsc{PDF} presenti nella sottocartella \texttt{Immagini} (il nome della
@@ -82,7 +80,7 @@ In questo \texttt{Makefile} è presente una regola con una definizione un po'
 particolare:
 \begin{lstlisting}
 $(CARTELLA_IMG)/%.eps: $(CARTELLA_IMG)/%.pdf
-	convert $^ $@
+	pdftops -eps $^ $@
 \end{lstlisting} %$
 Il prerequisito di questa regola è un qualsiasi file della cartella
 \texttt{Immagini} con estensione \texttt{.pdf}, l'obiettivo, però, non è un
@@ -96,7 +94,7 @@ Con questa regola verranno dunque generati solo file con estensione
 presente nella sottocartella \texttt{Immagini}.  Il comando eseguito nella
 regola è
 \begin{lstlisting}
-	convert $^ $@
+	pdftops -eps $^ $@
 \end{lstlisting}
 Le due variabili \texttt{\$\^} e \texttt{\$@} sono delle variabili dette
 \emph{automatiche}\footnote{Per un elenco esaustivo di queste variabili vedi
@@ -135,8 +133,6 @@ bibliografici.  Nella sottocartella \texttt{Capitoli} sono presenti vari file
 che saranno eventualmente convertite nel formato \textsc{EPS} nel caso di
 compilazione con \LaTeX.  Un \texttt{Makefile} per compilare questo progetto
 potrebbe apparire così:
-% ho aggiunto un paio di righe bianche in più del necessario, sopra e sotto i
-% phony targets, per evitare un underfull box
 \begin{lstlisting}[caption={\texttt{Makefile} in cui la prima regola compila il
 documento in \textsc{DVI} convertendo le immagini \textsc{PDF} in \textsc{EPS},
 la seconda regola compila in formato \textsc{PDF}.},
@@ -159,9 +155,7 @@ FILE_DISTCLEAN	= $(PRINCIPALE_DVI) \
 		  $(PRINCIPALE_PDF) \
 		  $(IMMAGINI_EPS)
 
-
 .PHONY: dvi pdf distclean clean
-
 
 dvi: $(PRINCIPALE_DVI)
 
@@ -182,7 +176,7 @@ $(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
 	pdflatex $(PRINCIPALE)
 
 Immagini/%.eps: Immagini/%.pdf
-	convert $^ $@
+	pdftops -eps $^ $@
 
 distclean: clean
 	rm -f $(FILE_DISTCLEAN)
@@ -244,7 +238,7 @@ paragrafo~\ref{sec:sostituzione-comando}, la funzione \texttt{\$(shell ...)} è
 stata introdotta nel paragrafo~\ref{sec:uso-variabili}.  Il phony target
 \texttt{dist} esegue queste operazione: cambia la cartella attuale di lavoro
 nella cartella superiore (con il comando \texttt{cd ..}) e crea in questa
-posizione un archivio, compresso con il programma, \texttt{xz} della cartella
+posizione un archivio, compresso con il programma \texttt{xz}, della cartella
 \texttt{\$(CARTELLA)}.  Il nome dell'archivio è
 \texttt{\$(PRINCIPALE)-\$(DATA).tar.xz}, in modo da individuare facilmente la
 data in cui è stato creato, e con l'opzione \texttt{--exclude-vcs} si escludono
@@ -258,7 +252,7 @@ $ man tar
 
 Si noti che nell'elenco dei comandi \texttt{cd} e \texttt{tar} devono trovarsi
 sulla stessa riga, separati da un punto e virgola \texttt{;} per separarli, e
-uno per riga come ci si potrebbe aspettare, perché, come detto nel
+non uno per riga come ci si potrebbe aspettare, perché, come detto nel
 paragrafo~\ref{sec:le-regole}, \texttt{make} in maniera predefinita invoca una
 nuova subshell per ogni riga dell'elenco dei comandi.  Quindi se si scrivesse
 \begin{lstlisting}
@@ -304,17 +298,17 @@ Ti\emph{k}Z in un file con estensione \texttt{.tikz} usando la classe
 per ottenere il documento in formato \textsc{PDF} e poi includere i file così
 prodotti nel documento principale con la macro
 \texttt{\textbackslash{}includegraphics\{\}}.  In questa situazione diventa
-importante assicurarsi che le figure PDF siano aggiornate, infatti è facile
-dimenticarsi di ricompilare la figura dopo aver fatto una piccola modifica al
-suo codice sorgente.  È evidente che in questo caso \texttt{make} può risultare
-molto utile per controllare in maniera efficiente che le figure Ti\emph{k}Z
-siano sempre aggiornate.
+importante assicurarsi che le figure \textsc{PDF} siano aggiornate, infatti è
+facile dimenticarsi di ricompilare la figura dopo aver fatto una piccola
+modifica al suo codice sorgente.  È evidente che in questo caso \texttt{make}
+può risultare molto utile per controllare in maniera efficiente che le figure
+Ti\emph{k}Z siano sempre aggiornate.
 
 Supponiamo che tutti i file \texttt{*.tikz} siano posti nella sottocartella
 \texttt{img-tikz} della directory in cui si trovano il \texttt{Makefile} e il
 file principale del documento, chiamato \texttt{documento.tex}. Per i codici
 delle figure si potrebbe più semplicemente usare la classica estensione
-\texttt{.tex}, ho preferito \texttt{.tikz} per evidenziare che si tratta di
+\texttt{.tex}, si è preferito \texttt{.tikz} per evidenziare che si tratta di
 codici di figure Ti\emph{k}Z.  Inoltre questa scelta permette di riservare
 l'estensione \texttt{.tex} a un eventuale file, da non compilare, posto nella
 cartella \texttt{img-tikz} e contenente solo il preambolo comune per tutti i
