@@ -1,5 +1,5 @@
 CARTELLA		= $(shell basename $$(pwd))
-MAIN			= make
+MAIN			= guidamake
 MAIN_TEX		= $(MAIN).tex
 MAIN_DVI		= $(MAIN).dvi
 MAIN_PDF		= $(MAIN).pdf
