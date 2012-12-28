@@ -38,13 +38,18 @@ $(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
 \section{Emacs}
 \label{sec:emacs}
 
-Aggiungere al proprio file di inizializzazione \texttt{.emacs} o il seguente codice
+Emacs supporta nativamente \texttt{make}.  È possibile eseguirlo con la
+combinazione di tasti \texttt{M-x compile RET} e si può anche specificare la
+regola da avviare.  Chi usa il pacchetto AUC\TeX{},
+però, potrebbe preferire una migliore integrazione che permetta di effettuare
+l'analisi dell'output del programma di compilazione usato.  Per fare ciò bisogna
+aggiungere al proprio file di inizializzazione \texttt{.emacs} il seguente
+codice
 \begin{lstlisting}[language=lisp,morekeywords={eval-after-load,add-to-list}]
 (eval-after-load "tex"
   (add-to-list 'TeX-command-list
 	       '("Make" "make" TeX-run-TeX nil t)))
 \end{lstlisting}
-È necessario utilizzare il pacchetto AUC\TeX{}.
 Con questa modifica sarà possibile eseguire \texttt{make} con la combinazione di
 tasti \texttt{C-c C-c Make RET}.
 
