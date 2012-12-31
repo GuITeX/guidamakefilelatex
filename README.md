@@ -2,6 +2,8 @@ guidamakefilelatex
 ==================
 
 Contiene i sorgenti LaTeX della Guida tematica all'uso di makefile per LaTeX.
+Per compilare il documento è necessaria la classe `guidatematica.cls'
+disponibile all'indirizzo https://github.com/GuITeX/guidetematiche.
 
 Quest'opera è rilasciata con licenza Creative Commons Attribuzione 3.0 Unported.
 Un riassunto in linguaggio accessibile a tutti della Licenza in versione 3.0 è
