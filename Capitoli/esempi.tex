@@ -2,14 +2,15 @@
 \chapter{Esempi d'uso}
 \label{cha:esempi}
 
-Il codice~\ref{lst:variabili} è un \texttt{Makefile} già abbastanza elaborato.
-In realtà, come già osservato, tutte le operazioni che esso svolge possono
-essere eseguite anche dai comuni editor di testo specializzati per \LaTeX{},
-quindi ci si potrebbe chiedere, a ragione, perché scrivere un \texttt{Makefile}
-piuttosto che affidarsi agli strumenti già disponibili.  \texttt{make} è utile
-quando è necessario eseguire operazioni non comuni difficilmente eseguibili con
-altri strumenti.  In questo paragrafo vedremo alcuni esempi di operazioni che un
-\texttt{Makefile} permette di automatizzare.
+Il codice~\ref{lst:variabili} è un \filestyle{Makefile} già abbastanza
+elaborato.  In realtà, come già osservato, tutte le operazioni che esso svolge
+possono essere eseguite anche dai comuni editor di testo specializzati per
+\LaTeX{}, quindi ci si potrebbe chiedere, a ragione, perché scrivere un
+\filestyle{Makefile} piuttosto che affidarsi agli strumenti già disponibili.
+\progstyle{make} è utile quando è necessario eseguire operazioni non comuni
+difficilmente eseguibili con altri strumenti.  In questo paragrafo vedremo
+alcuni esempi di operazioni che un \filestyle{Makefile} permette di
+automatizzare.
 
 \section{Convertire immagini \textsc{PDF} in formato \textsc{EPS}}
 \label{sec:immagini-eps}
@@ -36,13 +37,14 @@ del comando.
 
 Supponiamo di avere nella sottocartella \texttt{Immagini} della cartella in cui
 si trovano il documento \LaTeX{}
-principale e il \texttt{Makefile} tutte le immagini in formato \textsc{PDF}.
+principale e il \filestyle{Makefile} tutte le immagini in formato \textsc{PDF}.
 Per compilare in \textsc{DVI} è quindi necessario convertire tutte le immagini.
 Per automatizzare la compilazione e la conversione delle immagini è possibile
 scrivere queste regole utilizzando le funzioni apprese nel
 paragrafo~\ref{sec:variabili}:
-\begin{lstlisting}[caption={\texttt{Makefile} in cui le immagini \textsc{PDF}
-vengono convertite in \textsc{EPS} nella compilazione con \LaTeX.},label=lst:pdf-eps]
+\begin{lstlisting}[caption={\filestyle{Makefile} in cui le immagini \textsc{PDF}
+vengono convertite in \textsc{EPS} nella compilazione con \LaTeX.},
+label=lst:pdf-eps]
 PRINCIPALE     = documento
 PRINCIPALE_TEX = $(PRINCIPALE).tex
 PRINCIPALE_DVI = $(PRINCIPALE).dvi
@@ -76,7 +78,7 @@ sufficiente cambiare solo questo valore per cartelle con nomi differenti).  La
 variabile \texttt{IMMAGINI\_EPS}, invece, contiene l'elenco dei degli stessi
 file in formato \textsc{PDF}, ma questa volta con estensione \texttt{.eps}
 (abbiamo utilizzato la funzione \texttt{patsubst} per eseguire la sostituzione).
-In questo \texttt{Makefile} è presente una regola con una definizione un po'
+In questo \filestyle{Makefile} è presente una regola con una definizione un po'
 particolare:
 \begin{lstlisting}
 $(CARTELLA_IMG)/%.eps: $(CARTELLA_IMG)/%.pdf
@@ -111,14 +113,14 @@ $ make immagine.eps
 \end{verbatim}
 % $
 Per come è scritta la regola con obiettivo \texttt{\$(PRINCIPALE\_DVI)} nel
-\texttt{Makefile} del codice~\ref{lst:pdf-eps} non è però necessario convertire
-una a una le immagini quando si vuole generare il documento in formato
-\textsc{DVI}.  Infatti, compilando con il comando
+\filestyle{Makefile} del codice~\ref{lst:pdf-eps} non è però necessario
+convertire una a una le immagini quando si vuole generare il documento in
+formato \textsc{DVI}.  Infatti, compilando con il comando
 \begin{verbatim}
 $ make dvi
 \end{verbatim}
 % $
-il programma \texttt{make} si preoccupa di verificare se tutti i prerequisiti
+il programma \progstyle{make} si preoccupa di verificare se tutti i prerequisiti
 elencati in questa regola sono aggiornati.  Fra questi ci sono le figure
 \texttt{\$(IMMAGINI\_EPS)} che verranno generate a partire dalle corrispondenti
 immagini in formato \textsc{PDF} grazie alla regola vista in precedenza.
@@ -131,11 +133,11 @@ bibliografici.  Nella sottocartella \texttt{Capitoli} sono presenti vari file
 \texttt{.tex} inclusi in \texttt{documento.tex}; nella sottocartella
 \texttt{Immagini}, invece, sono presenti immagini nel solo formato \textsc{PDF}
 che saranno eventualmente convertite nel formato \textsc{EPS} nel caso di
-compilazione con \LaTeX.  Un \texttt{Makefile} per compilare questo progetto
+compilazione con \LaTeX.  Un \filestyle{Makefile} per compilare questo progetto
 potrebbe apparire così:
-\begin{lstlisting}[caption={\texttt{Makefile} in cui la prima regola compila il
-documento in \textsc{DVI} convertendo le immagini \textsc{PDF} in \textsc{EPS},
-la seconda regola compila in formato \textsc{PDF}.},
+\begin{lstlisting}[caption={\filestyle{Makefile} in cui la prima regola compila
+il documento in \textsc{DVI} convertendo le immagini \textsc{PDF} in
+\textsc{EPS}, la seconda regola compila in formato \textsc{PDF}.},
 label=lst:dvi+pdf]
 PRINCIPALE 	= documento
 PRINCIPALE_TEX	= $(PRINCIPALE).tex
@@ -199,16 +201,16 @@ clean:
       child {node {\texttt{\$(IMMAGINI\_PDF)}}};
   \end{tikzpicture}
   \caption{Grafo ad albero rappresentante le dipendenze fra i file del
-    \texttt{Makefile} contenuto nel codice~\ref{lst:dvi+pdf}, eccetto i phony
+    \filestyle{Makefile} contenuto nel codice~\ref{lst:dvi+pdf}, eccetto i phony
     targets.}
   \label{fig:grafo-albero2}
 \end{figure}
 Con gli strumenti acquisiti fino a questo punto dovrebbe essere comprensibile
-come funziona questo \texttt{Makefile}, cosa compie ciascuna regola e quali
+come funziona questo \filestyle{Makefile}, cosa compie ciascuna regola e quali
 comandi bisogna dare nel terminale per compilare il documento.  Per maggiore
 chiarezza, nella figura~\ref{fig:grafo-albero2} è rappresentato il grafo ad
-albero che descrive le dipendenze fra i file del \texttt{Makefile} mostrato nel
-codice~\ref{lst:dvi+pdf}.
+albero che descrive le dipendenze fra i file del \filestyle{Makefile} mostrato
+nel codice~\ref{lst:dvi+pdf}.
 
 \section{Creare un archivio compresso}
 \label{sec:creare-archivio}
@@ -253,8 +255,9 @@ $ man tar
 Si noti che nell'elenco dei comandi \texttt{cd} e \texttt{tar} devono trovarsi
 sulla stessa riga, separati da un punto e virgola \texttt{;} per separarli, e
 non uno per riga come ci si potrebbe aspettare, perché, come detto nel
-paragrafo~\ref{sec:le-regole}, \texttt{make} in maniera predefinita invoca una
-nuova subshell per ogni riga dell'elenco dei comandi.  Quindi se si scrivesse
+paragrafo~\ref{sec:le-regole}, \progstyle{make} in maniera predefinita invoca
+una nuova subshell per ogni riga dell'elenco dei comandi.  Quindi se si
+scrivesse
 \begin{lstlisting}
 dist: distclean
 	cd ..
@@ -300,12 +303,12 @@ prodotti nel documento principale con la macro
 \texttt{\textbackslash{}includegraphics\{\}}.  In questa situazione diventa
 importante assicurarsi che le figure \textsc{PDF} siano aggiornate, infatti è
 facile dimenticarsi di ricompilare la figura dopo aver fatto una piccola
-modifica al suo codice sorgente.  È evidente che in questo caso \texttt{make}
+modifica al suo codice sorgente.  È evidente che in questo caso \progstyle{make}
 può risultare molto utile per controllare in maniera efficiente che le figure
 Ti\emph{k}Z siano sempre aggiornate.
 
 Supponiamo che tutti i file \texttt{*.tikz} siano posti nella sottocartella
-\texttt{img-tikz} della directory in cui si trovano il \texttt{Makefile} e il
+\texttt{img-tikz} della directory in cui si trovano il \filestyle{Makefile} e il
 file principale del documento, chiamato \texttt{documento.tex}. Per i codici
 delle figure si potrebbe più semplicemente usare la classica estensione
 \texttt{.tex}, si è preferito \texttt{.tikz} per evidenziare che si tratta di
@@ -316,8 +319,8 @@ file \texttt{*.tikz}, all'interno dei quali viene incluso con la macro
 \texttt{\textbackslash{}input\{\}}.  Nell'esempio seguente il file di preambolo
 è chiamato \texttt{preambolo.tex}.
 
-Un \texttt{Makefile} che permette di compilare il file \texttt{documento.tex} in
-formato \textsc{PDF} è il seguente
+Un \filestyle{Makefile} che permette di compilare il file \texttt{documento.tex}
+in formato \textsc{PDF} è il seguente
 \begin{lstlisting}
 PRINCIPALE 	    = documento
 PRINCIPALE_TEX	    = $(PRINCIPALE).tex
@@ -354,11 +357,11 @@ distclean: clean
 clean:
 	rm -f $(FILE_CLEAN)
 \end{lstlisting}
-La duplice utilità di un simile \texttt{Makefile} è che le figure \textsc{PDF}
-realizzate con Ti\emph{k}Z sono sicuramente sempre aggiornate quando si genera
-il documento finale con \texttt{make} ed esse vengono ricompilate solo se il
-corrispondente codice sorgente è stato modificato, riducendo al minimo
-indispensabile il tempo di compilazione totale.
+La duplice utilità di un simile \filestyle{Makefile} è che le figure
+\textsc{PDF} realizzate con Ti\emph{k}Z sono sicuramente sempre aggiornate
+quando si genera il documento finale con \progstyle{make} ed esse vengono
+ricompilate solo se il corrispondente codice sorgente è stato modificato,
+riducendo al minimo indispensabile il tempo di compilazione totale.
 
 %%% Local Variables:
 %%% mode: latex

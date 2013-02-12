@@ -21,41 +21,41 @@ e
 \texttt{arara}.\footnote{Per maggiori informazioni su questo programma visita il
   sito \url{http://cereda.github.com/arara/}.}
 In questa guida, invece, ci occuperemo di un programma creato nel 1977 da Stuart
-Feldman: \texttt{make}.  Nella voce di Wikipedia in lingua italiana di
-\texttt{make} (\url{https://it.wikipedia.org/wiki/Make}) possiamo leggere la
+Feldman: \progstyle{make}.  Nella voce di Wikipedia in lingua italiana di
+\progstyle{make} (\url{https://it.wikipedia.org/wiki/Make}) possiamo leggere la
 seguente descrizione:
 \begin{quoting}
   Il \textbf{make} è un'utility [...] che automatizza il processo di creazione
   di file che dipendono da altri file, risolvendo le dipendenze e invocando
   programmi esterni per il lavoro necessario.
 \end{quoting}
-\texttt{make} è molto usato nella compilazione dei programmi scritti in C o C++,
-specie nell'ambiente del software libero, ma può essere utilmente sfruttato per
-automatizzare e semplificare anche la compilazione di complessi documenti
+\progstyle{make} è molto usato nella compilazione dei programmi scritti in C o
+C++, specie nell'ambiente del software libero, ma può essere utilmente sfruttato
+per automatizzare e semplificare anche la compilazione di complessi documenti
 \LaTeX{}.
-Rispetto a software come \texttt{arara}, \texttt{make} permette di svolgere, su
-richiesta, altre operazioni quali la cancellazione di file temporanei non
+Rispetto a software come \texttt{arara}, \progstyle{make} permette di svolgere,
+su richiesta, altre operazioni quali la cancellazione di file temporanei non
 necessari e la creazione di un archivio compresso per conservare i file
 sorgenti.\footnote{\texttt{arara} permette di eseguire qualsiasi operazione,
   però queste vengono eseguite tutte, ogni volta che viene invocato
   \texttt{arara}, non è possibile scegliere selettivamente quali operazioni
   svolgere.}  Non ci sono limiti alla fantasia.
 
-Di \texttt{make} esistono alcune versioni, le più famose sono \texttt{GNU make},
-sviluppata da Richard Stallman e Roland McGrath, e \texttt{BSD make}.  Questa
-guida è incentrata su \texttt{GNU make}, il dialetto presente nei sistemi
-GNU/Linux e Mac OS X.  Questo programma si utilizza da linea di comando, chi non
-dovesse avere familiarità con il terminale può leggere la guida
-di~\cite{giacomelli:console}.  Il manuale di riferimento per \texttt{GNU make},
-a cui si rimanda per qualsiasi approfondimento, è~\cite{gnu:make}, ma è
-orientato soprattutto a programmatori che sviluppano software nel linguaggio C,
-la presente guida vuole essere invece una semplice introduzione a \texttt{make}
-per gli utenti di \LaTeX{}.
+Di \progstyle{make} esistono alcune versioni, le più famose sono
+\texttt{GNU make}, sviluppata da Richard Stallman e Roland McGrath, e
+\texttt{BSD make}.  Questa guida è incentrata su \texttt{GNU make}, il dialetto
+presente nei sistemi GNU/Linux e Mac OS X.  Questo programma si utilizza da
+linea di comando, chi non dovesse avere familiarità con il terminale può leggere
+la guida di~\cite{giacomelli:console}.  Il manuale di riferimento per
+\texttt{GNU make}, a cui si rimanda per qualsiasi approfondimento,
+è~\cite{gnu:make}, ma è orientato soprattutto a programmatori che sviluppano
+software nel linguaggio C, la presente guida vuole essere invece una semplice
+introduzione a \progstyle{make} per gli utenti di \LaTeX{}.
 
-Non si vuole convincere nessuno che \texttt{make} sia il programma migliore in
-assoluto, perché sicuramente \emph{non} lo è, ha i suoi pregi e anche qualche
+Non si vuole convincere nessuno che \progstyle{make} sia il programma migliore
+in assoluto, perché sicuramente \emph{non} lo è, ha i suoi pregi e anche qualche
 difetto.  Qui verranno solo illustrate le sue funzioni e potenzialità fornendo
-anche degli esempi d'uso, starà poi al lettore decidere se \texttt{make} si
+anche degli esempi d'uso, starà poi al lettore decidere se \progstyle{make} si
 adatta alle proprie necessità.
 
 Sono ben accetti suggerimenti per migliorare la guida, segnalazioni di errori e

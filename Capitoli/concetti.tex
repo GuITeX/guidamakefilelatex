@@ -2,10 +2,10 @@
 \chapter{Concetti di base}
 \label{cha:concetti-base}
 
-\section{Installazione di \texttt{make}}
+\section{Installazione di \progstyle{make}}
 \label{sec:installazione}
 
-Per verificare se \texttt{make} è già presente nel proprio sistema si può
+Per verificare se \progstyle{make} è già presente nel proprio sistema si può
 eseguire in un terminale il seguente comando
 \begin{verbatim}
 $ make --version
@@ -16,9 +16,9 @@ programma non è presente verrà mostrato un messaggio di errore.  Il simbolo
 \texttt{\$} rappresenta il prompt della linea di comando e non deve essere
 ricopiato.
 
-Per ottenere \texttt{make} in ambiente GNU/Linux bisogna installare il pacchetto
-omonimo utilizzando il gestore pacchetti della propria distribuzione.  Per
-esempio, per Debian e sistemi derivati (come Ubuntu) bisogna dare il comando
+Per ottenere \progstyle{make} in ambiente GNU/Linux bisogna installare il
+pacchetto omonimo utilizzando il gestore pacchetti della propria distribuzione.
+Per esempio, per Debian e sistemi derivati (come Ubuntu) bisogna dare il comando
 \begin{verbatim}
 # apt-get install make
 \end{verbatim}
@@ -29,18 +29,19 @@ il comando
 # yum install make
 \end{verbatim}
 
-Fino a qualche anno fa, \texttt{make} era preinstallato sui sistemi Mac OS X.
-Per ottenere \texttt{make} nei sistemi Mac OS X sui quali non è già presente,
+Fino a qualche anno fa, \progstyle{make} era preinstallato sui sistemi Mac OS X.
+Per ottenere \progstyle{make} nei sistemi Mac OS X sui quali non è già presente,
 si deve installare il software Xcode, disponibile nel Mac App Store, e poi
 scaricare gli strumenti a linea di comando dalle preferenze del programma.
 
-Il programma di installazione di \texttt{make} per Windows può essere scaricato
-all'indirizzo \url{http://gnuwin32.sourceforge.net/packages/make.htm}.
-\texttt{make} è fornito anche insieme a Cygwin (\textsc{url}:
-\url{http://cygwin.com/index.html}).  Si noti che la sintassi dei Makefile su
-Windows potrebbe differire leggermente rispetto alla sintassi utilizzata nei
-sistemi di tipo Unix.  Per esempio, nei sistemi di tipo Unix si potrebbe voler
-definire una variabile che ha come valore un elenco di cartelle, separate dal
+Il programma di installazione di \progstyle{make} per Windows può essere
+scaricato all'indirizzo \url{http://gnuwin32.sourceforge.net/packages/make.htm}.
+\progstyle{make} è fornito anche insieme a Cygwin (\textsc{url}:
+\url{http://cygwin.com/index.html}).  Si noti che la sintassi dei
+\filestyle{Makefile} su Windows potrebbe differire leggermente rispetto alla
+sintassi utilizzata nei sistemi di tipo Unix.  Per esempio, nei sistemi di tipo
+Unix si potrebbe voler definire una variabile che ha come valore un elenco di
+cartelle, separate dal
 carattere \texttt{:}
 \begin{verbatim}
 TEXINPUTS = ../../text-en:../../images:$(TEXINPUTS)
@@ -57,14 +58,14 @@ TEXINPUTS = ../../text-en;../../images;$(TEXINPUTS)
 \section{Le regole}
 \label{sec:le-regole}
 
-Il programma \texttt{make} non fa altro che leggere le istruzioni presenti in un
-file di testo, chiamato necessariamente
-\texttt{Makefile}\footnote{In realtà potrebbe avere anche altri nomi, questo è
-  quello consigliato e riconosciuto in maniera predefinita, per ulteriori
+Il programma \progstyle{make} non fa altro che leggere le istruzioni presenti in
+un file di testo, chiamato necessariamente
+\filestyle{Makefile}\footnote{In realtà potrebbe avere anche altri nomi, questo
+  è quello consigliato e riconosciuto in maniera predefinita, per ulteriori
   informazioni vedi~\cite[pagina 12]{gnu:make}.}
-e scritto con una particolare sintassi.  I \texttt{Makefile} sono dei file di
+e scritto con una particolare sintassi.  I \filestyle{Makefile} sono dei file di
 testo puro, per scriverli c'è bisogno quindi di un normale editor di testo come
-Gedit o Kate per GNU/Linux, TextEdit per Mac OS X.  Un \texttt{Makefile}
+Gedit o Kate per GNU/Linux, TextEdit per Mac OS X.  Un \filestyle{Makefile}
 basilare è composto essenzialmente da \emph{regole} (chiamate in inglese
 \emph{rules}) che hanno la seguente struttura:
 \begin{lstlisting}[showtabs=true,tab=\rightarrowfill,caption={Struttura di una
@@ -85,22 +86,22 @@ che vengono elencati separati da uno spazio.  Per evitare problemi in fase di
 compilazione è conveniente che tutti i file non abbiano degli spazi nel proprio
 nome.  Le regole possono non avere alcun prerequisito.
 
-Il programma \texttt{make} conosce i comandi necessari per eseguire una regola
-leggendoli dall'elenco dei \emph{comandi}.  I comandi di ogni regola sono
+Il programma \progstyle{make} conosce i comandi necessari per eseguire una
+regola leggendoli dall'elenco dei \emph{comandi}.  I comandi di ogni regola sono
 scritti l'uno sotto l'altro nell'ordine con cui devono essere eseguiti e
 ciascuna riga \emph{deve necessariamente} iniziare con una tabulazione (nel
 codice~\ref{lst:rule} è evidenziata dalla freccia
 \lstinline[showtabs=true,tab=\rightarrowfill]{	}), non con spazi altrimenti
-verrà segnalato un errore.  \texttt{make} invoca una nuova subshell per ogni
+verrà segnalato un errore.  \progstyle{make} invoca una nuova subshell per ogni
 riga dei comandi, per fare in modo che venga eseguita una sola subshell per
 tutto l'elenco dei comandi vedi~\cite[pagina 44]{gnu:make}.
 
-Un \texttt{Makefile} deve contenere almeno una regola, ma possono essercene
+Un \filestyle{Makefile} deve contenere almeno una regola, ma possono essercene
 anche più di una, ciascuna corrispondente a un diverso file da creare, e
-l'ordine con cui le regole compaiono nel \texttt{Makefile} \emph{non} è
+l'ordine con cui le regole compaiono nel \filestyle{Makefile} \emph{non} è
 importante.
 
-Un \texttt{Makefile} può contenere dei commenti, introdotti dal simbolo
+Un \filestyle{Makefile} può contenere dei commenti, introdotti dal simbolo
 cancelletto \texttt{\#}: tutto ciò che si trova alla destra di \texttt{\#} sulla
 sua stessa riga viene trattato come commento.  Questo simbolo ha lo stesso
 comportamento del simbolo \texttt{\%} nel linguaggio \LaTeX{}.
@@ -109,17 +110,18 @@ Se lo si desidera è possibile suddividere una riga di codice molto lunga su pi�
 righe inserendo \texttt{\textbackslash{}} seguito da un carattere di nuova linea
 (in pratica bisogna premere il tasto \keys{Invio} subito dopo l'inserimento del
 backslash).  Ciò non è obbligatorio in quanto non sono posti limiti alla
-lunghezza delle righe di un \texttt{Makefile}, però può aiutare la leggibilità
-del codice.
+lunghezza delle righe di un \filestyle{Makefile}, però può aiutare la
+leggibilità del codice.
 
 \textsc{Nota}\quad Da qui in poi tutti i comandi da eseguire nel terminale
 devono essere lanciati trovandosi nella stessa cartella in cui è presente il
-\texttt{Makefile} che si desidera utilizzare, se non diversamente specificato.
+\filestyle{Makefile} che si desidera utilizzare, se non diversamente
+specificato.
 
-\section{Come funziona \texttt{make}}
+\section{Come funziona \progstyle{make}}
 \label{sec:come-funziona}
 
-Tutta la logica di funzionamento di \texttt{make} si basa sul fatto che gli
+Tutta la logica di funzionamento di \progstyle{make} si basa sul fatto che gli
 obiettivi dipendono dai prerequisiti:
 \emph{quando un prerequisito viene modificato allora probabilmente l'obiettivo
   deve essere ricreato}.
@@ -127,11 +129,11 @@ Questo meccanismo, forse un po' laborioso e difficile da comprendere
 inizialmente, dovrebbe risultare chiaro più avanti.
 
 Per eseguire la regola che ha per obiettivo il file \meta{obiettivo} bisogna
-invocare \texttt{make} da terminale con il comando
+invocare \progstyle{make} da terminale con il comando
 \begin{sintassi}
   \small \texttt{\$ make} \meta{obiettivo}
 \end{sintassi}
-\texttt{make} verifica se è necessario aggiornare l'obiettivo della regola
+\progstyle{make} verifica se è necessario aggiornare l'obiettivo della regola
 corrispondente in questo modo: se l'obiettivo indicato da linea di comando non
 esiste oppure ha una data di ultima modifica precedente almeno a una di quelle
 dei file elencati nei \emph{prerequisiti} è considerato da aggiornare e la
@@ -141,9 +143,8 @@ il messaggio
 \begin{flushleft}
   \texttt{make: Nessuna operazione da eseguire per "}\meta{obiettivo}\texttt{".}
 \end{flushleft}
-Le istruzioni per aggiornare un obiettivo sono
-presenti nei \emph{comandi}: questi sono passati alla shell, normalmente la
-\texttt{sh}.
+Le istruzioni per aggiornare un obiettivo sono presenti nei \emph{comandi}:
+questi sono passati alla shell, normalmente la \texttt{sh}.
 
 \begin{figure}
   \centering
@@ -162,14 +163,14 @@ presenti nei \emph{comandi}: questi sono passati alla shell, normalmente la
     regola e sono necessari per la creazione dell'obiettivo.}
   \label{fig:grafo-albero1}
 \end{figure}
-Poiché tutta la logica di funzionamento di \texttt{make} è basata sulle
-dipendenze fra i file, per scrivere correttamente un \texttt{Makefile} risulta
-utile disegnare un grafo ad albero che illustri le relazioni che ci sono fra i
-vari file, individuando quali dovranno essere gli obiettivi delle regole e quali
-saranno i prerequisiti delle regole.  Uno stesso file può svolgere il ruolo di
-prerequisito in una regola e di obiettivo in un'altra.  Nell'esempio della
-figura~\ref{fig:grafo-albero1} ci sono due obiettivi, \texttt{obiettivo1} e
-\texttt{prerequisito2}, per le quali verranno scritte le opportune regole.  I
+Poiché tutta la logica di funzionamento di \progstyle{make} è basata sulle
+dipendenze fra i file, per scrivere correttamente un \filestyle{Makefile}
+risulta utile disegnare un grafo ad albero che illustri le relazioni che ci sono
+fra i vari file, individuando quali dovranno essere gli obiettivi delle regole e
+quali saranno i prerequisiti delle regole.  Uno stesso file può svolgere il
+ruolo di prerequisito in una regola e di obiettivo in un'altra.  Nell'esempio
+della figura~\ref{fig:grafo-albero1} ci sono due obiettivi, \texttt{obiettivo1}
+e \texttt{prerequisito2}, per le quali verranno scritte le opportune regole.  I
 prerequisiti di \texttt{obiettivo1} sono i file \texttt{prerequisito1} e
 \texttt{prerequisito2}, l'unico prerequisito di \texttt{prerequisito2} è il file
 \texttt{prerequisito3}.  I file \texttt{prerequisito1} e \texttt{prerequisito3}
@@ -177,10 +178,10 @@ sono modificati ``manualmente'' dall'utente e non generati automaticamente con
 un programma esterno a partire da altri file, quindi non è necessario associare
 a questi due file delle corrispondenti regole.
 
-Prima di eseguire una regola \texttt{make} verifica se è necessario aggiornare
-uno o più dei file elencati fra i prerequisiti e in questo caso esegue
-automaticamente le eventuali regole associate ai prerequisiti.  Nel seguente
-\texttt{Makefile}, corrispondente alla situazione illustrata nella
+Prima di eseguire una regola \progstyle{make} verifica se è necessario
+aggiornare uno o più dei file elencati fra i prerequisiti e in questo caso
+esegue automaticamente le eventuali regole associate ai prerequisiti.  Nel
+seguente \filestyle{Makefile}, corrispondente alla situazione illustrata nella
 figura~\ref{fig:grafo-albero1},
 \begin{lstlisting}
 obiettivo1: prerequisito1 prerequisito2
@@ -195,22 +196,22 @@ il \texttt{prerequisito2} ha una propria regola: dando il comando
 $ make obiettivo1
 \end{verbatim}
 % $
-\texttt{make} verifica se è necessario aggiornare il file
+\progstyle{make} verifica se è necessario aggiornare il file
 \texttt{prerequisito2}, eseguendo in maniera automatica il \texttt{comando3}
 specificato, prima di eseguire la regola \texttt{obiettivo1}.  Uno dei pregi di
-\texttt{make} è che esso si occupa autonomamente di eseguire tutte le regole che
-servono per preparare i prerequisiti dell'obiettivo che si vuole creare,
+\progstyle{make} è che esso si occupa autonomamente di eseguire tutte le regole
+che servono per preparare i prerequisiti dell'obiettivo che si vuole creare,
 \texttt{obiettivo1} nell'esempio.  Per la buona riuscita di questo processo è
 cruciale la corretta e completa definizione delle dipendenze fra i file.
 
-Se si richiama \texttt{make} senza argomenti, cioè si dà solo il comando
+Se si richiama \progstyle{make} senza argomenti, cioè si dà solo il comando
 \begin{verbatim}
 $ make
 \end{verbatim}
 % $
-esso procede all'esecuzione della prima regola che trova nel \texttt{Makefile},
-per la precisione la prima regola il cui target non inizia con un punto
-\texttt{.}  (questo comportamento può essere modificato, vedi
+esso procede all'esecuzione della prima regola che trova nel
+\filestyle{Makefile}, per la precisione la prima regola il cui target non inizia
+con un punto \texttt{.}  (questo comportamento può essere modificato, vedi
 \cite[pagina 5]{gnu:make}).  Dunque è preferibile scrivere come prima regola
 quella che si intende utilizzare più spesso, per esempio quella per compilare il
 documento completo.
@@ -225,8 +226,8 @@ l'opzione \texttt{-B} in questo modo:
 \section{Un semplice \texttt{Makefile}}
 \label{sec:makefile-semplice}
 
-Passiamo ora alla pratica vedendo un esempio di \texttt{Makefile} molto semplice
-per compilare un documento \LaTeX{}.
+Passiamo ora alla pratica vedendo un esempio di \filestyle{Makefile} molto
+semplice per compilare un documento \LaTeX{}.
 Supponiamo che il sorgente sia interamente contenuto nel solo file
 \texttt{documento.tex} e che vogliamo generare il file di output in formato DVI.
 Se il documento non contiene bibliografia, indice, indice analitico, ecc., per
@@ -236,13 +237,13 @@ $ latex documento
 \end{verbatim}
 % $
 dopo essersi posizionati, usando il comando \texttt{cd}, nella cartella in cui
-si trova il file \texttt{documento.tex}.  Il \texttt{Makefile} che descrive
+si trova il file \texttt{documento.tex}.  Il \filestyle{Makefile} che descrive
 questa regola è il seguente
-\begin{lstlisting}[caption={Un semplice \texttt{Makefile}.},label=lst:base]
+\begin{lstlisting}[caption={Un semplice \filestyle{Makefile}.},label=lst:base]
 documento.dvi: documento.tex
 	latex documento
 \end{lstlisting}
-Questo \texttt{Makefile} deve essere posto nella cartella in cui si trova il
+Questo \filestyle{Makefile} deve essere posto nella cartella in cui si trova il
 file \texttt{documento.tex}.  Nel codice~\ref{lst:base}, il file
 \texttt{documento.dvi} è l'\emph{obiettivo}, cioè il file ottenuto dopo la
 compilazione, il \emph{prerequisito} è il solo file \texttt{documento.tex} e
@@ -252,8 +253,8 @@ generare il file di output \texttt{documento.dvi} bisogna eseguire il comando
 $ make documento.dvi
 \end{verbatim}
 % $
-oppure solo \texttt{make} se la regola è la prima in ordine di apparizione nel
-\texttt{Makefile}.
+oppure solo \progstyle{make} se la regola è la prima in ordine di apparizione
+nel \filestyle{Makefile}.
 
 Se nel file \texttt{documento.tex} è presente una bibliografia realizzata con
 \textsc{Bib}\TeX, per compilare il documento è necessario eseguire i comandi
@@ -264,7 +265,7 @@ $ latex documento
 $ latex documento
 \end{verbatim}
 Ripetere questi cinque comandi ogni volta che si desidera compilare un documento
-può diventare un'operazione noiosa.  Nel \texttt{Makefile} si può scrivere la
+può diventare un'operazione noiosa.  Nel \filestyle{Makefile} si può scrivere la
 seguente regola
 \begin{lstlisting}
 documento.dvi: documento.tex bibliografia.bib
@@ -282,17 +283,17 @@ a questi prerequisiti.  Per compilare il documento è sufficiente dare il comand
 $ make documento.dvi
 \end{verbatim}
 % $
-oppure solo \texttt{make} qualora quella regola fosse la prima presente nel
-\texttt{Makefile}.  \texttt{make} eseguirà la regola solo se almeno uno dei
-prerequisiti è stato modificato dopo l'ultima modifica al file obiettivo, a meno
-di usare l'opzione \texttt{-B} illustrata in precedenza.
+oppure solo \progstyle{make} qualora quella regola fosse la prima presente nel
+\filestyle{Makefile}.  \progstyle{make} eseguirà la regola solo se almeno uno
+dei prerequisiti è stato modificato dopo l'ultima modifica al file obiettivo, a
+meno di usare l'opzione \texttt{-B} illustrata in precedenza.
 
 Si può aggiungere una regola per compilare lo stesso documento con \LaTeX{}
 e un'altra per compilarlo con \textsc{PDF}\LaTeX, per poter scegliere fra un
 file di output in formato \textsc{DVI} o \textsc{PDF}.  In questo caso il
-\texttt{Makefile} apparirebbe così:
-\begin{lstlisting}[caption={La prima regola permette di compilare un documento con
-\LaTeX, la seconda con \textsc{PDF}\LaTeX.},label=lst:dvi-pdf]
+\filestyle{Makefile} apparirebbe così:
+\begin{lstlisting}[caption={La prima regola permette di compilare un documento
+con \LaTeX, la seconda con \textsc{PDF}\LaTeX.},label=lst:dvi-pdf]
 documento.dvi: documento.tex bibliografia.bib
 	latex documento
 	bibtex documento
@@ -306,10 +307,10 @@ documento.pdf: documento.tex bibliografia.bib
 	pdflatex documento
 \end{lstlisting}
 
-Eseguendo \texttt{make} in un terminale, viene scritto nel terminale il comando
-che si sta eseguendo, seguito dall'output di quel comando.  Se non si vuole che
-il comando venga scritto nel terminale, nel \texttt{Makefile} deve essere
-preceduto dalla chiocciola \texttt{\@}, per esempio
+Eseguendo \progstyle{make} in un terminale, viene scritto nel terminale il
+comando che si sta eseguendo, seguito dall'output di quel comando.  Se non si
+vuole che il comando venga scritto nel terminale, nel \filestyle{Makefile} deve
+essere preceduto dalla chiocciola \texttt{\@}, per esempio
 \begin{lstlisting}
 documento.pdf: documento.tex bibliografia.bib
 	@pdflatex documento
@@ -358,10 +359,10 @@ documento
   assenza dei file da cancellare.  Il metacarattere \texttt{*} sostituisce una
   qualsiasi sequenza di caratteri.}
 È consigliabile specificare esplicitamente quali sono i phony targets utilizzati
-nel \texttt{Makefile}: se nella cartella in cui si trova il \texttt{Makefile} è
-presente un file chiamato \texttt{clean} questa regola non verrebbe mai
-eseguita.  Infatti, dal momento che la regola non ha prerequisiti, il file
-\texttt{clean} risulterebbe sempre
+nel \filestyle{Makefile}: se nella cartella in cui si trova il
+\filestyle{Makefile} è presente un file chiamato \texttt{clean} questa regola
+non verrebbe mai eseguita.  Infatti, dal momento che la regola non ha
+prerequisiti, il file \texttt{clean} risulterebbe sempre
 aggiornato.\footnote{Vedi~\cite[pagina 31]{gnu:make}.}  Per fare ciò bisogna
 mettere gli obiettivi di queste regole come prerequisiti della regola speciale
 \texttt{.PHONY}:
@@ -370,9 +371,9 @@ mettere gli obiettivi di queste regole come prerequisiti della regola speciale
 clean:
 	rm -f *.aux *.log *.out
 \end{lstlisting}
-In questo modo \texttt{make} sa che \texttt{clean} non è il nome del file che si
-deve ottenere e la regola verrà quindi sempre eseguita, indipendentemente dalla
-presenza di un eventuale file \texttt{clean}.
+In questo modo \progstyle{make} sa che \texttt{clean} non è il nome del file che
+si deve ottenere e la regola verrà quindi sempre eseguita, indipendentemente
+dalla presenza di un eventuale file \texttt{clean}.
 
 I phony targets possono essere anche usati per creare una sorta di \emph{alias}
 di altre regole.  Per esempio, inserendo il seguente
@@ -385,7 +386,7 @@ dvi: documento.dvi
 
 pdf: documento.pdf
 \end{lstlisting}
-in un \texttt{Makefile}, prima del codice~\ref{lst:dvi-pdf}, per compilare il
+in un \filestyle{Makefile}, prima del codice~\ref{lst:dvi-pdf}, per compilare il
 documento in formato \textsc{DVI} si potrà eseguire il comando
 \begin{verbatim}
 $ make dvi
@@ -425,12 +426,13 @@ clean:
 \section{Le variabili}
 \label{sec:variabili}
 
-Un evidente svantaggio dei \texttt{Makefile} è che essi devono essere
+Un evidente svantaggio dei \filestyle{Makefile} è che essi devono essere
 completamente riscritti per ogni nuovo progetto.  Questo difetto può essere
-superato perché una volta che si possiede un \texttt{Makefile} ben organizzato
-per compilare un documento, con pochissime modifiche si può adattare alla
-compilazione di un altro documento strutturato in maniera simile (cioè con una
-simile struttura delle dipendenze fra i file), grazie all'uso delle variabili.
+superato perché una volta che si possiede un \filestyle{Makefile} ben
+organizzato per compilare un documento, con pochissime modifiche si può adattare
+alla compilazione di un altro documento strutturato in maniera simile (cioè con
+una simile struttura delle dipendenze fra i file), grazie all'uso delle
+variabili.
 
 Una variabile è un nome a cui è associato un \emph{valore} che in genere è una
 stringa di testo.  Per assegnare a una variabile il suo valore si usa la
@@ -438,11 +440,11 @@ sintassi
 \begin{sintassi}
   \small \meta{nome della variabile} \texttt{=} \meta{valore}
 \end{sintassi}
-Le variabili permettono di rendere il \texttt{Makefile} più compatto perché i
+Le variabili permettono di rendere il \filestyle{Makefile} più compatto perché i
 valori delle variabili sono spesso dei lunghi elenchi di file che dovrebbero
 essere ripetuti più volte all'interno del file: invece di scrivere ogni volta
 questa lunga stringa è sufficiente richiamare il valore della variabile che sarà
-poi automaticamente sostituito da \texttt{make} durante la processazione del
+poi automaticamente sostituito da \progstyle{make} durante la processazione del
 file.  Inoltre quando diventa necessario modificare uno di questi elenchi, è
 sufficiente modificare solo una volta il valore della variabile, senza dover
 andare a cercare nel file tutte le occorrenze da sostituire.
@@ -453,15 +455,15 @@ racchiuso fra parentesi tonde o graffe:
 \texttt{\$(}\meta{nome della variabile}\texttt{)} oppure
 \texttt{\$\{}\meta{nome della variabile}\texttt{\}}.  Per evitare di
 dimenticarsi di dichiarare una variabile prima di richiamarla può essere utile
-abituarsi a definire tutte le variabili all'inizio del \texttt{Makefile}.
+abituarsi a definire tutte le variabili all'inizio del \filestyle{Makefile}.
 
 Le variabili possono essere referenziate in qualsiasi parte di un
-\texttt{Makefile}, come per esempio negli obiettivi, nei prerequisiti, nei
+\filestyle{Makefile}, come per esempio negli obiettivi, nei prerequisiti, nei
 comandi, nel valore di altre variabili.  Le variabili possono rappresentare
 qualsiasi cosa: oltre a elenchi di file le variabili potrebbero avere come
 valore nomi di cartelle in cui cercare file o programmi da eseguire.
 
-Le variabili, come qualunque altra cosa scritta nel \texttt{Makefile}, sono
+Le variabili, come qualunque altra cosa scritta nel \filestyle{Makefile}, sono
 sensibili alle maiuscole, quindi \texttt{Variabile}, \texttt{variabile} e
 \texttt{VARIABILE} sono stringhe distinte.  Inoltre il nome di una variabile può
 essere una sequenza di qualsiasi carattere eccetto spazi o tabulazioni, siano
@@ -479,9 +481,9 @@ e che l'elenco dei riferimenti bibliografici si trovi nel file
 \texttt{bibliografia.bib}.  Entrambi i file \texttt{documento.tex} e
 \texttt{bibliografia.bib}, inoltre, si trovano nella stessa cartella in cui è
 posizionato il seguente
-\texttt{Makefile}:\footnote{Parte del \texttt{Makefile} è ripreso da quello
-  presente in \cite[pagina 61]{caucci:tabelle}.}
-\begin{lstlisting}[caption={Esempio di \texttt{Makefile} che utilizza le
+\filestyle{Makefile}:\footnote{Parte del \filestyle{Makefile} è ripreso da
+  quello presente in \cite[pagina 61]{caucci:tabelle}.}
+\begin{lstlisting}[caption={Esempio di \filestyle{Makefile} che utilizza le
 variabili.},label=lst:variabili]
 PRINCIPALE 		= documento
 PRINCIPALE_TEX		= $(PRINCIPALE).tex
@@ -519,9 +521,9 @@ distclean: clean
 clean:
 	rm -f $(FILE_CLEAN)
 \end{lstlisting}
-Le variabili definite vengono sostituite da \texttt{make} quando viene invocato:
-tutte le occorrenze di \texttt{\$(PRINCIPALE)} verranno lette dal programma come
-se ci fosse scritto \texttt{documento}, perciò la variabile
+Le variabili definite vengono sostituite da \progstyle{make} quando viene
+invocato: tutte le occorrenze di \texttt{\$(PRINCIPALE)} verranno lette dal
+programma come se ci fosse scritto \texttt{documento}, perciò la variabile
 \texttt{PRINCIPALE\_TEX} assume il valore \texttt{documento.tex}, e così
 via. Come nell'esempio del codice~\ref{lst:phony}, per compilare il documento in
 formato \textsc{DVI} è sufficiente dare il comando
@@ -545,7 +547,7 @@ codice~\ref{lst:distclean}, \texttt{clean} è un prerequisito di
 
 Quando si dovrà compilare un altro documento \LaTeX{}
 che richiede gli stessi comandi del documento appena visto, si potrà facilmente
-utilizzare lo stesso \texttt{Makefile}, dopo averlo posto nell'opportuna
+utilizzare lo stesso \filestyle{Makefile}, dopo averlo posto nell'opportuna
 cartella, avendo solo cura di modificare il valore delle variabili
 \texttt{PRINCIPALE} e \texttt{BIBLIOGRAFIA} per adattarlo alle proprie
 necessità.
@@ -568,11 +570,11 @@ si indica un elenco di tutti i file, presenti nella cartella, con estensione
 hanno tutti uno stesso formato o uno stesso schema nel nome.  Negli esempi
 precedenti abbiamo usato il metacarattere \texttt{*} senza bisogno di usare la
 funzione \texttt{wildcard} perché l'espansione dei metacaratteri nel nome
-dell'obiettivo e nei prerequisiti è svolta automaticamente da \texttt{make} e
+dell'obiettivo e nei prerequisiti è svolta automaticamente da \progstyle{make} e
 all'interno dei comandi è svolta dalla shell.  In tutti gli altri contesti
 (compresa la definizione delle variabili) l'espansione dei metacaratteri avviene
 solo richiedendola con la funzione \texttt{wildcard}.  Consideriamo il seguente
-\texttt{Makefile} di esempio
+\filestyle{Makefile} di esempio
 \begin{lstlisting}
 VAR1 = *.tex
 VAR2 = $(wildcard *.tex)
@@ -615,8 +617,8 @@ allora la sostituzione viene eseguita.  Per esempio
 \begin{lstlisting}
 $(patsubst %.png,%.eps,img1.png img2.jpg img3.png)
 \end{lstlisting} %$
-viene interpretato da \texttt{make} come \texttt{img1.eps img3.eps}.  Si ottiene
-questo risultato perché \texttt{img2.jpg} non ha lo stesso schema di
+viene interpretato da \progstyle{make} come \texttt{img1.eps img3.eps}.  Si
+ottiene questo risultato perché \texttt{img2.jpg} non ha lo stesso schema di
 \meta{modello}, non finisce cioè per \texttt{.png}, la sostituzione non avviene
 e questa parola viene soppressa dall'output della funzione \texttt{patsubst},
 invece le altre due parole seguono lo schema del modello dunque
@@ -627,12 +629,12 @@ invece le altre due parole seguono lo schema del modello dunque
 \label{sec:uso-variabili}
 
 Abbiamo imparato che per richiamare una variabile definita all'interno del
-\texttt{Makefile} bisogna usare la sintassi
+\filestyle{Makefile} bisogna usare la sintassi
 \texttt{\$(}\meta{nome della variabile}\texttt{)}.  Qualche volta, però,
 potremmo voler richiamare una variabile della shell.  Nella maggior parte delle
 shell Unix questo si fa usando proprio il metacarattere \texttt{\$}, però per
-far capire a \texttt{make} che in questo caso vogliamo una variabile della shell
-e non del \texttt{Makefile} dobbiamo raddoppiare il simbolo di dollaro:
+far capire a \progstyle{make} che in questo caso vogliamo una variabile della
+shell e non del \filestyle{Makefile} dobbiamo raddoppiare il simbolo di dollaro:
 \texttt{\$\$}.
 
 Nel seguente esempio, tratto da~\cite[pagina 43]{gnu:make},
@@ -644,12 +646,12 @@ foo:
 	done
 \end{lstlisting}
 la variabile \texttt{ELENCO} è stata richiamata normalmente con
-\texttt{\$(ELENCO)} poiché è una variabile del \texttt{Makefile}, mentre la
+\texttt{\$(ELENCO)} poiché è una variabile del \filestyle{Makefile}, mentre la
 variabile \texttt{i} del \texttt{for} è stata richiamata con \texttt{\$\$i}
 poiché è una variabile della shell.
 
-In un \texttt{Makefile} i comandi che devono essere eseguiti in una regola vanno
-scritti, normalmente, uno su ciascuna riga.  Anche se generalmente i cicli
+In un \filestyle{Makefile} i comandi che devono essere eseguiti in una regola
+vanno scritti, normalmente, uno su ciascuna riga.  Anche se generalmente i cicli
 \texttt{for} delle shell Unix sono scritti nella forma
 \begin{sintassi} \obeylines{}
   \small \texttt{\textcolor{blue}{\textbf{for}}} \meta{variabile} \texttt{in}\
@@ -659,7 +661,7 @@ scritti, normalmente, uno su ciascuna riga.  Anche se generalmente i cicli
     \ \ ...
     \textcolor{blue}{\textbf{done}}}
 \end{sintassi}
-si tratta in realtà di \emph{un unico} comando e quindi nel \texttt{Makefile}
+si tratta in realtà di \emph{un unico} comando e quindi nel \filestyle{Makefile}
 andrebbe scritto su un'unica riga in questo modo
 \begin{sintassi}
   \small \texttt{\textcolor{blue}{\textbf{for}}} \meta{variabile} \texttt{in}
@@ -677,9 +679,9 @@ quali \texttt{if}, \texttt{while} e \texttt{until}.
 
 Nella principali shell Unix si può effettuare la sostituzione di comando con la
 sintassi \texttt{`...`} e questa può essere usata anche all'interno di un
-\texttt{Makefile}.  Inoltre nella bash e nella ksh la sostituzione di comando
+\filestyle{Makefile}.  Inoltre nella bash e nella ksh la sostituzione di comando
 può essere eseguita con la sintassi \texttt{\$(...)} che però nei
-\texttt{Makefile} abbiamo visto che si usa per richiamare il valore delle
+\filestyle{Makefile} abbiamo visto che si usa per richiamare il valore delle
 variabili.  La sostituzione di comando può essere eseguita, invece, sfruttando
 la funzione \texttt{shell} in questo modo:
 \begin{sintassi}

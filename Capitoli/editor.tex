@@ -1,18 +1,19 @@
 \cleardoublepage{}
-\chapter{Integrare \texttt{make} negli editor di testo}
+\chapter{Integrare \progstyle{make} negli editor di testo}
 \label{cha:editor}
 
-Può essere utile poter richiamare \texttt{make} direttamente dal proprio editor
-di testo preferito.  In generale si consiglia di aggiungere il comando
-\texttt{make} all'elenco dei comandi di composizione dell'editor, in modo da
-poter eseguire la regola predefinita del \texttt{Makefile}.  Di seguito sono
-riportate le istruzioni per aggiungere \texttt{make} all'elenco dei programmi di
-composizione di alcuni dei più diffusi editor di testo specifici per \LaTeX{}.
-Affinché tutti gli editor di testo possano effettuare correttamente l'analisi
-dell'output di \texttt{make} è necessario compilare in modalità
-\texttt{nonstopmode}.  Questo può essere fatto aggiungendo nel \texttt{Makefile}
-ai comandi \texttt{latex} o \texttt{pdflatex} (o l'eventuale altro compilatore
-usato) l'opzione \texttt{-interaction=nonstopmode}.
+Può essere utile poter richiamare \progstyle{make} direttamente dal proprio
+editor di testo preferito.  In generale si consiglia di aggiungere il comando
+\progstyle{make} all'elenco dei comandi di composizione dell'editor, in modo da
+poter eseguire la regola predefinita del \filestyle{Makefile}.  Di seguito sono
+riportate le istruzioni per aggiungere \progstyle{make} all'elenco dei programmi
+di composizione di alcuni dei più diffusi editor di testo specifici per
+\LaTeX{}.  Affinché tutti gli editor di testo possano effettuare correttamente
+l'analisi dell'output di \progstyle{make} è necessario compilare in modalità
+\texttt{nonstopmode}.  Questo può essere fatto aggiungendo nel
+\filestyle{Makefile} ai comandi \texttt{latex} o \texttt{pdflatex} (o
+l'eventuale altro compilatore usato) l'opzione
+\texttt{-interaction=nonstopmode}.
 \begin{lstlisting}
 # Variabili contenenti i nomi dei comandi da eseguire
 # e le relative opzioni.  Per cambiare le opzioni dei
@@ -38,7 +39,7 @@ $(PRINCIPALE_PDF): $(TUTTI_LATEX) $(IMMAGINI_PDF)
 \section{Emacs}
 \label{sec:emacs}
 
-Emacs supporta nativamente \texttt{make}.  È possibile eseguirlo con la
+Emacs supporta nativamente \progstyle{make}.  È possibile eseguirlo con la
 combinazione di tasti \texttt{M-x compile RET} e si può anche specificare la
 regola da avviare.  Chi usa il pacchetto AUC\TeX{},
 però, potrebbe preferire una migliore integrazione che permetta di effettuare
@@ -50,8 +51,8 @@ codice
   (add-to-list 'TeX-command-list
 	       '("Make" "make" TeX-run-TeX nil t)))
 \end{lstlisting}
-Con questa modifica sarà possibile eseguire \texttt{make} con la combinazione di
-tasti \texttt{C-c C-c Make RET}.
+Con questa modifica sarà possibile eseguire \progstyle{make} con la combinazione
+di tasti \texttt{C-c C-c Make RET}.
 
 \section{Kile}
 \label{sec:kile}
@@ -66,13 +67,13 @@ tendina della classe a cui fare riferimento, quindi fare clic sul pulsante
 ``Comando'' della scheda ``Generale'' scrivere ``make'', assicurarsi che le
 opzioni ``Controlla se il documento radice'' e ``Salta al primo errore'' siano
 attive e deselezionare l'opzione ``Esegui automaticamente gli strumenti
-aggiuntivi'' (se nei \texttt{Makefile} ci sono già le istruzioni necessaria per
-eseguire automaticamente tutti gli eventuali strumenti aggiuntivi).  Nella
+aggiuntivi'' (se nei \filestyle{Makefile} ci sono già le istruzioni necessaria
+per eseguire automaticamente tutti gli eventuali strumenti aggiuntivi).  Nella
 scheda ``Avanzate'' assicurarsi che il campo ``Tipo'' sia impostato a ``Esegui
 al di fuori di Kile'', il campo ``Classe'' a ``LaTeX'' e il campo ``Stato'' a
 ``Editor''.  Nella scheda ``Menu'' selezionare ``Compila'' nel menu a tendina
 relativo alla voce ``Aggiungi strumento al meno di costruzione'', in questo modo
-sarà possibile eseguire \texttt{make} dall'elenco di tutti gli strumenti di
+sarà possibile eseguire \progstyle{make} dall'elenco di tutti gli strumenti di
 compilazione.
 
 \section{Texmaker}
@@ -88,7 +89,7 @@ Seguendo il menu
 \menu{Utente > Comandi personalizzati > Modifica comandi utente} si aprirà una
 finestra come quella riportata nella figura~\ref{fig:texmaker} e si deve
 scrivere ``Make'' nel campo ``Voce di menu'' e ``make'' nel campo ``Comando''.
-In questo modo \texttt{make} sarà eseguibile dall'elenco dei comandi
+In questo modo \progstyle{make} sarà eseguibile dall'elenco dei comandi
 personalizzati.
 
 \section{TeXstudio}
@@ -104,7 +105,7 @@ TeXstudio è un fork di Texmaker e la procedura è simile a quella descritta qui
 sopra.  Dal menu \menu{Utente > Comandi utente > Edit comandi utente} si aprirà
 una finestra come quella riportata nella figura~\ref{fig:texstudio} e nel campo
 ``Voce menu'' si scriverà ``Make'', nel campo ``Comando'' si scriverà ``make''.
-Dopo di ciò sarà possibile eseguire \texttt{make} dall'elenco dei comandi
+Dopo di ciò sarà possibile eseguire \progstyle{make} dall'elenco dei comandi
 utente.
 
 \section{Texworks}
@@ -120,8 +121,8 @@ Andare nel menu \menu{Modifica > Preferenze} e nella scheda ``Composizione''
 della finestra che si aprirà fare clic sul pulsante \keys{{+}} vicino all'elenco
 degli strumenti di composizione.  Nella finestra che si aprirà, come quella
 riportata nella figura~\ref{fig:texworks}, scrivere ``Make'' nel campo ``Nome''
-e ``make'' nel campo ``Programma''.  Dopo di ciò \texttt{make} sarà disponibile
-nell'elenco dei programmi di composizione di questo editor di testo.
+e ``make'' nel campo ``Programma''.  Dopo di ciò \progstyle{make} sarà
+disponibile nell'elenco dei programmi di composizione di questo editor di testo.
 
 %%% Local Variables:
 %%% mode: latex
