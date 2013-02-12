@@ -13,7 +13,7 @@ SHELL			= /bin/sh
 ALL_TEX			= $(MAIN_TEX) $(CAPITOLI_TEX) $(BIBLIO_BIB)
 CLEAN_FILES		= *.aux *.bbl *.bcf *.blg *-blx.bib *.brf *.fdb_latexmk \
 			  *.fls *.idx *.ilg *.ind *.log *.out *.run.xml *.toc *~
-DISTCLEAN_FILES		= $(MAIN_PDF) $(MAIN_DVI) $(IMMAGINI_EPS)
+DISTCLEAN_FILES		= $(MAIN_PDF) $(MAIN_DVI) $(IMMAGINI_EPS) ChangeLog
 TODAY			= $(shell date "+%Y%m%d.%H%M%S")
 
 .PHONY: pdf dvi clean distclean dist
@@ -32,6 +32,7 @@ $(CARTELLA_IMG)/%.eps: $(CARTELLA_IMG)/%.png
 	convert $^ $@
 
 dist: distclean
+	git log --first-parent --format="%ai %aN [%h]%d%n%n%x09* %s%n" > ChangeLog
 	cd ..; tar cvzpf $(MAIN)-$(TODAY).tar.gz --exclude-vcs --exclude $(CARTELLA)/auto $(CARTELLA)/
 
 clean:
