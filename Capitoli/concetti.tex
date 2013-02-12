@@ -12,7 +12,9 @@ $ make --version
 \end{verbatim}
 % $
 che restituisce la versione del programma installata nel sistema.  Se il
-programma non è presente verrà mostrato un messaggio di errore.
+programma non è presente verrà mostrato un messaggio di errore.  Il simbolo
+\texttt{\$} rappresenta il prompt della linea di comando e non deve essere
+ricopiato.
 
 Per ottenere \texttt{make} in ambiente GNU/Linux bisogna installare il pacchetto
 omonimo utilizzando il gestore pacchetti della propria distribuzione.  Per
@@ -20,21 +22,37 @@ esempio, per Debian e sistemi derivati (come Ubuntu) bisogna dare il comando
 \begin{verbatim}
 # apt-get install make
 \end{verbatim}
-con i diritti di amministratore.  In Fedora e derivate, invece, bisogna eseguire
+Il simbolo di prompt \texttt{\#} significa che il comando deve essere eseguito
+con i diritti di amministratore.  In Fedora e derivate, invece, bisogna usare
 il comando
 \begin{verbatim}
 # yum install make
 \end{verbatim}
 
 Fino a qualche anno fa, \texttt{make} era preinstallato sui sistemi Mac OS X.
-Per installare \texttt{make} nei sistemi Mac OS X sui quali non è già presente,
+Per ottenere \texttt{make} nei sistemi Mac OS X sui quali non è già presente,
 si deve installare il software Xcode, disponibile nel Mac App Store, e poi
 scaricare gli strumenti a linea di comando dalle preferenze del programma.
 
 Il programma di installazione di \texttt{make} per Windows può essere scaricato
 all'indirizzo \url{http://gnuwin32.sourceforge.net/packages/make.htm}.
-\texttt{make} è fornito anche insieme a Cygwin (\textsc{Url}:
-\url{http://cygwin.com/index.html}).
+\texttt{make} è fornito anche insieme a Cygwin (\textsc{url}:
+\url{http://cygwin.com/index.html}).  Si noti che la sintassi dei Makefile su
+Windows potrebbe differire leggermente rispetto alla sintassi utilizzata nei
+sistemi di tipo Unix.  Per esempio, nei sistemi di tipo Unix si potrebbe voler
+definire una variabile che ha come valore un elenco di cartelle, separate dal
+carattere \texttt{:}
+\begin{verbatim}
+TEXINPUTS = ../../text-en:../../images:$(TEXINPUTS)
+\end{verbatim}
+% $
+Su Windows non è possibile utilizzare i due punti come separatori di questi
+elenchi, a causa di alcune restrizioni sull'uso del carattere, si dovrà invece
+utilizzare il punto e virgola, come nel seguente esempio
+\begin{verbatim}
+TEXINPUTS = ../../text-en;../../images;$(TEXINPUTS)
+\end{verbatim}
+% $
 
 \section{Le regole}
 \label{sec:le-regole}
