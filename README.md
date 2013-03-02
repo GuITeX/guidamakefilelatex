@@ -1,5 +1,5 @@
 Introduzione ai Makefile per compilare documenti LaTeX
-==========
+======================================================
 
 Qui è contenuto il codice sorgente LaTeX della guida
 [*Introduzione ai Makefile per compilare documenti LaTeX*](http://www.guitex.org/home/images/doc/GuideGuIT/guidamake.pdf).
@@ -10,7 +10,7 @@ sistema TeX, condotto dal Gruppo Italiano di utilizzatori di TeX
 [www.guitex.org](http://www.guitex.org).
 
 Licenza e collaborazione
-----------
+------------------------
 
 Quest'opera è rilasciata con licenza Creative Commons Attribuzione 3.0 Unported.
 Un riassunto in linguaggio accessibile a tutti della Licenza in versione 3.0 è
@@ -24,7 +24,7 @@ oppure inviando critiche, commenti e consigli all'autore all'indirizzo e-mail
 indicato nella guida.
 
 Compilazione della guida
-----------
+------------------------
 
 Per compilare il documento è necessaria la classe `guidatematica.cls`
 disponibile all'indirizzo https://github.com/GuITeX/guidetematiche.  Per
