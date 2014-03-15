@@ -49,7 +49,7 @@ codice
 \begin{lstlisting}[language=lisp,morekeywords={eval-after-load,add-to-list}]
 (eval-after-load "tex"
   (add-to-list 'TeX-command-list
-	       '("Make" "make" TeX-run-TeX nil t)))
+	       '("Make" "make" TeX-run-compile nil t)))
 \end{lstlisting}
 Con questa modifica sarà possibile eseguire \progstyle{make} con la combinazione
 di tasti \texttt{C-c C-c Make RET}.
